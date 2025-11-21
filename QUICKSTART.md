@@ -2,6 +2,165 @@
 
 Guía rápida para poner en marcha el aplicativo en menos de 5 minutos.
 
+---
+
+## 🆕 Configuración en Nuevo PC (Desde Cero)
+
+Esta sección es para cuando estás configurando el proyecto por primera vez en un nuevo equipo, sin base de datos existente ni configuración previa.
+
+### Prerequisitos
+- **Docker Desktop** instalado y corriendo ([Descargar aquí](https://www.docker.com/products/docker-desktop))
+- **Git** instalado (para clonar el repositorio)
+
+### Pasos Completos
+
+```bash
+# 1. Clonar el repositorio (si aún no lo tienes)
+git clone <URL_DEL_REPOSITORIO>
+cd Surveyjs
+
+# 2. Verificar que Docker está corriendo
+docker --version
+docker-compose --version
+
+# 3. Levantar todos los servicios (primera vez)
+docker-compose up --build
+
+# Esto hará automáticamente:
+# ✅ Descargar imagen de MongoDB 7.0
+# ✅ Crear volumen para persistencia de datos
+# ✅ Crear base de datos 'surveyjs_db'
+# ✅ Construir imagen del backend
+# ✅ Construir imagen del frontend
+# ✅ Crear red interna entre servicios
+# ✅ Iniciar todos los contenedores
+
+# 4. Esperar a que los servicios estén listos (1-2 minutos primera vez)
+# Verás mensajes como:
+# ✅ MongoDB Connected
+# 🚀 Server running on port 3000
+# VITE ready in X ms
+
+# 5. Verificar que todo funciona
+# Frontend: http://localhost:5173
+# Backend: http://localhost:3000/health
+# MongoDB: localhost:27017 (accesible con MongoDB Compass)
+```
+
+### ¿Qué Crea Docker Automáticamente?
+
+1. **Base de Datos MongoDB**
+   - Contenedor: `surveyjs-mongodb`
+   - Puerto: `27017`
+   - Base de datos: `surveyjs_db`
+   - Volumen persistente: `mongodb_data`
+
+2. **Backend API**
+   - Contenedor: `surveyjs-backend`
+   - Puerto: `3000`
+   - Variables de entorno configuradas automáticamente
+
+3. **Frontend React**
+   - Contenedor: `surveyjs-frontend`
+   - Puerto: `5173`
+   - Variables de entorno configuradas automáticamente
+
+4. **Red Interna**
+   - Red: `surveyjs-network`
+   - Permite comunicación entre contenedores
+
+### Verificación Post-Instalación
+
+```bash
+# Ver estado de los contenedores
+docker-compose ps
+
+# Deberías ver 3 contenedores corriendo:
+# surveyjs-mongodb    Up
+# surveyjs-backend    Up
+# surveyjs-frontend   Up
+
+# Ver logs en tiempo real
+docker-compose logs -f
+
+# Probar la API
+curl http://localhost:3000/health
+# Respuesta esperada: {"status":"OK","timestamp":"..."}
+
+# Probar conexión a MongoDB (si tienes MongoDB Compass)
+# URI: mongodb://localhost:27017/surveyjs_db
+```
+
+### Detener y Reiniciar
+
+```bash
+# Detener servicios (mantiene datos)
+docker-compose down
+
+# Reiniciar servicios
+docker-compose up
+
+# Reiniciar desde cero (BORRA TODOS LOS DATOS)
+docker-compose down -v
+docker-compose up --build
+```
+
+### Estructura de Datos Creada
+
+```
+Docker Volumes:
+└── mongodb_data/          # Datos persistentes de MongoDB
+    └── surveyjs_db/       # Base de datos
+        └── surveys/       # Colección de encuestas (se crea al primer POST)
+
+Docker Networks:
+└── surveyjs-network       # Red interna para comunicación
+
+Docker Containers:
+├── surveyjs-mongodb       # Base de datos
+├── surveyjs-backend       # API Node.js
+└── surveyjs-frontend      # App React
+```
+
+### Solución de Problemas Comunes
+
+#### Docker no está corriendo
+```bash
+# Verificar Docker Desktop
+# Abrir Docker Desktop y asegurarse que está iniciado
+```
+
+#### Puerto ya en uso
+```bash
+# Si el puerto 3000, 5173 o 27017 está ocupado
+# Opción 1: Detener el proceso que usa el puerto
+lsof -i :3000  # Encontrar PID
+kill -9 <PID>  # Matar proceso
+
+# Opción 2: Cambiar puerto en docker-compose.yml
+# Editar: "3001:3000" en lugar de "3000:3000"
+```
+
+#### Error de permisos
+```bash
+# En Linux, agregar usuario al grupo docker
+sudo usermod -aG docker $USER
+# Cerrar sesión y volver a entrar
+```
+
+#### Contenedores no inician
+```bash
+# Ver logs detallados
+docker-compose logs
+
+# Reconstruir desde cero
+docker-compose down -v
+docker system prune -a  # CUIDADO: Borra todo de Docker
+docker-compose up --build
+```
+
+---
+
 ## ⚡ Opción 1: Docker (Más Rápido)
 
 ### Prerequisitos

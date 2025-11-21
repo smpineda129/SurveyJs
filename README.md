@@ -35,6 +35,18 @@ surveyjs-app/
 
 ## 📦 Instalación
 
+### 🆕 Nuevo PC / Primera Instalación
+
+Si estás configurando el proyecto por primera vez en un nuevo equipo:
+
+**📘 [Ver Guía Completa de Docker Setup](./DOCKER_SETUP.md)**
+
+Esta guía incluye:
+- Instalación de Docker Desktop desde cero
+- Configuración paso a paso sin base de datos existente
+- Verificación completa del sistema
+- Solución de problemas comunes
+
 ### Opción 1: Con Docker (Recomendado)
 
 ```bash
@@ -202,6 +214,15 @@ Este proyecto está diseñado para ser extendido. Para agregar nuevos campos o p
 ## 📝 Licencia
 
 MIT
+
+## 📚 Documentación
+
+- **[QUICKSTART.md](./QUICKSTART.md)** - Inicio rápido en 5 minutos
+- **[DOCKER_SETUP.md](./DOCKER_SETUP.md)** - Configuración completa de Docker desde cero
+- **[SETUP.md](./SETUP.md)** - Instalación detallada y configuración
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Arquitectura del sistema
+- **[MODULARIZATION.md](./MODULARIZATION.md)** - Guía de integración como módulo
+- **[SURVEYJS_INPUTS_REFERENCE.md](./SURVEYJS_INPUTS_REFERENCE.md)** - Referencia de tipos de inputs
 
 ## 👥 Soporte
 

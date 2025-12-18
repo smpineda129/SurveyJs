@@ -35,6 +35,20 @@ surveyjs-app/
 
 ## 📦 Instalación
 
+### 🔄 Actualización desde Versión Anterior
+
+Si ya tienes el proyecto instalado y quieres actualizar a la última versión:
+
+**📘 [Ver Guía de Actualización](./UPDATE_GUIDE.md)**
+
+Pasos rápidos:
+```bash
+docker-compose down
+git pull origin main
+docker-compose build --no-cache
+docker-compose up -d
+```
+
 ### 🆕 Nuevo PC / Primera Instalación
 
 Si estás configurando el proyecto por primera vez en un nuevo equipo:
@@ -217,12 +231,18 @@ MIT
 
 ## 📚 Documentación
 
+### General
 - **[QUICKSTART.md](./QUICKSTART.md)** - Inicio rápido en 5 minutos
+- **[UPDATE_GUIDE.md](./UPDATE_GUIDE.md)** - 🔄 Guía de actualización para usuarios existentes
 - **[DOCKER_SETUP.md](./DOCKER_SETUP.md)** - Configuración completa de Docker desde cero
 - **[SETUP.md](./SETUP.md)** - Instalación detallada y configuración
 - **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Arquitectura del sistema
 - **[MODULARIZATION.md](./MODULARIZATION.md)** - Guía de integración como módulo
 - **[SURVEYJS_INPUTS_REFERENCE.md](./SURVEYJS_INPUTS_REFERENCE.md)** - Referencia de tipos de inputs
+
+### Generación de Presentaciones PowerPoint
+- **[PPTX_DOCUMENTATION.md](./PPTX_DOCUMENTATION.md)** - 📘 Documentación completa de PptxGenJS
+- **[PPTX_EXAMPLES.md](./PPTX_EXAMPLES.md)** - 💡 Ejemplos prácticos del proyecto
 
 ## 👥 Soporte
 

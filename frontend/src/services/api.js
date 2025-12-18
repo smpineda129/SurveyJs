@@ -64,6 +64,22 @@ export const surveyAPI = {
     const response = await api.get('/surveys/stats');
     return response.data;
   },
+
+  // Generar presentación PPTX
+  generatePresentation: async () => {
+    const response = await api.get('/surveys/presentation', {
+      responseType: 'blob'
+    });
+    return response.data;
+  },
+
+  // Generar presentación PPTX individual
+  generateIndividualPresentation: async (id) => {
+    const response = await api.get(`/surveys/${id}/presentation`, {
+      responseType: 'blob'
+    });
+    return response.data;
+  },
 };
 
 // Survey Definition API

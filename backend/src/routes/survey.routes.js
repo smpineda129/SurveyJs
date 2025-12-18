@@ -5,7 +5,9 @@ import {
   getSurveyById,
   updateSurvey,
   deleteSurvey,
-  getSurveyStats
+  getSurveyStats,
+  generatePresentation,
+  generateIndividualPresentation
 } from '../controllers/survey.controller.js';
 import { validateSurvey } from '../middleware/validators.js';
 
@@ -31,6 +33,20 @@ router.get('/', getAllSurveys);
  * @access  Public
  */
 router.get('/stats', getSurveyStats);
+
+/**
+ * @route   GET /api/surveys/presentation
+ * @desc    Generar presentación PPTX con datos y gráficos
+ * @access  Public
+ */
+router.get('/presentation', generatePresentation);
+
+/**
+ * @route   GET /api/surveys/:id/presentation
+ * @desc    Generar presentación PPTX individual para un registro
+ * @access  Public
+ */
+router.get('/:id/presentation', generateIndividualPresentation);
 
 /**
  * @route   GET /api/surveys/:id

@@ -70,7 +70,8 @@ export const surveyJson = {
           type: "text", 
           name: "rama", 
           title: "Ubicación en la estructura del Estado (Rama)",
-          maxLength: 100
+          maxLength: 100,
+          isRequired: false
         },
         {
           type: "panel",
@@ -88,7 +89,8 @@ export const surveyJson = {
               type: "text", 
               name: "acto_legal", 
               title: "Acto legal",
-              maxLength: 255
+              maxLength: 255,
+              isRequired: true
             }
           ]
         },
@@ -101,32 +103,29 @@ export const surveyJson = {
               type: "text", 
               name: "direccion", 
               title: "Dirección",
-              maxLength: 255
+              maxLength: 255,
+              isRequired: true
             },
             { 
               type: "text", 
               name: "telefono", 
               title: "Teléfono",
               inputType: "tel",
+              isRequired: true,
               validators: [{
                 type: "regex",
                 text: "Por favor ingrese un número de teléfono válido",
-                regex: "^[0-9\\(\)\\-\\s+]*$"
+                regex: "^[0-9\\(\\)\\-\\s+]*$"
               }]
             }
           ]
         },
         { 
           type: "text", 
-          name: "fax", 
-          title: "Fax",
-          inputType: "tel"
-        },
-        { 
-          type: "text", 
           name: "correo", 
           title: "Correo electrónico",
           inputType: "email",
+          isRequired: true,
           validators: [{
             type: "email",
             text: "Por favor ingrese un correo electrónico válido"
@@ -137,6 +136,7 @@ export const surveyJson = {
           name: "web", 
           title: "Página web",
           inputType: "url",
+          isRequired: true,
           validators: [{
             type: "regex",
             text: "Por favor ingrese una URL válida (ej: https://ejemplo.com)",
@@ -153,19 +153,22 @@ export const surveyJson = {
               type: "text", 
               name: "municipio", 
               title: "Municipio",
-              maxLength: 100
+              maxLength: 100,
+              isRequired: true
             },
             { 
               type: "text", 
               name: "categoria", 
               title: "Categoría",
-              maxLength: 50
+              maxLength: 50,
+              isRequired: true
             },
             { 
               type: "text", 
               name: "departamento", 
               title: "Departamento",
-              maxLength: 100
+              maxLength: 100,
+              isRequired: true
             }
           ]
         },
@@ -184,6 +187,7 @@ export const surveyJson = {
           name: "sucursales_info",
           title: "Especifique las regiones o sucursales",
           visibleIf: "{tiene_sucursales} = 'si'",
+          isRequired: true,
           maxLength: 500,
           rows: 3
         },
@@ -192,6 +196,7 @@ export const surveyJson = {
           inputType: "number",
           name: "numero_dependencias",
           title: "Número de dependencias",
+          isRequired: true,
           min: 0,
           max: 10000,
           validators: [{
@@ -203,16 +208,36 @@ export const surveyJson = {
           title: "Número de dependencias"
         },
 
-        { type: "comment", name: "mision", title: "Misión de la entidad" },
+        { 
+          type: "comment", 
+          name: "mision", 
+          title: "Misión de la entidad",
+          isRequired: true 
+        },
 
         {
           type: "panel",
           name: "rep_legal",
           title: "Representante legal",
           elements: [
-            { type: "text", name: "rep_nombre", title: "Nombre" },
-            { type: "text", name: "rep_profesion", title: "Profesión" },
-            { type: "text", name: "rep_cargo", title: "Cargo" }
+            { 
+              type: "text", 
+              name: "rep_nombre", 
+              title: "Nombre",
+              isRequired: true 
+            },
+            { 
+              type: "text", 
+              name: "rep_profesion", 
+              title: "Profesión",
+              isRequired: true 
+            },
+            { 
+              type: "text", 
+              name: "rep_cargo", 
+              title: "Cargo",
+              isRequired: true 
+            }
           ]
         },
 
@@ -221,8 +246,18 @@ export const surveyJson = {
           name: "diligenciante",
           title: "Persona que diligencia",
           elements: [
-            { type: "text", name: "dil_nombre", title: "Nombre" },
-            { type: "text", name: "dil_tiempo", title: "Tiempo en el cargo" },
+            { 
+              type: "text", 
+              name: "dil_nombre", 
+              title: "Nombre",
+              isRequired: true 
+            },
+            { 
+              type: "text", 
+              name: "dil_tiempo", 
+              title: "Tiempo en el cargo",
+              isRequired: true 
+            },
             { type: "comment", name: "dil_obs", title: "Observaciones" }
           ]
         }

@@ -1,20 +1,6 @@
 version: '3.8'
 
 services:
-  # MongoDB Database
-  mongodb:
-    image: mongo:7.0
-    container_name: surveyjs-mongodb
-    restart: unless-stopped
-    ports:
-      - "27017:27017"
-    environment:
-      MONGO_INITDB_DATABASE: surveyjs_db
-    volumes:
-      - mongodb_data:/data/db
-    networks:
-      - surveyjs-network
-
   # Backend API
   backend:
     build:
@@ -24,12 +10,8 @@ services:
     restart: unless-stopped
     ports:
       - "3000:3000"
-    environment:
-      - NODE_ENV=development
-      - PORT=3000
-      - MONGODB_URI=mongodb://mongodb:27017/surveyjs_db
-    depends_on:
-      - mongodb
+    env_file:
+      - ./backend/.env
     volumes:
       - ./backend:/app
       - /app/node_modules
@@ -54,10 +36,6 @@ services:
       - /app/node_modules
     networks:
       - surveyjs-network
-
-volumes:
-  mongodb_data:
-    driver: local
 
 networks:
   surveyjs-network:

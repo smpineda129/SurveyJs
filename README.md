@@ -268,6 +268,8 @@ MIT
 - **[LOCAL_SETUP.md](./LOCAL_SETUP.md)** - 💻 Instalación local sin Docker
 - **[DOCKER_SETUP.md](./DOCKER_SETUP.md)** - 🐳 Configuración completa de Docker desde cero
 - **[UPDATE_GUIDE.md](./UPDATE_GUIDE.md)** - 🔄 Guía de actualización para usuarios existentes
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - 🚀 Guía de despliegue en Render.com y MongoDB Atlas
+- **[VERCEL_SETUP.md](./VERCEL_SETUP.md)** - ⚡ Configuración de Vercel y solución de errores CORS
 - **[SETUP.md](./SETUP.md)** - Instalación detallada y configuración
 
 ### Desarrollo

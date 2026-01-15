@@ -390,20 +390,39 @@ function ResultsPage() {
           <DialogContent dividers>
             {selectedSurvey && (
               <Box>
-                {/* Información Personal */}
+                {/* Información de la Entidad */}
                 <Typography variant="h6" sx={{ mb: 2, color: 'primary.main', fontWeight: 600 }}>
-                  Paso 1: Información Personal
+                  Información de la Entidad
                 </Typography>
                 <Grid container spacing={2} sx={{ mb: 3 }}>
-                  {['firstName', 'lastName', 'age', 'gender'].map((field) => (
-                    selectedSurvey.surveyData[field] !== undefined && (
-                      <Grid item xs={12} sm={6} key={field}>
+                  {[
+                    { key: 'nombre_entidad', label: 'Nombre de la Entidad' },
+                    { key: 'nivel', label: 'Nivel' },
+                    { key: 'sector', label: 'Sector' },
+                    { key: 'caracter', label: 'Carácter' },
+                    { key: 'categoria', label: 'Categoría' },
+                    { key: 'organismo', label: 'Organismo' },
+                    { key: 'rama', label: 'Rama' },
+                    { key: 'municipio', label: 'Municipio' },
+                    { key: 'departamento', label: 'Departamento' },
+                    { key: 'direccion', label: 'Dirección' },
+                    { key: 'telefono', label: 'Teléfono' },
+                    { key: 'fax', label: 'Fax' },
+                    { key: 'correo', label: 'Correo Electrónico' },
+                    { key: 'web', label: 'Sitio Web' },
+                    { key: 'fecha_creacion', label: 'Fecha de Creación' },
+                    { key: 'acto_legal', label: 'Acto Legal de Creación' },
+                    { key: 'numero_dependencias', label: 'Número de Dependencias' },
+                    { key: 'tiene_sucursales', label: '¿Tiene Sucursales?' }
+                  ].map(({ key, label }) => (
+                    selectedSurvey.surveyData[key] !== undefined && selectedSurvey.surveyData[key] !== '' && (
+                      <Grid item xs={12} sm={6} key={key}>
                         <Paper elevation={1} sx={{ p: 2 }}>
                           <Typography variant="caption" color="text.secondary">
-                            {getFieldLabel(field)}
+                            {label}
                           </Typography>
                           <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                            {renderFieldValue(field, selectedSurvey.surveyData[field])}
+                            {renderFieldValue(key, selectedSurvey.surveyData[key])}
                           </Typography>
                         </Paper>
                       </Grid>
@@ -411,20 +430,24 @@ function ResultsPage() {
                   ))}
                 </Grid>
 
-                {/* Información de Contacto */}
+                {/* Representante Legal */}
                 <Typography variant="h6" sx={{ mb: 2, color: 'primary.main', fontWeight: 600 }}>
-                  Paso 2: Información de Contacto
+                  Representante Legal
                 </Typography>
                 <Grid container spacing={2} sx={{ mb: 3 }}>
-                  {['email', 'phone', 'address', 'city', 'country'].map((field) => (
-                    selectedSurvey.surveyData[field] !== undefined && (
-                      <Grid item xs={12} sm={6} key={field}>
+                  {[
+                    { key: 'rep_nombre', label: 'Nombre' },
+                    { key: 'rep_cargo', label: 'Cargo' },
+                    { key: 'rep_profesion', label: 'Profesión' }
+                  ].map(({ key, label }) => (
+                    selectedSurvey.surveyData[key] !== undefined && selectedSurvey.surveyData[key] !== '' && (
+                      <Grid item xs={12} sm={6} key={key}>
                         <Paper elevation={1} sx={{ p: 2 }}>
                           <Typography variant="caption" color="text.secondary">
-                            {getFieldLabel(field)}
+                            {label}
                           </Typography>
                           <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                            {renderFieldValue(field, selectedSurvey.surveyData[field])}
+                            {renderFieldValue(key, selectedSurvey.surveyData[key])}
                           </Typography>
                         </Paper>
                       </Grid>
@@ -432,20 +455,23 @@ function ResultsPage() {
                   ))}
                 </Grid>
 
-                {/* Preferencias */}
+                {/* Diligenciador */}
                 <Typography variant="h6" sx={{ mb: 2, color: 'primary.main', fontWeight: 600 }}>
-                  Paso 3: Preferencias
+                  Diligenciador
                 </Typography>
                 <Grid container spacing={2} sx={{ mb: 3 }}>
-                  {['interests', 'contactPreference', 'newsletter'].map((field) => (
-                    selectedSurvey.surveyData[field] !== undefined && (
-                      <Grid item xs={12} sm={6} key={field}>
+                  {[
+                    { key: 'dil_nombre', label: 'Nombre' },
+                    { key: 'dil_tiempo', label: 'Tiempo en el Cargo' }
+                  ].map(({ key, label }) => (
+                    selectedSurvey.surveyData[key] !== undefined && selectedSurvey.surveyData[key] !== '' && (
+                      <Grid item xs={12} sm={6} key={key}>
                         <Paper elevation={1} sx={{ p: 2 }}>
                           <Typography variant="caption" color="text.secondary">
-                            {getFieldLabel(field)}
+                            {label}
                           </Typography>
                           <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                            {renderFieldValue(field, selectedSurvey.surveyData[field])}
+                            {renderFieldValue(key, selectedSurvey.surveyData[key])}
                           </Typography>
                         </Paper>
                       </Grid>
@@ -453,26 +479,105 @@ function ResultsPage() {
                   ))}
                 </Grid>
 
-                {/* Comentarios Adicionales */}
-                <Typography variant="h6" sx={{ mb: 2, color: 'primary.main', fontWeight: 600 }}>
-                  Paso 4: Comentarios Adicionales
-                </Typography>
-                <Grid container spacing={2}>
-                  {['comments', 'satisfaction'].map((field) => (
-                    selectedSurvey.surveyData[field] !== undefined && (
-                      <Grid item xs={12} key={field}>
-                        <Paper elevation={1} sx={{ p: 2 }}>
-                          <Typography variant="caption" color="text.secondary">
-                            {getFieldLabel(field)}
-                          </Typography>
-                          <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                            {renderFieldValue(field, selectedSurvey.surveyData[field])}
-                          </Typography>
-                        </Paper>
-                      </Grid>
-                    )
-                  ))}
-                </Grid>
+                {/* Aspectos Administrativos */}
+                {Object.keys(selectedSurvey.surveyData).some(k => k.startsWith('1_') || k.startsWith('2_') || k.startsWith('3_') || k.startsWith('4_')) && (
+                  <>
+                    <Typography variant="h6" sx={{ mb: 2, color: 'primary.main', fontWeight: 600 }}>
+                      I. Aspectos Administrativos
+                    </Typography>
+                    <Grid container spacing={2} sx={{ mb: 3 }}>
+                      {Object.keys(selectedSurvey.surveyData)
+                        .filter(key => (key.startsWith('1_') || key.startsWith('2_') || key.startsWith('3_') || key.startsWith('4_')) && 
+                                      !key.includes('_detail') && !key.includes('_obs') && !key.includes('_info'))
+                        .sort()
+                        .map(key => (
+                          <Grid item xs={12} sm={6} md={4} key={key}>
+                            <Paper elevation={1} sx={{ p: 2, bgcolor: selectedSurvey.surveyData[key] === 'Cumple' ? '#e8f5e9' : selectedSurvey.surveyData[key] === 'Parcial' ? '#fff3e0' : '#ffebee' }}>
+                              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+                                {key}
+                              </Typography>
+                              <Typography variant="body1" sx={{ fontWeight: 500, mb: 1 }}>
+                                {selectedSurvey.surveyData[key]}
+                              </Typography>
+                              {selectedSurvey.surveyData[`${key}_detail`] && (
+                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
+                                  Detalle: {selectedSurvey.surveyData[`${key}_detail`]}
+                                </Typography>
+                              )}
+                              {selectedSurvey.surveyData[`${key}_info`] && (
+                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
+                                  Info: {selectedSurvey.surveyData[`${key}_info`]}
+                                </Typography>
+                              )}
+                            </Paper>
+                          </Grid>
+                        ))}
+                    </Grid>
+                  </>
+                )}
+
+                {/* Función Archivística */}
+                {Object.keys(selectedSurvey.surveyData).some(k => k.startsWith('5_') || k.startsWith('6_') || k.startsWith('7_')) && (
+                  <>
+                    <Typography variant="h6" sx={{ mb: 2, color: 'primary.main', fontWeight: 600 }}>
+                      II. Aspectos de Función Archivística
+                    </Typography>
+                    <Grid container spacing={2} sx={{ mb: 3 }}>
+                      {Object.keys(selectedSurvey.surveyData)
+                        .filter(key => (key.startsWith('5_') || key.startsWith('6_') || key.startsWith('7_')) && 
+                                      !key.includes('_detail') && !key.includes('_obs') && !key.includes('_info'))
+                        .sort()
+                        .map(key => (
+                          <Grid item xs={12} sm={6} md={4} key={key}>
+                            <Paper elevation={1} sx={{ p: 2, bgcolor: selectedSurvey.surveyData[key] === 'Cumple' ? '#e8f5e9' : selectedSurvey.surveyData[key] === 'Parcial' ? '#fff3e0' : '#ffebee' }}>
+                              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+                                {key}
+                              </Typography>
+                              <Typography variant="body1" sx={{ fontWeight: 500, mb: 1 }}>
+                                {selectedSurvey.surveyData[key]}
+                              </Typography>
+                              {selectedSurvey.surveyData[`${key}_detail`] && (
+                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
+                                  Detalle: {selectedSurvey.surveyData[`${key}_detail`]}
+                                </Typography>
+                              )}
+                            </Paper>
+                          </Grid>
+                        ))}
+                    </Grid>
+                  </>
+                )}
+
+                {/* Preservación */}
+                {Object.keys(selectedSurvey.surveyData).some(k => k.startsWith('8_')) && (
+                  <>
+                    <Typography variant="h6" sx={{ mb: 2, color: 'primary.main', fontWeight: 600 }}>
+                      III. Aspectos de Preservación
+                    </Typography>
+                    <Grid container spacing={2} sx={{ mb: 3 }}>
+                      {Object.keys(selectedSurvey.surveyData)
+                        .filter(key => key.startsWith('8_') && !key.includes('_detail') && !key.includes('_obs') && !key.includes('_info'))
+                        .sort()
+                        .map(key => (
+                          <Grid item xs={12} sm={6} md={4} key={key}>
+                            <Paper elevation={1} sx={{ p: 2, bgcolor: selectedSurvey.surveyData[key] === 'Cumple' ? '#e8f5e9' : selectedSurvey.surveyData[key] === 'Parcial' ? '#fff3e0' : '#ffebee' }}>
+                              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+                                {key}
+                              </Typography>
+                              <Typography variant="body1" sx={{ fontWeight: 500, mb: 1 }}>
+                                {selectedSurvey.surveyData[key]}
+                              </Typography>
+                              {selectedSurvey.surveyData[`${key}_detail`] && (
+                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
+                                  Detalle: {selectedSurvey.surveyData[`${key}_detail`]}
+                                </Typography>
+                              )}
+                            </Paper>
+                          </Grid>
+                        ))}
+                    </Grid>
+                  </>
+                )}
 
                 {/* Metadata */}
                 <Box sx={{ mt: 3, pt: 2, borderTop: 1, borderColor: 'divider' }}>

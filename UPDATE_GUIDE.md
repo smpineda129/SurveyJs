@@ -14,11 +14,11 @@ Si ya tienes el proyecto instalado y funcionando con Docker, sigue estos pasos p
 # Detener todos los contenedores
 docker-compose down
 
-# Si quieres eliminar también los volúmenes (⚠️ ESTO BORRARÁ LA BASE DE DATOS)
-# docker-compose down -v
+# Eliminar el volumen de MongoDB local (ya no se usa)
+docker-compose down -v
 ```
 
-**⚠️ IMPORTANTE:** Si NO usas `-v`, tus datos de MongoDB se conservarán.
+**⚠️ IMPORTANTE:** Ahora usamos MongoDB Atlas (en la nube), por lo que los datos locales ya no se necesitan.
 
 ---
 
@@ -36,7 +36,29 @@ git stash pop
 
 ---
 
-### 3. Reconstruir las Imágenes de Docker
+### 3. Configurar MongoDB Atlas
+
+**NUEVO:** El proyecto ahora usa MongoDB Atlas en lugar de MongoDB local.
+
+```bash
+# Crear el archivo .env en la carpeta backend
+cd backend
+cp .env.example .env
+```
+
+Edita el archivo `backend/.env` y asegúrate de que tenga:
+
+```env
+NODE_ENV=development
+PORT=3000
+MONGODB_URI=mongodb+srv://desarrollador_db_user:WH9djZnzVqHa6dl5@cluster0.4rfwro1.mongodb.net/surveyjs_db?retryWrites=true&w=majority&appName=Cluster0
+```
+
+**Nota:** La URI de MongoDB Atlas ya está configurada. No necesitas cambiar nada.
+
+---
+
+### 4. Reconstruir las Imágenes de Docker
 
 ```bash
 # Reconstruir las imágenes con los nuevos cambios
@@ -49,7 +71,7 @@ docker-compose build --no-cache
 
 ---
 
-### 4. Levantar los Servicios Actualizados
+### 5. Levantar los Servicios Actualizados
 
 ```bash
 # Iniciar todos los servicios
@@ -63,13 +85,13 @@ docker-compose logs -f
 
 ---
 
-### 5. Verificar que Todo Funciona
+### 6. Verificar que Todo Funciona
 
 Abre tu navegador y verifica:
 
 - ✅ **Frontend:** http://localhost:5173
 - ✅ **Backend:** http://localhost:3000/api/surveys
-- ✅ **MongoDB:** Conectado en puerto 27017
+- ✅ **MongoDB Atlas:** Conectado a la nube (no hay puerto local)
 
 ---
 
@@ -124,8 +146,27 @@ Estas dependencias se instalan automáticamente al reconstruir las imágenes de 
 
 ## 🗄️ Cambios en la Base de Datos
 
-### Estructura de Datos
-Los datos existentes en MongoDB **son compatibles** con la nueva versión. No se requiere migración.
+### ⚠️ CAMBIO IMPORTANTE: MongoDB Atlas
+
+**Antes:** MongoDB local en Docker (puerto 27017)  
+**Ahora:** MongoDB Atlas en la nube
+
+### Migración de Datos
+
+Si tenías datos en MongoDB local y quieres conservarlos:
+
+```bash
+# 1. Exportar datos del MongoDB local (antes de actualizar)
+docker-compose exec mongodb mongodump --db surveyjs_db --out /data/backup
+
+# 2. Copiar el backup a tu máquina
+docker cp surveyjs-mongodb:/data/backup ./mongodb_backup
+
+# 3. Restaurar en MongoDB Atlas (después de actualizar)
+mongorestore --uri="mongodb+srv://desarrollador_db_user:WH9djZnzVqHa6dl5@cluster0.4rfwro1.mongodb.net/surveyjs_db" ./mongodb_backup/surveyjs_db
+```
+
+**Nota:** Si no tenías datos importantes, puedes omitir este paso.
 
 ### Datos de Prueba
 Si quieres probar las nuevas funcionalidades, puedes crear registros de prueba:
@@ -162,18 +203,25 @@ docker-compose build --no-cache
 docker-compose up -d
 ```
 
-### Problema 3: Error de conexión a MongoDB
+### Problema 3: Error de conexión a MongoDB Atlas
 
 ```bash
-# Verificar que MongoDB está corriendo
-docker-compose ps
+# Ver logs del backend para ver el error específico
+docker-compose logs backend
 
-# Ver logs de MongoDB
-docker-compose logs mongodb
+# Verificar que el archivo .env existe y tiene la URI correcta
+cat backend/.env
 
-# Reiniciar solo MongoDB
-docker-compose restart mongodb
+# Verificar conectividad a MongoDB Atlas
+ping cluster0.4rfwro1.mongodb.net
+
+# Si hay error de autenticación, verifica las credenciales en .env
 ```
+
+**Errores comunes:**
+- `MongoServerError: bad auth` - Credenciales incorrectas
+- `MongoNetworkError` - Problema de red o firewall
+- `ENOTFOUND` - URI incorrecta o sin conexión a internet
 
 ### Problema 4: Frontend no carga
 
@@ -290,9 +338,17 @@ Si encuentras algún problema durante la actualización:
 Para usuarios experimentados, estos son los comandos esenciales:
 
 ```bash
-# Actualización rápida (conservando datos)
-docker-compose down
+# Actualización rápida
+docker-compose down -v
 git pull origin main
+
+# Configurar MongoDB Atlas
+cd backend
+cp .env.example .env
+# Editar .env si es necesario (la URI ya está configurada)
+cd ..
+
+# Reconstruir y levantar
 docker-compose build --no-cache
 docker-compose up -d
 
@@ -305,6 +361,11 @@ docker-compose logs -f
 ---
 
 ## ✅ Cambios en Archivos Clave
+
+### Docker y Configuración
+- `docker-compose.yml` - **MODIFICADO:** Removido servicio MongoDB local, ahora usa Atlas
+- `backend/.env.example` - **MODIFICADO:** URI de MongoDB Atlas
+- `backend/.env` - **NUEVO:** Debes crearlo con las credenciales de Atlas
 
 ### Backend
 - `backend/src/controllers/survey.controller.js` - Nuevas funciones de generación de PPTX

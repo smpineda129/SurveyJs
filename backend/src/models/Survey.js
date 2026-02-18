@@ -2,6 +2,12 @@ import mongoose from 'mongoose';
 
 const surveySchema = new mongoose.Schema(
   {
+    formType: {
+      type: String,
+      enum: ['entidades_publicas', 'mgda', 'entidades_privadas'],
+      required: true,
+      description: 'Tipo de formulario diligenciado'
+    },
     surveyData: {
       type: mongoose.Schema.Types.Mixed,
       required: true,
@@ -39,6 +45,7 @@ const surveySchema = new mongoose.Schema(
 );
 
 // Índices para optimizar búsquedas
+surveySchema.index({ formType: 1 });
 surveySchema.index({ status: 1 });
 surveySchema.index({ createdAt: -1 });
 surveySchema.index({ completedAt: -1 });

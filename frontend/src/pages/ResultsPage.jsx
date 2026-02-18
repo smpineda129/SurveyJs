@@ -15,8 +15,6 @@ import {
   Chip,
   IconButton,
   Tooltip,
-  Card,
-  CardContent,
   Grid,
   Dialog,
   DialogTitle,
@@ -26,10 +24,45 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import SlideshowIcon from '@mui/icons-material/Slideshow';
 import DescriptionIcon from '@mui/icons-material/Description';
 import { Button } from '@mui/material';
 import { surveyAPI } from '../services/api';
+import entidadesPublicasConfig from '../config/EntidadesPublicasConfig';
+import mgdaConfig from '../config/MGMAconfig';
+import entidadesPrivadasConfig from '../config/surveyConfig';
+
+const FORM_TYPE_LABELS = {
+  entidades_publicas: 'Entidades Públicas',
+  mgda: 'MGDA',
+  entidades_privadas: 'Entidades Privadas',
+};
+
+const FORM_CONFIGS = {
+  entidades_publicas: entidadesPublicasConfig,
+  mgda: mgdaConfig,
+  entidades_privadas: entidadesPrivadasConfig,
+};
+
+const extractElements = (elements = []) => {
+  const fields = [];
+  for (const el of elements) {
+    if (el.type === 'html') continue;
+    if (el.type === 'panel') {
+      fields.push(...extractElements(el.elements));
+    } else if (el.name) {
+      fields.push({ name: el.name, title: el.title || el.name });
+    }
+  }
+  return fields;
+};
+
+const getPageStructure = (config) => {
+  if (!config || !config.pages) return [];
+  return config.pages.map((page) => ({
+    pageTitle: page.title || page.name,
+    fields: extractElements(page.elements),
+  }));
+};
 
 function ResultsPage() {
   const [surveys, setSurveys] = useState([]);
@@ -38,6 +71,7 @@ function ResultsPage() {
   const [error, setError] = useState(null);
   const [selectedSurvey, setSelectedSurvey] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
+  const [filterType, setFilterType] = useState('all');
 
   const fetchData = async () => {
     setLoading(true);
@@ -82,61 +116,6 @@ function ResultsPage() {
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setSelectedSurvey(null);
-  };
-
-  const renderFieldValue = (key, value) => {
-    if (Array.isArray(value)) {
-      return value.join(', ');
-    }
-    if (typeof value === 'boolean') {
-      return value ? 'Sí' : 'No';
-    }
-    if (value === null || value === undefined || value === '') {
-      return '-';
-    }
-    return String(value);
-  };
-
-  const getFieldLabel = (key) => {
-    const labels = {
-      firstName: 'Nombre',
-      lastName: 'Apellido',
-      age: 'Edad',
-      gender: 'Género',
-      email: 'Correo Electrónico',
-      phone: 'Teléfono',
-      address: 'Dirección',
-      city: 'Ciudad',
-      country: 'País',
-      interests: 'Áreas de Interés',
-      contactPreference: 'Preferencia de Contacto',
-      newsletter: 'Boletín Informativo',
-      comments: 'Comentarios',
-      satisfaction: 'Satisfacción'
-    };
-    return labels[key] || key;
-  };
-
-  const handleGeneratePresentation = async () => {
-    try {
-      setLoading(true);
-      const blob = await surveyAPI.generatePresentation();
-      
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `Resultados_Formulario_${Date.now()}.pptx`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-      
-      setLoading(false);
-    } catch (err) {
-      console.error('Error generating presentation:', err);
-      setError('Error al generar la presentación. Por favor, intente nuevamente.');
-      setLoading(false);
-    }
   };
 
   const handleGenerateIndividualPresentation = async (survey) => {
@@ -185,183 +164,230 @@ function ResultsPage() {
     );
   }
 
+  const filteredSurveys = filterType === 'all'
+    ? surveys
+    : surveys.filter((s) => s.formType === filterType);
+
+  const typeCounts = Object.fromEntries(
+    Object.keys(FORM_TYPE_LABELS).map((key) => [
+      key,
+      surveys.filter((s) => s.formType === key).length,
+    ])
+  );
+
   return (
     <Container maxWidth="lg">
       <Box className="fade-in" sx={{ py: 4 }}>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            mb: 4,
-          }}
-        >
-          <Typography variant="h3" component="h1" sx={{ fontWeight: 600 }}>
-            Resultados del Formulario
+        {/* Header */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Typography variant="h4" component="h1" sx={{ fontWeight: 700 }}>
+            Resultados
           </Typography>
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<SlideshowIcon />}
-              onClick={handleGeneratePresentation}
-              disabled={loading || surveys.length === 0}
-            >
-              Generar Presentación
-            </Button>
-            <Tooltip title="Actualizar">
-              <IconButton onClick={fetchData} color="primary">
-                <RefreshIcon />
-              </IconButton>
-            </Tooltip>
-          </Box>
+          <Tooltip title="Actualizar datos">
+            <IconButton onClick={fetchData} color="primary" sx={{ bgcolor: 'primary.50', '&:hover': { bgcolor: 'primary.100' } }}>
+              <RefreshIcon />
+            </IconButton>
+          </Tooltip>
         </Box>
 
         {error && (
-          <Alert severity="error" sx={{ mb: 3 }}>
+          <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
             {error}
           </Alert>
         )}
 
-        {/* Estadísticas */}
+        {/* Stats compactas */}
         {stats && (
-          <Grid container spacing={3} sx={{ mb: 4 }}>
-            <Grid item xs={12} sm={6} md={3}>
-              <Card>
-                <CardContent>
-                  <Typography color="text.secondary" gutterBottom>
-                    Total de Respuestas
-                  </Typography>
-                  <Typography variant="h4" component="div">
-                    {stats.total}
-                  </Typography>
-                </CardContent>
-              </Card>
+          <Paper elevation={0} sx={{ p: 2.5, mb: 3, bgcolor: 'grey.50', borderRadius: 2 }}>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs={6} sm={3}>
+                <Typography variant="overline" color="text.secondary" sx={{ lineHeight: 1 }}>
+                  Total
+                </Typography>
+                <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                  {stats.total}
+                </Typography>
+              </Grid>
+              <Grid item xs={6} sm={3}>
+                <Typography variant="overline" color="text.secondary" sx={{ lineHeight: 1 }}>
+                  Completadas
+                </Typography>
+                <Typography variant="h5" sx={{ fontWeight: 700, color: 'success.main' }}>
+                  {stats.completed}
+                </Typography>
+              </Grid>
+              <Grid item xs={6} sm={3}>
+                <Typography variant="overline" color="text.secondary" sx={{ lineHeight: 1 }}>
+                  Borradores
+                </Typography>
+                <Typography variant="h5" sx={{ fontWeight: 700, color: 'warning.main' }}>
+                  {stats.draft}
+                </Typography>
+              </Grid>
+              <Grid item xs={6} sm={3}>
+                <Typography variant="overline" color="text.secondary" sx={{ lineHeight: 1 }}>
+                  Completado
+                </Typography>
+                <Typography variant="h5" sx={{ fontWeight: 700, color: 'primary.main' }}>
+                  {stats.completionRate}%
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <Card>
-                <CardContent>
-                  <Typography color="text.secondary" gutterBottom>
-                    Completadas
-                  </Typography>
-                  <Typography variant="h4" component="div" color="success.main">
-                    {stats.completed}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <Card>
-                <CardContent>
-                  <Typography color="text.secondary" gutterBottom>
-                    Borradores
-                  </Typography>
-                  <Typography variant="h4" component="div" color="warning.main">
-                    {stats.draft}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <Card>
-                <CardContent>
-                  <Typography color="text.secondary" gutterBottom>
-                    Tasa de Completado
-                  </Typography>
-                  <Typography variant="h4" component="div" color="primary.main">
-                    {stats.completionRate}%
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
+          </Paper>
         )}
 
-        {/* Tabla de Resultados */}
-        <TableContainer component={Paper} elevation={3}>
-          <Table>
+        {/* Filtros por tipo (cards clickeables) */}
+        <Grid container spacing={2} sx={{ mb: 3 }}>
+          <Grid item xs={6} sm={3}>
+            <Paper
+              elevation={0}
+              onClick={() => setFilterType('all')}
+              sx={{
+                p: 2,
+                textAlign: 'center',
+                cursor: 'pointer',
+                borderRadius: 2,
+                border: 2,
+                borderColor: filterType === 'all' ? 'primary.main' : 'transparent',
+                bgcolor: filterType === 'all' ? 'primary.50' : 'background.paper',
+                transition: 'all 0.2s',
+                '&:hover': { borderColor: 'primary.light', bgcolor: 'primary.50' },
+              }}
+            >
+              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                Todos
+              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                {surveys.length}
+              </Typography>
+            </Paper>
+          </Grid>
+          {Object.entries(FORM_TYPE_LABELS).map(([key, label]) => (
+            <Grid item xs={6} sm={3} key={key}>
+              <Paper
+                elevation={0}
+                onClick={() => setFilterType(filterType === key ? 'all' : key)}
+                sx={{
+                  p: 2,
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  borderRadius: 2,
+                  border: 2,
+                  borderColor: filterType === key ? 'primary.main' : 'transparent',
+                  bgcolor: filterType === key ? 'primary.50' : 'background.paper',
+                  transition: 'all 0.2s',
+                  '&:hover': { borderColor: 'primary.light', bgcolor: 'primary.50' },
+                }}
+              >
+                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                  {label}
+                </Typography>
+                <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                  {typeCounts[key]}
+                </Typography>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
+
+        {/* Tabla */}
+        <TableContainer component={Paper} elevation={0} sx={{ border: 1, borderColor: 'divider', borderRadius: 2 }}>
+          <Table size="small">
             <TableHead>
-              <TableRow sx={{ backgroundColor: 'primary.main' }}>
-                <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
-                  ID
+              <TableRow sx={{ bgcolor: 'grey.50' }}>
+                <TableCell sx={{ fontWeight: 700, color: 'text.secondary', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                  Entidad
                 </TableCell>
-                <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
+                <TableCell sx={{ fontWeight: 700, color: 'text.secondary', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                  Tipo
+                </TableCell>
+                <TableCell sx={{ fontWeight: 700, color: 'text.secondary', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: 0.5 }}>
                   Estado
                 </TableCell>
-                <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
-                  Fecha de Creación
+                <TableCell sx={{ fontWeight: 700, color: 'text.secondary', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                  Fecha
                 </TableCell>
-                <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
-                  Fecha de Completado
-                </TableCell>
-                <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="right">
+                <TableCell sx={{ fontWeight: 700, color: 'text.secondary', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: 0.5 }} align="right">
                   Acciones
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {surveys.length === 0 ? (
+              {filteredSurveys.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} align="center">
-                    <Typography variant="body1" color="text.secondary" sx={{ py: 4 }}>
+                  <TableCell colSpan={5} align="center" sx={{ py: 6 }}>
+                    <Typography variant="body2" color="text.secondary">
                       No hay resultados disponibles
                     </Typography>
                   </TableCell>
                 </TableRow>
               ) : (
-                surveys.map((survey) => (
+                filteredSurveys.map((survey) => (
                   <TableRow
                     key={survey._id}
-                    sx={{
-                      '&:hover': { backgroundColor: 'action.hover' },
-                    }}
+                    sx={{ '&:hover': { bgcolor: 'action.hover' }, '&:last-child td': { borderBottom: 0 } }}
                   >
                     <TableCell>
-                      <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-                        {survey._id.substring(0, 8)}...
+                      <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                        {survey.surveyData?.nombre_entidad || survey.surveyData?.NOMBRE_ENTIDAD || survey._id.substring(0, 8) + '...'}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {formatDate(survey.createdAt)}
                       </Typography>
                     </TableCell>
                     <TableCell>
                       <Chip
-                        label={survey.status}
-                        color={survey.status === 'completed' ? 'success' : 'warning'}
+                        label={FORM_TYPE_LABELS[survey.formType] || survey.formType}
                         size="small"
+                        sx={{
+                          fontWeight: 600,
+                          fontSize: '0.7rem',
+                          bgcolor: survey.formType === 'entidades_publicas' ? '#e3f2fd'
+                            : survey.formType === 'mgda' ? '#f3e5f5'
+                            : '#e8f5e9',
+                          color: survey.formType === 'entidades_publicas' ? '#1565c0'
+                            : survey.formType === 'mgda' ? '#7b1fa2'
+                            : '#2e7d32',
+                        }}
                       />
                     </TableCell>
-                    <TableCell>{formatDate(survey.createdAt)}</TableCell>
                     <TableCell>
-                      {survey.completedAt
-                        ? formatDate(survey.completedAt)
-                        : '-'}
+                      <Chip
+                        label={survey.status === 'completed' ? 'Completado' : 'Borrador'}
+                        size="small"
+                        sx={{
+                          fontWeight: 600,
+                          fontSize: '0.7rem',
+                          bgcolor: survey.status === 'completed' ? '#e8f5e9' : '#fff3e0',
+                          color: survey.status === 'completed' ? '#2e7d32' : '#e65100',
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">
+                        {survey.completedAt ? formatDate(survey.completedAt) : '-'}
+                      </Typography>
                     </TableCell>
                     <TableCell align="right">
-                      <Tooltip title="Ver detalles">
-                        <IconButton
-                          size="small"
-                          onClick={() => handleView(survey)}
-                          color="primary"
-                        >
-                          <VisibilityIcon />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Generar Presentación">
-                        <IconButton
-                          size="small"
-                          onClick={() => handleGenerateIndividualPresentation(survey)}
-                          color="secondary"
-                        >
-                          <DescriptionIcon />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Eliminar">
-                        <IconButton
-                          size="small"
-                          onClick={() => handleDelete(survey._id)}
-                          color="error"
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </Tooltip>
+                      <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 0.5 }}>
+                        <Tooltip title="Ver detalles">
+                          <IconButton size="small" onClick={() => handleView(survey)}>
+                            <VisibilityIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                        {survey.formType === 'entidades_privadas' && (
+                          <Tooltip title="Generar Presentación">
+                            <IconButton size="small" onClick={() => handleGenerateIndividualPresentation(survey)} color="primary">
+                              <DescriptionIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                        <Tooltip title="Eliminar">
+                          <IconButton size="small" onClick={() => handleDelete(survey._id)} sx={{ color: 'error.light', '&:hover': { color: 'error.main' } }}>
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))
@@ -388,213 +414,103 @@ function ResultsPage() {
             )}
           </DialogTitle>
           <DialogContent dividers>
-            {selectedSurvey && (
-              <Box>
-                {/* Información de la Entidad */}
-                <Typography variant="h6" sx={{ mb: 2, color: 'primary.main', fontWeight: 600 }}>
-                  Información de la Entidad
-                </Typography>
-                <Grid container spacing={2} sx={{ mb: 3 }}>
-                  {[
-                    { key: 'nombre_entidad', label: 'Nombre de la Entidad' },
-                    { key: 'nivel', label: 'Nivel' },
-                    { key: 'sector', label: 'Sector' },
-                    { key: 'caracter', label: 'Carácter' },
-                    { key: 'categoria', label: 'Categoría' },
-                    { key: 'organismo', label: 'Organismo' },
-                    { key: 'rama', label: 'Rama' },
-                    { key: 'municipio', label: 'Municipio' },
-                    { key: 'departamento', label: 'Departamento' },
-                    { key: 'direccion', label: 'Dirección' },
-                    { key: 'telefono', label: 'Teléfono' },
-                    { key: 'fax', label: 'Fax' },
-                    { key: 'correo', label: 'Correo Electrónico' },
-                    { key: 'web', label: 'Sitio Web' },
-                    { key: 'fecha_creacion', label: 'Fecha de Creación' },
-                    { key: 'acto_legal', label: 'Acto Legal de Creación' },
-                    { key: 'numero_dependencias', label: 'Número de Dependencias' },
-                    { key: 'tiene_sucursales', label: '¿Tiene Sucursales?' }
-                  ].map(({ key, label }) => (
-                    selectedSurvey.surveyData[key] !== undefined && selectedSurvey.surveyData[key] !== '' && (
-                      <Grid item xs={12} sm={6} key={key}>
-                        <Paper elevation={1} sx={{ p: 2 }}>
-                          <Typography variant="caption" color="text.secondary">
-                            {label}
-                          </Typography>
-                          <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                            {renderFieldValue(key, selectedSurvey.surveyData[key])}
-                          </Typography>
-                        </Paper>
-                      </Grid>
-                    )
-                  ))}
-                </Grid>
+            {selectedSurvey && (() => {
+              const config = FORM_CONFIGS[selectedSurvey.formType];
+              const pages = getPageStructure(config);
+              const data = selectedSurvey.surveyData || {};
 
-                {/* Representante Legal */}
-                <Typography variant="h6" sx={{ mb: 2, color: 'primary.main', fontWeight: 600 }}>
-                  Representante Legal
-                </Typography>
-                <Grid container spacing={2} sx={{ mb: 3 }}>
-                  {[
-                    { key: 'rep_nombre', label: 'Nombre' },
-                    { key: 'rep_cargo', label: 'Cargo' },
-                    { key: 'rep_profesion', label: 'Profesión' }
-                  ].map(({ key, label }) => (
-                    selectedSurvey.surveyData[key] !== undefined && selectedSurvey.surveyData[key] !== '' && (
-                      <Grid item xs={12} sm={6} key={key}>
-                        <Paper elevation={1} sx={{ p: 2 }}>
-                          <Typography variant="caption" color="text.secondary">
-                            {label}
-                          </Typography>
-                          <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                            {renderFieldValue(key, selectedSurvey.surveyData[key])}
-                          </Typography>
-                        </Paper>
-                      </Grid>
-                    )
-                  ))}
-                </Grid>
+              return (
+                <Box>
+                  <Chip
+                    label={FORM_TYPE_LABELS[selectedSurvey.formType] || selectedSurvey.formType}
+                    color="primary"
+                    sx={{ mb: 3 }}
+                  />
 
-                {/* Diligenciador */}
-                <Typography variant="h6" sx={{ mb: 2, color: 'primary.main', fontWeight: 600 }}>
-                  Diligenciador
-                </Typography>
-                <Grid container spacing={2} sx={{ mb: 3 }}>
-                  {[
-                    { key: 'dil_nombre', label: 'Nombre' },
-                    { key: 'dil_tiempo', label: 'Tiempo en el Cargo' }
-                  ].map(({ key, label }) => (
-                    selectedSurvey.surveyData[key] !== undefined && selectedSurvey.surveyData[key] !== '' && (
-                      <Grid item xs={12} sm={6} key={key}>
-                        <Paper elevation={1} sx={{ p: 2 }}>
-                          <Typography variant="caption" color="text.secondary">
-                            {label}
-                          </Typography>
-                          <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                            {renderFieldValue(key, selectedSurvey.surveyData[key])}
-                          </Typography>
-                        </Paper>
-                      </Grid>
-                    )
-                  ))}
-                </Grid>
+                  {pages.map((page, pageIdx) => {
+                    const fieldsWithValue = page.fields.filter(
+                      (f) => data[f.name] !== undefined && data[f.name] !== ''
+                    );
+                    if (fieldsWithValue.length === 0) return null;
+                    return (
+                      <Box key={pageIdx} sx={{ mb: 4 }}>
+                        <Typography
+                          variant="subtitle1"
+                          sx={{
+                            mb: 2,
+                            color: 'primary.main',
+                            fontWeight: 600,
+                            borderBottom: 1,
+                            borderColor: 'divider',
+                            pb: 1,
+                          }}
+                        >
+                          {page.pageTitle}
+                        </Typography>
+                        <Grid container spacing={2}>
+                          {fieldsWithValue.map((field) => {
+                            const value = data[field.name];
+                            const displayValue = Array.isArray(value)
+                              ? value.join(', ')
+                              : typeof value === 'boolean'
+                              ? value ? 'Sí' : 'No'
+                              : String(value);
+                            const isNumeric = typeof value === 'number';
+                            const bgColor = value === 'Cumple'
+                              ? '#e8f5e9'
+                              : value === 'Parcial'
+                              ? '#fff3e0'
+                              : value === 'No cumple'
+                              ? '#ffebee'
+                              : undefined;
+                            return (
+                              <Grid item xs={12} sm={6} key={field.name}>
+                                <Paper
+                                  elevation={1}
+                                  sx={{
+                                    p: 2,
+                                    ...(bgColor && { bgcolor: bgColor }),
+                                  }}
+                                >
+                                  <Typography
+                                    variant="caption"
+                                    color="text.secondary"
+                                    sx={{ fontWeight: 600, display: 'block', mb: 0.5 }}
+                                  >
+                                    {field.title}
+                                  </Typography>
+                                  <Typography
+                                    variant="body2"
+                                    sx={{ fontWeight: 500, whiteSpace: 'pre-wrap' }}
+                                  >
+                                    {isNumeric ? `${displayValue} puntos` : displayValue}
+                                  </Typography>
+                                </Paper>
+                              </Grid>
+                            );
+                          })}
+                        </Grid>
+                      </Box>
+                    );
+                  })}
 
-                {/* Aspectos Administrativos */}
-                {Object.keys(selectedSurvey.surveyData).some(k => k.startsWith('1_') || k.startsWith('2_') || k.startsWith('3_') || k.startsWith('4_')) && (
-                  <>
-                    <Typography variant="h6" sx={{ mb: 2, color: 'primary.main', fontWeight: 600 }}>
-                      I. Aspectos Administrativos
-                    </Typography>
-                    <Grid container spacing={2} sx={{ mb: 3 }}>
-                      {Object.keys(selectedSurvey.surveyData)
-                        .filter(key => (key.startsWith('1_') || key.startsWith('2_') || key.startsWith('3_') || key.startsWith('4_')) && 
-                                      !key.includes('_detail') && !key.includes('_obs') && !key.includes('_info'))
-                        .sort()
-                        .map(key => (
-                          <Grid item xs={12} sm={6} md={4} key={key}>
-                            <Paper elevation={1} sx={{ p: 2, bgcolor: selectedSurvey.surveyData[key] === 'Cumple' ? '#e8f5e9' : selectedSurvey.surveyData[key] === 'Parcial' ? '#fff3e0' : '#ffebee' }}>
-                              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-                                {key}
-                              </Typography>
-                              <Typography variant="body1" sx={{ fontWeight: 500, mb: 1 }}>
-                                {selectedSurvey.surveyData[key]}
-                              </Typography>
-                              {selectedSurvey.surveyData[`${key}_detail`] && (
-                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
-                                  Detalle: {selectedSurvey.surveyData[`${key}_detail`]}
-                                </Typography>
-                              )}
-                              {selectedSurvey.surveyData[`${key}_info`] && (
-                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
-                                  Info: {selectedSurvey.surveyData[`${key}_info`]}
-                                </Typography>
-                              )}
-                            </Paper>
-                          </Grid>
-                        ))}
-                    </Grid>
-                  </>
-                )}
-
-                {/* Función Archivística */}
-                {Object.keys(selectedSurvey.surveyData).some(k => k.startsWith('5_') || k.startsWith('6_') || k.startsWith('7_')) && (
-                  <>
-                    <Typography variant="h6" sx={{ mb: 2, color: 'primary.main', fontWeight: 600 }}>
-                      II. Aspectos de Función Archivística
-                    </Typography>
-                    <Grid container spacing={2} sx={{ mb: 3 }}>
-                      {Object.keys(selectedSurvey.surveyData)
-                        .filter(key => (key.startsWith('5_') || key.startsWith('6_') || key.startsWith('7_')) && 
-                                      !key.includes('_detail') && !key.includes('_obs') && !key.includes('_info'))
-                        .sort()
-                        .map(key => (
-                          <Grid item xs={12} sm={6} md={4} key={key}>
-                            <Paper elevation={1} sx={{ p: 2, bgcolor: selectedSurvey.surveyData[key] === 'Cumple' ? '#e8f5e9' : selectedSurvey.surveyData[key] === 'Parcial' ? '#fff3e0' : '#ffebee' }}>
-                              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-                                {key}
-                              </Typography>
-                              <Typography variant="body1" sx={{ fontWeight: 500, mb: 1 }}>
-                                {selectedSurvey.surveyData[key]}
-                              </Typography>
-                              {selectedSurvey.surveyData[`${key}_detail`] && (
-                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
-                                  Detalle: {selectedSurvey.surveyData[`${key}_detail`]}
-                                </Typography>
-                              )}
-                            </Paper>
-                          </Grid>
-                        ))}
-                    </Grid>
-                  </>
-                )}
-
-                {/* Preservación */}
-                {Object.keys(selectedSurvey.surveyData).some(k => k.startsWith('8_')) && (
-                  <>
-                    <Typography variant="h6" sx={{ mb: 2, color: 'primary.main', fontWeight: 600 }}>
-                      III. Aspectos de Preservación
-                    </Typography>
-                    <Grid container spacing={2} sx={{ mb: 3 }}>
-                      {Object.keys(selectedSurvey.surveyData)
-                        .filter(key => key.startsWith('8_') && !key.includes('_detail') && !key.includes('_obs') && !key.includes('_info'))
-                        .sort()
-                        .map(key => (
-                          <Grid item xs={12} sm={6} md={4} key={key}>
-                            <Paper elevation={1} sx={{ p: 2, bgcolor: selectedSurvey.surveyData[key] === 'Cumple' ? '#e8f5e9' : selectedSurvey.surveyData[key] === 'Parcial' ? '#fff3e0' : '#ffebee' }}>
-                              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-                                {key}
-                              </Typography>
-                              <Typography variant="body1" sx={{ fontWeight: 500, mb: 1 }}>
-                                {selectedSurvey.surveyData[key]}
-                              </Typography>
-                              {selectedSurvey.surveyData[`${key}_detail`] && (
-                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
-                                  Detalle: {selectedSurvey.surveyData[`${key}_detail`]}
-                                </Typography>
-                              )}
-                            </Paper>
-                          </Grid>
-                        ))}
-                    </Grid>
-                  </>
-                )}
-
-                {/* Metadata */}
-                <Box sx={{ mt: 3, pt: 2, borderTop: 1, borderColor: 'divider' }}>
-                  <Typography variant="caption" color="text.secondary" display="block">
-                    Fecha de creación: {formatDate(selectedSurvey.createdAt)}
-                  </Typography>
-                  {selectedSurvey.completedAt && (
+                  {/* Metadata */}
+                  <Box sx={{ mt: 3, pt: 2, borderTop: 1, borderColor: 'divider' }}>
                     <Typography variant="caption" color="text.secondary" display="block">
-                      Fecha de completado: {formatDate(selectedSurvey.completedAt)}
+                      Fecha de creación: {formatDate(selectedSurvey.createdAt)}
                     </Typography>
-                  )}
-                  <Typography variant="caption" color="text.secondary" display="block">
-                    Estado: {selectedSurvey.status}
-                  </Typography>
+                    {selectedSurvey.completedAt && (
+                      <Typography variant="caption" color="text.secondary" display="block">
+                        Fecha de completado: {formatDate(selectedSurvey.completedAt)}
+                      </Typography>
+                    )}
+                    <Typography variant="caption" color="text.secondary" display="block">
+                      Estado: {selectedSurvey.status}
+                    </Typography>
+                  </Box>
                 </Box>
-              </Box>
-            )}
+              );
+            })()}
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDialog} color="primary">

@@ -4,15 +4,14 @@ import { Survey } from 'survey-react-ui';
 import { Box, Paper, Alert, CircularProgress } from '@mui/material';
 import 'survey-core/defaultV2.min.css';
 import { surveyAPI } from '../../services/api';
-import surveyJson from '../../config/surveyConfig';
 
-function SurveyComponent({ onComplete }) {
+function SurveyComponent({ surveyConfig, formType, onComplete }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
   // Crear modelo de SurveyJS
-  const survey = new Model(surveyJson);
+  const survey = new Model(surveyConfig);
 
   // Configurar tema
   survey.applyTheme({
@@ -31,7 +30,7 @@ function SurveyComponent({ onComplete }) {
       console.log('Survey Data:', surveyData);
 
       // Enviar datos al backend
-      const response = await surveyAPI.create(surveyData, 'completed');
+      const response = await surveyAPI.create(surveyData, 'completed', formType);
       
       console.log('Response:', response);
       setSuccess(true);
@@ -55,7 +54,7 @@ function SurveyComponent({ onComplete }) {
     } finally {
       setLoading(false);
     }
-  }, [onComplete]);
+  }, [onComplete, formType]);
 
   // Manejar cambios parciales (guardar como draft)
   const handleValueChanged = useCallback((sender) => {

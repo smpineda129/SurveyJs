@@ -21,8 +21,9 @@ api.interceptors.response.use(
 // Survey API
 export const surveyAPI = {
   // Crear nueva respuesta de formulario
-  create: async (surveyData, status = 'completed') => {
+  create: async (surveyData, status = 'completed', formType) => {
     const response = await api.post('/surveys', {
+      formType,
       surveyData,
       status,
       metadata: {
@@ -62,14 +63,6 @@ export const surveyAPI = {
   // Obtener estadísticas
   getStats: async () => {
     const response = await api.get('/surveys/stats');
-    return response.data;
-  },
-
-  // Generar presentación PPTX
-  generatePresentation: async () => {
-    const response = await api.get('/surveys/presentation', {
-      responseType: 'blob'
-    });
     return response.data;
   },
 

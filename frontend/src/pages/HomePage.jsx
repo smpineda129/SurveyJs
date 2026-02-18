@@ -1,41 +1,38 @@
-import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Typography,
-  Button,
   Card,
   CardContent,
   Grid,
   Container,
+  Chip,
 } from '@mui/material';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import SpeedIcon from '@mui/icons-material/Speed';
-import SecurityIcon from '@mui/icons-material/Security';
+import DescriptionIcon from '@mui/icons-material/Description';
+import BusinessIcon from '@mui/icons-material/Business';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 
 function HomePage() {
-  const navigate = useNavigate();
-
-  const features = [
+  const formularios = [
     {
-      icon: <AssignmentIcon sx={{ fontSize: 48, color: 'primary.main' }} />,
-      title: 'Multi-Step Form',
-      description: 'Formulario dividido en pasos para mejor experiencia de usuario',
+      icon: <AccountBalanceIcon sx={{ fontSize: 56, color: 'primary.main' }} />,
+      title: 'Diagnóstico Integral de Archivos – Entidades Públicas',
+      description:
+        'Instrumento archivístico para evaluar el estado de los archivos en entidades del sector público, abarcando identificación, infraestructura, gestión documental y conservación.',
+      config: 'EntidadesPublicasConfig',
     },
     {
-      icon: <CheckCircleIcon sx={{ fontSize: 48, color: 'primary.main' }} />,
-      title: 'Validación Robusta',
-      description: 'Validación en tiempo real de todos los campos del formulario',
+      icon: <DescriptionIcon sx={{ fontSize: 56, color: 'primary.main' }} />,
+      title: 'Modelo de Gestión Documental y Administración de Archivos (MGDA)',
+      description:
+        'Formulario orientado a la implementación del Modelo de Gestión Documental y Administración de Archivos, incluyendo datos de la entidad y criterios de evaluación.',
+      config: 'MGMAconfig',
     },
     {
-      icon: <SpeedIcon sx={{ fontSize: 48, color: 'primary.main' }} />,
-      title: 'Alto Rendimiento',
-      description: 'Optimizado para velocidad y eficiencia con React y Vite',
-    },
-    {
-      icon: <SecurityIcon sx={{ fontSize: 48, color: 'primary.main' }} />,
-      title: 'Seguro y Escalable',
-      description: 'Arquitectura modular lista para integración y escalabilidad',
+      icon: <BusinessIcon sx={{ fontSize: 56, color: 'primary.main' }} />,
+      title: 'Diagnóstico Integral de Archivos – Entidades Privadas',
+      description:
+        'Instrumento archivístico dirigido a entidades del sector privado para diagnosticar el estado de sus archivos, su organización y prácticas de gestión documental.',
+      config: 'surveyConfig',
     },
   ];
 
@@ -51,7 +48,7 @@ function HomePage() {
           }}
         >
           <Typography
-            variant="h2"
+            variant="h3"
             component="h1"
             gutterBottom
             sx={{
@@ -62,38 +59,28 @@ function HomePage() {
               WebkitTextFillColor: 'transparent',
             }}
           >
-            SurveyJS Multi-Step Form
+            Instrumentos Archivísticos
           </Typography>
+          <Chip
+            label="Gestión Documental Inteligente — GDI"
+            color="primary"
+            variant="outlined"
+            sx={{ mb: 3, fontSize: '0.95rem', py: 2.5, px: 1 }}
+          />
           <Typography
-            variant="h5"
+            variant="h6"
             color="text.secondary"
             paragraph
-            sx={{ mb: 4 }}
+            sx={{ mb: 2, maxWidth: 720, mx: 'auto' }}
           >
-            Aplicativo profesional modular con formulario multi-step
+            Plataforma para el diligenciamiento de instrumentos archivísticos
+            requeridos en los procesos de gestión documental. Seleccione uno de
+            los formularios disponibles para comenzar.
           </Typography>
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
-            <Button
-              variant="contained"
-              size="large"
-              onClick={() => navigate('/survey')}
-              sx={{ px: 4, py: 1.5 }}
-            >
-              Comenzar Formulario
-            </Button>
-            <Button
-              variant="outlined"
-              size="large"
-              onClick={() => navigate('/results')}
-              sx={{ px: 4, py: 1.5 }}
-            >
-              Ver Resultados
-            </Button>
-          </Box>
         </Box>
 
-        {/* Features Section */}
-        <Box sx={{ py: 6 }}>
+        {/* Formularios Section */}
+        <Box sx={{ py: 4 }}>
           <Typography
             variant="h4"
             component="h2"
@@ -101,11 +88,11 @@ function HomePage() {
             gutterBottom
             sx={{ mb: 6, fontWeight: 600 }}
           >
-            Características Principales
+            Formularios Disponibles
           </Typography>
-          <Grid container spacing={4}>
-            {features.map((feature, index) => (
-              <Grid item xs={12} sm={6} md={3} key={index}>
+          <Grid container spacing={4} justifyContent="center">
+            {formularios.map((form, index) => (
+              <Grid item xs={12} sm={6} md={4} key={index}>
                 <Card
                   sx={{
                     height: '100%',
@@ -113,7 +100,7 @@ function HomePage() {
                     flexDirection: 'column',
                     alignItems: 'center',
                     textAlign: 'center',
-                    p: 2,
+                    p: 3,
                     transition: 'transform 0.2s, box-shadow 0.2s',
                     '&:hover': {
                       transform: 'translateY(-8px)',
@@ -122,90 +109,23 @@ function HomePage() {
                   }}
                 >
                   <CardContent>
-                    <Box sx={{ mb: 2 }}>{feature.icon}</Box>
-                    <Typography variant="h6" component="h3" gutterBottom>
-                      {feature.title}
+                    <Box sx={{ mb: 2 }}>{form.icon}</Box>
+                    <Typography
+                      variant="h6"
+                      component="h3"
+                      gutterBottom
+                      sx={{ fontWeight: 600 }}
+                    >
+                      {form.title}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {feature.description}
+                      {form.description}
                     </Typography>
                   </CardContent>
                 </Card>
               </Grid>
             ))}
           </Grid>
-        </Box>
-
-        {/* Tech Stack Section */}
-        <Box
-          sx={{
-            py: 6,
-            px: 4,
-            backgroundColor: 'background.paper',
-            borderRadius: 2,
-            mt: 4,
-          }}
-        >
-          <Typography
-            variant="h4"
-            component="h2"
-            textAlign="center"
-            gutterBottom
-            sx={{ mb: 4, fontWeight: 600 }}
-          >
-            Stack Tecnológico
-          </Typography>
-          <Grid container spacing={2} justifyContent="center">
-            {[
-              'React 18',
-              'Vite',
-              'SurveyJS',
-              'Material UI',
-              'Tailwind CSS',
-              'Node.js',
-              'Express',
-              'MongoDB',
-              'Docker',
-            ].map((tech, index) => (
-              <Grid item key={index}>
-                <Box
-                  sx={{
-                    px: 3,
-                    py: 1.5,
-                    backgroundColor: 'primary.main',
-                    color: 'white',
-                    borderRadius: 2,
-                    fontWeight: 500,
-                  }}
-                >
-                  {tech}
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-
-        {/* CTA Section */}
-        <Box
-          sx={{
-            textAlign: 'center',
-            py: 8,
-          }}
-        >
-          <Typography variant="h5" gutterBottom>
-            ¿Listo para comenzar?
-          </Typography>
-          <Typography variant="body1" color="text.secondary" paragraph>
-            Complete nuestro formulario multi-step en pocos minutos
-          </Typography>
-          <Button
-            variant="contained"
-            size="large"
-            onClick={() => navigate('/survey')}
-            sx={{ px: 6, py: 1.5, mt: 2 }}
-          >
-            Iniciar Ahora
-          </Button>
         </Box>
       </Box>
     </Container>

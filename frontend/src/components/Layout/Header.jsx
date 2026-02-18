@@ -1,6 +1,6 @@
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import AssignmentIcon from '@mui/icons-material/Assignment';
+import Logo from '../../public/Logo.png';
 
 function Header() {
   const navigate = useNavigate();
@@ -8,16 +8,8 @@ function Header() {
 
   return (
     <AppBar position="static" elevation={2}>
-      <Toolbar>
-        <AssignmentIcon sx={{ mr: 2 }} />
-        <Typography
-          variant="h6"
-          component="div"
-          sx={{ flexGrow: 1, cursor: 'pointer' }}
-          onClick={() => navigate('/')}
-        >
-          SurveyJS Multi-Step Form
-        </Typography>
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Box component="img" src={Logo} alt="GDI Logo" sx={{ height: 40, mr: 2, cursor: 'pointer' }} onClick={() => navigate('/')} />
         <Box sx={{ display: 'flex', gap: 2 }}>
           <Button
             color="inherit"

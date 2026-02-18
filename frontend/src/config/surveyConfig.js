@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Configuración base del formulario multi-step con SurveyJS
  * Esta configuración puede ser modificada para agregar más pasos y campos
  */
@@ -47,7 +47,7 @@ export const surveyJson = {
           type: "text", 
           name: "organismo", 
           title: "Organismo al que pertenece", 
-          isRequired: true,
+          isRequired: false,
           maxLength: 255
         },
         {
@@ -70,7 +70,8 @@ export const surveyJson = {
           type: "text", 
           name: "rama", 
           title: "Ubicación en la estructura del Estado (Rama)",
-          maxLength: 100
+          maxLength: 100,
+          isRequired: false
         },
         {
           type: "panel",
@@ -88,7 +89,8 @@ export const surveyJson = {
               type: "text", 
               name: "acto_legal", 
               title: "Acto legal",
-              maxLength: 255
+              maxLength: 255,
+              isRequired: true
             }
           ]
         },
@@ -101,32 +103,29 @@ export const surveyJson = {
               type: "text", 
               name: "direccion", 
               title: "Dirección",
-              maxLength: 255
+              maxLength: 255,
+              isRequired: true
             },
             { 
               type: "text", 
               name: "telefono", 
               title: "Teléfono",
               inputType: "tel",
+              isRequired: true,
               validators: [{
                 type: "regex",
                 text: "Por favor ingrese un número de teléfono válido",
-                regex: "^[0-9\\(\)\\-\\s+]*$"
+                regex: "^[0-9\\(\\)\\-\\s+]*$"
               }]
             }
           ]
         },
         { 
           type: "text", 
-          name: "fax", 
-          title: "Fax",
-          inputType: "tel"
-        },
-        { 
-          type: "text", 
           name: "correo", 
           title: "Correo electrónico",
           inputType: "email",
+          isRequired: true,
           validators: [{
             type: "email",
             text: "Por favor ingrese un correo electrónico válido"
@@ -137,6 +136,7 @@ export const surveyJson = {
           name: "web", 
           title: "Página web",
           inputType: "url",
+          isRequired: true,
           validators: [{
             type: "regex",
             text: "Por favor ingrese una URL válida (ej: https://ejemplo.com)",
@@ -153,19 +153,22 @@ export const surveyJson = {
               type: "text", 
               name: "municipio", 
               title: "Municipio",
-              maxLength: 100
+              maxLength: 100,
+              isRequired: true
             },
             { 
               type: "text", 
               name: "categoria", 
               title: "Categoría",
-              maxLength: 50
+              maxLength: 50,
+              isRequired: false
             },
             { 
               type: "text", 
               name: "departamento", 
               title: "Departamento",
-              maxLength: 100
+              maxLength: 100,
+              isRequired: true
             }
           ]
         },
@@ -184,6 +187,7 @@ export const surveyJson = {
           name: "sucursales_info",
           title: "Especifique las regiones o sucursales",
           visibleIf: "{tiene_sucursales} = 'si'",
+          isRequired: true,
           maxLength: 500,
           rows: 3
         },
@@ -192,6 +196,7 @@ export const surveyJson = {
           inputType: "number",
           name: "numero_dependencias",
           title: "Número de dependencias",
+          isRequired: true,
           min: 0,
           max: 10000,
           validators: [{
@@ -203,16 +208,36 @@ export const surveyJson = {
           title: "Número de dependencias"
         },
 
-        { type: "comment", name: "mision", title: "Misión de la entidad" },
+        { 
+          type: "comment", 
+          name: "mision", 
+          title: "Misión de la entidad",
+          isRequired: true 
+        },
 
         {
           type: "panel",
           name: "rep_legal",
           title: "Representante legal",
           elements: [
-            { type: "text", name: "rep_nombre", title: "Nombre" },
-            { type: "text", name: "rep_profesion", title: "Profesión" },
-            { type: "text", name: "rep_cargo", title: "Cargo" }
+            { 
+              type: "text", 
+              name: "rep_nombre", 
+              title: "Nombre",
+              isRequired: true 
+            },
+            { 
+              type: "text", 
+              name: "rep_profesion", 
+              title: "Profesión",
+              isRequired: true 
+            },
+            { 
+              type: "text", 
+              name: "rep_cargo", 
+              title: "Cargo",
+              isRequired: true 
+            }
           ]
         },
 
@@ -221,8 +246,18 @@ export const surveyJson = {
           name: "diligenciante",
           title: "Persona que diligencia",
           elements: [
-            { type: "text", name: "dil_nombre", title: "Nombre" },
-            { type: "text", name: "dil_tiempo", title: "Tiempo en el cargo" },
+            { 
+              type: "text", 
+              name: "dil_nombre", 
+              title: "Nombre",
+              isRequired: true 
+            },
+            { 
+              type: "text", 
+              name: "dil_tiempo", 
+              title: "Tiempo en el cargo",
+              isRequired: true 
+            },
             { type: "comment", name: "dil_obs", title: "Observaciones" }
           ]
         }
@@ -326,7 +361,7 @@ export const surveyJson = {
         { "type": "comment", "name": "2_4_2_obs", "title": "Observaciones" },
         { "type": "expression", "name": "c_2_4_2", "expression": "iif({2_4_2} = 'Cumple', 0.64, iif({2_4_2} = 'Parcial', 0.32, 0))", "visible": false },
 
-        { "type": "html", "name": "A_acuerdo_0p1_132_header", "html": "<div style='font-size:18px; font-weight:bold; margin-top:20px;'>Acuerdo 001 de 2024, art. 9.1.1.1 (0.64%)</div>" },
+        { "type": "html", "name": "A_acuo_001_132_header", "html": "<div style='font-size:18px; font-weight:bold; margin-top:20px;'>Resolución 8934 de 2014, art. 3 (2.77%)</div>" },
 
         { "type": "radiogroup", "name": "2_5_1", "title": "2.5.1 ¿Tiene la Entidad funciones relacionadas con la garantía, protección y salvaguardia de los Derechos Humanos y el Derecho Internacional Humanitario?", "choices": ["Cumple","Parcial","No cumple"] },
         { "type": "text", "name": "2_5_1_detail", "visibleIf": "{2_5_1} != 'No cumple'", "title": "Detalle" },
@@ -825,21 +860,9 @@ export const surveyJson = {
           "visible": false
         },
         {
-          "type": "comment",
-          "name": "notas_finales",
-          "title": "Notas"
-        },
-        {
           "type": "signaturepad",
           "name": "firma_responsable",
-          "title": "Firma responsable",
-          "width": 600,
-          "height": 200
-        },
-        {
-          "type": "signaturepad",
-          "name": "firma_revisor",
-          "title": "Firma revisor",
+          "title": "Firma Responsable GDI",
           "width": 600,
           "height": 200
         }
@@ -854,4 +877,44 @@ export const surveyJson = {
   completeText: "Finalizar"
 };
 
-export default surveyJson;
+const stripDetailElements = (elements) => {
+  if (!Array.isArray(elements)) return elements;
+
+  return elements
+    .filter((el) => {
+      if (!el || typeof el !== 'object') return true;
+      if (el.type === 'html' && typeof el.name === 'string' && el.name.toLowerCase().endsWith('_header')) return false;
+      if (typeof el.name === 'string' && el.name.endsWith('_detail')) return false;
+      return true;
+    })
+    .map((el) => {
+      if (!el || typeof el !== 'object') return el;
+      const next = { ...el };
+      if (Array.isArray(next.elements)) next.elements = stripDetailElements(next.elements);
+      if (Array.isArray(next.templateElements)) next.templateElements = stripDetailElements(next.templateElements);
+      if (Array.isArray(next.questions)) next.questions = stripDetailElements(next.questions);
+      if (Array.isArray(next.panels)) next.panels = stripDetailElements(next.panels);
+      return next;
+    });
+};
+
+const sanitizedSurveyJson = (() => {
+  if (!Array.isArray(surveyJson.pages) || surveyJson.pages.length <= 1) return surveyJson;
+
+  const pages = surveyJson.pages.map((page, idx) => {
+    if (idx === 0) return page;
+    if (!page || typeof page !== 'object') return page;
+    if (page.name === 'resultados_finales') return page;
+    return {
+      ...page,
+      elements: stripDetailElements(page.elements),
+    };
+  });
+
+  return {
+    ...surveyJson,
+    pages,
+  };
+})();
+
+export default sanitizedSurveyJson;

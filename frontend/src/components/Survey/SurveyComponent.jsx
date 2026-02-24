@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useRef, useMemo, useEffect } from 'react';
 import { Model } from 'survey-core';
 import { Survey } from 'survey-react-ui';
 import { Box, Paper, Alert, CircularProgress } from '@mui/material';
@@ -10,61 +10,99 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  // Crear modelo de SurveyJS
-  const survey = new Model(surveyConfig);
+  console.log('>>> SurveyComponent v5 LOADED <<<');
 
-  // Configurar tema
-  survey.applyTheme({
-    themeName: 'defaultV2',
-    colorPalette: 'light',
-    isPanelless: false,
-  });
+  // Acumulador de todos los valores capturados durante la interacción
+  const allValuesRef = useRef({});
+  // Refs para callbacks actuales (evita stale closures)
+  const onCompleteRef = useRef(onComplete);
+  const formTypeRef = useRef(formType);
+  onCompleteRef.current = onComplete;
+  formTypeRef.current = formType;
 
-  // Manejar completado del formulario
-  const handleComplete = useCallback(async (sender) => {
-    setLoading(true);
-    setError(null);
+  // Crear modelo UNA SOLA VEZ
+  const survey = useMemo(() => {
+    const s = new Model(surveyConfig);
+    s.clearInvisibleValues = 'none';
+    s.keepIncorrectValues = true;
+    s.storeOthersAsComment = false;
+    s.textUpdateMode = 'onTyping';
+    s.applyTheme({
+      themeName: 'defaultV2',
+      colorPalette: 'light',
+      isPanelless: false,
+    });
+    return s;
+  }, [surveyConfig]);
 
-    try {
-      const surveyData = sender.data;
-      console.log('Survey Data:', surveyData);
+  // Asignar eventos UNA SOLA VEZ al modelo estable
+  useEffect(() => {
+    const onValueChanged = (sender, options) => {
+      if (options.name && options.value !== undefined && options.value !== null && options.value !== '') {
+        allValuesRef.current[options.name] = options.value;
+      }
+    };
 
-      // Enviar datos al backend
-      const response = await surveyAPI.create(surveyData, 'completed', formType);
-      
-      console.log('Response:', response);
-      setSuccess(true);
+    const onPageChanging = (sender) => {
+      const page = sender.currentPage;
+      if (page && page.questions) {
+        page.questions.forEach(q => {
+          if (q.name && q.value !== undefined && q.value !== null && q.value !== '') {
+            allValuesRef.current[q.name] = q.value;
+          }
+        });
+      }
+      console.log('[PAGE] obs captured:', Object.keys(allValuesRef.current).filter(k => k.includes('_obs')).length);
+    };
 
-      // Callback opcional
-      if (onComplete) {
-        onComplete(response.data);
+    const onSurveyComplete = async (sender) => {
+      setLoading(true);
+      setError(null);
+
+      // Capturar última página antes de completar
+      const lastPage = sender.currentPage;
+      if (lastPage && lastPage.questions) {
+        lastPage.questions.forEach(q => {
+          if (q.name && q.value !== undefined && q.value !== null && q.value !== '') {
+            allValuesRef.current[q.name] = q.value;
+          }
+        });
       }
 
-      // Mostrar mensaje de éxito
-      setTimeout(() => {
-        setSuccess(false);
-      }, 5000);
+      // Merge: acumulados + sender.data (sender.data tiene prioridad para radiogroups)
+      const surveyData = { ...allValuesRef.current, ...sender.data };
+      
+      const obsKeys = Object.keys(surveyData).filter(k => k.includes('_obs'));
+      console.log('FINAL _obs keys:', obsKeys.length, obsKeys);
+      console.log('Total keys:', Object.keys(surveyData).length);
 
-    } catch (err) {
-      console.error('Error al enviar el formulario:', err);
-      setError(
-        err.response?.data?.message || 
-        'Error al enviar el formulario. Por favor, intente nuevamente.'
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [onComplete, formType]);
+      try {
+        const response = await surveyAPI.create(surveyData, 'completed', formTypeRef.current);
+        console.log('Response:', response);
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 5000);
 
-  // Manejar cambios parciales (guardar como draft)
-  const handleValueChanged = useCallback((sender) => {
-    // Aquí se puede implementar auto-guardado como draft
-    console.log('Current data:', sender.data);
-  }, []);
+        if (onCompleteRef.current) {
+          onCompleteRef.current(response.data);
+        }
+      } catch (err) {
+        console.error('Error al enviar:', err);
+        setError(err.response?.data?.message || 'Error al enviar el formulario.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Asignar eventos
-  survey.onComplete.add(handleComplete);
-  survey.onValueChanged.add(handleValueChanged);
+    survey.onValueChanged.add(onValueChanged);
+    survey.onCurrentPageChanging.add(onPageChanging);
+    survey.onComplete.add(onSurveyComplete);
+
+    return () => {
+      survey.onValueChanged.remove(onValueChanged);
+      survey.onCurrentPageChanging.remove(onPageChanging);
+      survey.onComplete.remove(onSurveyComplete);
+    };
+  }, [survey]);
 
   return (
     <Box className="fade-in">

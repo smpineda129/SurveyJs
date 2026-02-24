@@ -234,67 +234,62 @@ export const generateIndividualPresentation = async (req, res, next) => {
     // Estado porcentual general
     dynamicSlides.createEstadoPorcentual(pptx, globalResult);
     
-    // Aspectos administrativos - con hallazgos
-    const adminFindings = calculator.generateFindingsBySection('1_', 'Aspectos Administrativos');
-    adminFindings.push(...calculator.generateFindingsBySection('2_', 'Aspectos Organizacionales'));
-    adminFindings.push(...calculator.generateFindingsBySection('3_', 'Aspectos de Financiación'));
-    adminFindings.push(...calculator.generateFindingsBySection('4_', 'Aspectos de Formación'));
+    // Aspectos administrativos - gráfico + listado completo
+    const adminItems = [
+      ...calculator.generateAllItemsBySection('1_'),
+      ...calculator.generateAllItemsBySection('2_'),
+      ...calculator.generateAllItemsBySection('3_'),
+      ...calculator.generateAllItemsBySection('4_')
+    ];
     
-    if (adminFindings.length > 0) {
-      dynamicSlides.createInformeSeccion(
-        pptx,
-        'INFORME DIAGNÓSTICO DOCUMENTAL – ASPECTOS ADMINISTRATIVOS',
-        adminFindings,
-        globalResult.bySection.admin.porcentaje
-      );
-    } else {
-      dynamicSlides.createInformeConGrafico(
-        pptx,
-        'INFORME DIAGNÓSTICO DOCUMENTAL – ASPECTOS ADMINISTRATIVOS',
-        ['La entidad cumple satisfactoriamente con los aspectos administrativos evaluados.'],
-        globalResult.bySection.admin.porcentaje
-      );
-    }
+    dynamicSlides.createSeccionBarChart(
+      pptx,
+      'INFORME DIAGNÓSTICO DOCUMENTAL – ASPECTOS ADMINISTRATIVOS',
+      globalResult.bySection.admin,
+      globalResult.bySection.admin.porcentaje
+    );
+    dynamicSlides.createInformeSeccion(
+      pptx,
+      'INFORME DIAGNÓSTICO DOCUMENTAL – ASPECTOS ADMINISTRATIVOS',
+      adminItems,
+      globalResult.bySection.admin.porcentaje
+    );
     
-    // Función archivística - con hallazgos
-    const funcFindings = calculator.generateFindingsBySection('5_', 'Instrumentos Archivísticos');
-    funcFindings.push(...calculator.generateFindingsBySection('6_', 'Organización y Descripción'));
-    funcFindings.push(...calculator.generateFindingsBySection('7_', 'Comunicaciones Oficiales'));
+    // Función archivística - gráfico + listado completo
+    const funcItems = [
+      ...calculator.generateAllItemsBySection('5_'),
+      ...calculator.generateAllItemsBySection('6_'),
+      ...calculator.generateAllItemsBySection('7_')
+    ];
     
-    if (funcFindings.length > 0) {
-      dynamicSlides.createInformeSeccion(
-        pptx,
-        'INFORME DIAGNÓSTICO DOCUMENTAL – ASPECTOS DE FUNCIÓN ARCHIVÍSTICA',
-        funcFindings,
-        globalResult.bySection.func.porcentaje
-      );
-    } else {
-      dynamicSlides.createInformeConGrafico(
-        pptx,
-        'INFORME DIAGNÓSTICO DOCUMENTAL – ASPECTOS DE FUNCIÓN ARCHIVÍSTICA',
-        ['La entidad cumple satisfactoriamente con los aspectos de función archivística evaluados.'],
-        globalResult.bySection.func.porcentaje
-      );
-    }
+    dynamicSlides.createSeccionBarChart(
+      pptx,
+      'INFORME DIAGNÓSTICO DOCUMENTAL – ASPECTOS DE FUNCIÓN ARCHIVÍSTICA',
+      globalResult.bySection.func,
+      globalResult.bySection.func.porcentaje
+    );
+    dynamicSlides.createInformeSeccion(
+      pptx,
+      'INFORME DIAGNÓSTICO DOCUMENTAL – ASPECTOS DE FUNCIÓN ARCHIVÍSTICA',
+      funcItems,
+      globalResult.bySection.func.porcentaje
+    );
     
-    // Preservación - con hallazgos
-    const presFindings = calculator.generateFindingsBySection('8_', 'Aspectos de Preservación');
+    // Preservación - gráfico + listado completo
+    const presItems = calculator.generateAllItemsBySection('8_');
     
-    if (presFindings.length > 0) {
-      dynamicSlides.createInformeSeccion(
-        pptx,
-        'INFORME DIAGNÓSTICO DOCUMENTAL – ASPECTOS DE PRESERVACIÓN',
-        presFindings,
-        globalResult.bySection.pres.porcentaje
-      );
-    } else {
-      dynamicSlides.createInformeConGrafico(
-        pptx,
-        'INFORME DIAGNÓSTICO DOCUMENTAL – ASPECTOS DE PRESERVACIÓN',
-        ['La entidad cumple satisfactoriamente con los aspectos de preservación evaluados.'],
-        globalResult.bySection.pres.porcentaje
-      );
-    }
+    dynamicSlides.createSeccionBarChart(
+      pptx,
+      'INFORME DIAGNÓSTICO DOCUMENTAL – ASPECTOS DE PRESERVACIÓN',
+      globalResult.bySection.pres,
+      globalResult.bySection.pres.porcentaje
+    );
+    dynamicSlides.createInformeSeccion(
+      pptx,
+      'INFORME DIAGNÓSTICO DOCUMENTAL – ASPECTOS DE PRESERVACIÓN',
+      presItems,
+      globalResult.bySection.pres.porcentaje
+    );
     
     // Plan de acción
     const recommendations = helpers.generateRecommendations(globalResult);

@@ -235,14 +235,157 @@ export function createEstadoPorcentual(pptx, globalResult) {
 }
 
 /**
- * Slide: Informe por sección con hallazgos textuales
+ * Slide: Gráfico de barras verticales por sección (Cumple / No cumple / Parcial)
  */
-export function createInformeSeccion(pptx, title, findings, percentage) {
+export function createSeccionBarChart(pptx, title, sectionStats, percentage) {
+  const slide = pptx.addSlide();
+  slide.background = { color: STYLES.colors.bgBlue };
+  
+  addDecorativeElements(slide);
+  
   const color = getComplianceColor(percentage);
   
-  // Si hay muchos hallazgos, dividir en múltiples slides
-  const maxFindingsPerSlide = 8;
-  const chunks = findings.length > 0 ? chunkArray(findings, maxFindingsPerSlide) : [['No se registraron observaciones para esta sección.']];
+  // Título
+  slide.addText(title.toUpperCase(), {
+    x: 0.5,
+    y: 0.3,
+    w: 8.5,
+    h: 0.6,
+    fontSize: 18,
+    bold: true,
+    color: STYLES.colors.white
+  });
+  
+  // Indicador de cumplimiento (barra de color)
+  slide.addShape('rect', {
+    x: 9.2,
+    y: 0.3,
+    w: 0.3,
+    h: 0.6,
+    fill: { color: color },
+    line: { type: 'none' }
+  });
+  
+  // Porcentaje
+  slide.addText(`${percentage.toFixed(1)}%`, {
+    x: 8.8,
+    y: 0.35,
+    w: 0.8,
+    h: 0.5,
+    fontSize: 12,
+    color: STYLES.colors.white,
+    align: 'right',
+    bold: true
+  });
+  
+  // Subtítulo
+  slide.addText('DISTRIBUCIÓN DE CUMPLIMIENTO', {
+    x: 0.5,
+    y: 1.1,
+    w: 9,
+    h: 0.4,
+    fontSize: 14,
+    color: STYLES.colors.textLight,
+    align: 'center'
+  });
+  
+  // Gráfico de barras verticales
+  const data = [
+    { label: 'Cumple', value: sectionStats.cumple, color: STYLES.colors.optimal, x: 2.5 },
+    { label: 'No cumple', value: sectionStats.noCumple, color: STYLES.colors.critical, x: 4.5 },
+    { label: 'Parcial', value: sectionStats.parcial, color: STYLES.colors.acceptable, x: 6.5 }
+  ];
+  
+  const maxHeight = 2.2;
+  const barBaseY = 4.2;
+  const maxValue = Math.max(sectionStats.cumple, sectionStats.noCumple, sectionStats.parcial, 1);
+  
+  data.forEach(item => {
+    const barHeight = maxValue > 0 ? (item.value / maxValue) * maxHeight : 0;
+    const yPos = barBaseY - barHeight;
+    
+    // Barra
+    if (barHeight > 0) {
+      slide.addShape('rect', {
+        x: item.x,
+        y: yPos,
+        w: 1.2,
+        h: barHeight,
+        fill: { color: item.color },
+        line: { type: 'none' }
+      });
+    }
+    
+    // Valor numérico encima de la barra
+    slide.addText(item.value.toString(), {
+      x: item.x,
+      y: yPos - 0.35,
+      w: 1.2,
+      h: 0.35,
+      fontSize: 16,
+      color: STYLES.colors.white,
+      align: 'center',
+      bold: true
+    });
+    
+    // Etiqueta debajo de la barra
+    slide.addText(item.label, {
+      x: item.x - 0.3,
+      y: barBaseY + 0.15,
+      w: 1.8,
+      h: 0.4,
+      fontSize: 11,
+      color: STYLES.colors.white,
+      align: 'center'
+    });
+  });
+  
+  // Línea base
+  slide.addShape('line', {
+    x: 2.0,
+    y: barBaseY,
+    w: 6.2,
+    h: 0,
+    line: { color: STYLES.colors.white, width: 2 }
+  });
+  
+  // Total de ítems
+  slide.addText(`Total ítems evaluados: ${sectionStats.total}`, {
+    x: 0.5,
+    y: 4.9,
+    w: 9,
+    h: 0.4,
+    fontSize: 11,
+    color: STYLES.colors.textLight,
+    align: 'center'
+  });
+}
+
+/**
+ * Obtener color de texto según el estado de cumplimiento
+ */
+function getStatusColor(value) {
+  if (value === 'Cumple') return STYLES.colors.optimal;
+  if (value === 'No cumple') return STYLES.colors.critical;
+  if (value === 'Parcial') return STYLES.colors.acceptable;
+  return STYLES.colors.white;
+}
+
+/**
+ * Slide: Informe por sección con listado completo de ítems (títulos + estado)
+ * @param {object} pptx - Instancia PptxGenJS
+ * @param {string} title - Título de la sección
+ * @param {Array<{key, title, value, observation}>} items - Ítems con título y estado
+ * @param {number} percentage - Porcentaje de cumplimiento
+ */
+export function createInformeSeccion(pptx, title, items, percentage) {
+  const color = getComplianceColor(percentage);
+  
+  // Dividir en múltiples slides
+  const maxItemsPerSlide = 5;
+  const chunks = items.length > 0 ? chunkArray(items, maxItemsPerSlide) : [];
+  
+  if (chunks.length === 0) return;
   
   chunks.forEach((chunk, index) => {
     const slide = pptx.addSlide();
@@ -283,19 +426,39 @@ export function createInformeSeccion(pptx, title, findings, percentage) {
       bold: true
     });
     
-    // Hallazgos como viñetas
-    let yPos = 1.3;
-    chunk.forEach(finding => {
-      slide.addText(`• ${finding}`, {
-        x: 0.8,
+    // Ítems como viñetas con título + estado coloreado
+    let yPos = 1.2;
+    chunk.forEach(item => {
+      const statusColor = getStatusColor(item.value);
+      
+      // Título de la pregunta + estado
+      slide.addText([
+        { text: `• ${item.title}: `, options: { fontSize: 9.5, color: STYLES.colors.white } },
+        { text: item.value, options: { fontSize: 9.5, color: statusColor, bold: true } }
+      ], {
+        x: 0.6,
         y: yPos,
-        w: 8.4,
-        h: 'auto',
-        fontSize: 11,
-        color: STYLES.colors.white,
+        w: 8.8,
+        h: 0.3,
         valign: 'top'
       });
-      yPos += 0.5;
+      
+      // Observación si existe
+      if (item.observation && item.observation.trim()) {
+        yPos += 0.3;
+        slide.addText(`   Obs: ${item.observation}`, {
+          x: 0.6,
+          y: yPos,
+          w: 8.8,
+          h: 0.25,
+          fontSize: 8,
+          color: STYLES.colors.textLight,
+          italic: true,
+          valign: 'top'
+        });
+      }
+      
+      yPos += 0.52;
     });
     
     // Indicador de página si hay múltiples
@@ -439,14 +602,15 @@ export function createPlanAccion(pptx, recommendations) {
     align: 'center'
   });
   
-  // Tabla de recomendaciones
+  // Tabla de recomendaciones (máximo 8 ítems, columna de texto vacía para llenar)
+  const totalRows = Math.min(recommendations.length, 8);
   const tableData = [
     ['ÍTEM', 'ACCIÓN']
   ];
   
-  recommendations.forEach((rec, index) => {
-    tableData.push([`${index + 1}`, rec]);
-  });
+  for (let i = 0; i < totalRows; i++) {
+    tableData.push([`${i + 1}`, '']);
+  }
   
   slide.addTable(tableData, {
     x: 0.8,

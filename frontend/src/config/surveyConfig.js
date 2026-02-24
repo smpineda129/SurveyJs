@@ -9,6 +9,8 @@ export const surveyJson = {
   showProgressBar: "top",
   progressBarType: "buttons",
   showQuestionNumbers: "off",
+  clearInvisibleValues: "none",
+  keepIncorrectValues: true,
   completedHtml: "<div style='font-size:18px; font-weight:bold; margin-top:20px;'>El formulario ha sido diligenciado correctamente.</div>",
   
     pages: [

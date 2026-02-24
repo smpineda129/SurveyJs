@@ -3,6 +3,8 @@
  * Lógica de cálculo separada y reutilizable
  */
 
+import { getQuestionTitle } from '../config/questionTitles.js';
+
 export class DiagnosticCalculator {
   
   constructor(surveyData) {
@@ -164,5 +166,30 @@ export class DiagnosticCalculator {
     });
     
     return findings;
+  }
+  
+  /**
+   * Generar listado completo de ítems por sección con títulos y todos los estados
+   * Retorna objetos { key, title, value, observation }
+   */
+  generateAllItemsBySection(sectionPrefix) {
+    const items = [];
+    const keys = Object.keys(this.data).sort();
+    
+    keys.forEach(key => {
+      if (key.startsWith(sectionPrefix) && 
+          key.match(/^\d+_\d+_\d+$/) &&
+          this.data[key]) {
+        
+        const value = this.data[key];
+        const obsKey = `${key}_obs`;
+        const observation = this.data[obsKey] || '';
+        const title = getQuestionTitle(key);
+        
+        items.push({ key, title, value, observation });
+      }
+    });
+    
+    return items;
   }
 }

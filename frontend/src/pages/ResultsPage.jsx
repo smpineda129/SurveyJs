@@ -125,7 +125,7 @@ function ResultsPage() {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      const entityName = survey.surveyData.nombre_entidad || 'Entidad';
+      const entityName = survey.surveyData.nombre_entidad || survey.surveyData.NOMBRE_ENTIDAD || 'Entidad';
       link.download = `Diagnostico_${entityName.replace(/\s+/g, '_')}_${Date.now()}.pptx`;
       document.body.appendChild(link);
       link.click();
@@ -375,7 +375,7 @@ function ResultsPage() {
                             <VisibilityIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
-                        {survey.formType === 'entidades_privadas' && (
+                        {(survey.formType === 'entidades_privadas' || survey.formType === 'entidades_publicas' || survey.formType === 'mgda') && (
                           <Tooltip title="Generar Presentación">
                             <IconButton size="small" onClick={() => handleGenerateIndividualPresentation(survey)} color="primary">
                               <DescriptionIcon fontSize="small" />

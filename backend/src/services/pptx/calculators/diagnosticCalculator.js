@@ -169,6 +169,50 @@ export class DiagnosticCalculator {
   }
   
   /**
+   * Calcular todos los sub-aspectos agrupados por los 3 aspectos principales
+   * Retorna { admin, func, pres } con global stats y array de sub-aspectos
+   */
+  calculateAllSubAspectos() {
+    const buildSubAspecto = (nombre, prefix) => ({
+      nombre,
+      prefix,
+      ...this.calculateByPrefix(prefix),
+      items: this.generateAllItemsBySection(prefix),
+      observaciones: this.getObservationsBySection(prefix)
+    });
+
+    return {
+      admin: {
+        global: this.calculateAdministrative(),
+        subAspectos: [
+          buildSubAspecto('Instancias asesoras', '1_'),
+          buildSubAspecto('Aspectos organizacionales', '2_'),
+          buildSubAspecto('Aspectos de financiación', '3_'),
+          buildSubAspecto('Aspectos de formación y capacitación', '4_'),
+        ]
+      },
+      func: {
+        global: this.calculateArchivalFunction(),
+        subAspectos: [
+          buildSubAspecto('Instrumentos archivísticos', '5_'),
+          buildSubAspecto('Organización y descripción', '6_'),
+          buildSubAspecto('Comunicaciones oficiales', '7_'),
+        ]
+      },
+      pres: {
+        global: this.calculatePreservation(),
+        subAspectos: [
+          buildSubAspecto('Condiciones de edificios y locales', '8_1_'),
+          buildSubAspecto('Unidades de conservación', '8_2_'),
+          buildSubAspecto('Condiciones ambientales', '8_3_'),
+          buildSubAspecto('Mantenimiento', '8_4_'),
+          buildSubAspecto('Seguridad y emergencias', '8_5_'),
+        ]
+      }
+    };
+  }
+
+  /**
    * Generar listado completo de ítems por sección con títulos y todos los estados
    * Retorna objetos { key, title, value, observation }
    */

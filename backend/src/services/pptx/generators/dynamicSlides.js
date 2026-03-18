@@ -33,10 +33,9 @@ function addDecorativeElements(slide) {
 /**
  * Crear gráfico de barras horizontales con semáforo
  */
-function createHorizontalBarChart(slide, data, title, yStart) {
+function createHorizontalBarChart(slide, data, title, yStart, spacing = 0.6) {
   const maxBarWidth = 6.0;
   const barHeight = 0.4;
-  const spacing = 0.6;
   
   data.forEach((item, index) => {
     const yPos = yStart + (index * spacing);
@@ -121,14 +120,18 @@ export function createResultadoGlobal(pptx, globalResult) {
     align: 'center'
   });
   
-  // Gráfico de barras con los tres aspectos
-  const chartData = [
-    { label: 'ASPECTOS ADMINISTRATIVOS', value: globalResult.bySection.admin.porcentaje },
-    { label: 'ASPECTOS FUNCIÓN ARCHIVÍSTICA', value: globalResult.bySection.func.porcentaje },
-    { label: 'ASPECTOS DE PRESERVACIÓN', value: globalResult.bySection.pres.porcentaje }
-  ];
-  
-  createHorizontalBarChart(slide, chartData, '', 2.0);
+  // Gráfico de barras — usa sections[] si existe (MGDA: 5), sino 3 secciones clásicas
+  const chartData = globalResult.sections
+    ? globalResult.sections.map(s => ({ label: s.label, value: s.porcentaje }))
+    : [
+        { label: 'ASPECTOS ADMINISTRATIVOS', value: globalResult.bySection.admin.porcentaje },
+        { label: 'ASPECTOS FUNCIÓN ARCHIVÍSTICA', value: globalResult.bySection.func.porcentaje },
+        { label: 'ASPECTOS DE PRESERVACIÓN', value: globalResult.bySection.pres.porcentaje }
+      ];
+
+  // For 5+ sections reduce spacing so bars fit above result box (y=4.2)
+  const barSpacing = chartData.length > 3 ? 0.5 : 0.6;
+  createHorizontalBarChart(slide, chartData, '', 2.0, barSpacing);
   
   // Resultado total en caja destacada
   const color = getComplianceColor(globalResult.porcentaje);
@@ -156,419 +159,277 @@ export function createResultadoGlobal(pptx, globalResult) {
 }
 
 /**
- * Slide: Estado porcentual de cada aspecto (con gráfico de barras)
+ * Helper: Dibujar tarjeta de sub-aspecto con indicador circular pequeño y barra de progreso
  */
-export function createEstadoPorcentual(pptx, globalResult) {
-  const slide = pptx.addSlide();
-  slide.background = { color: STYLES.colors.bgBlue };
-  
-  addDecorativeElements(slide);
-  
-  // Título
-  slide.addText('INFORME DIAGNÓSTICO DOCUMENTAL\nESTADO PORCENTUAL DE CADA ASPECTO', {
-    x: 0.5,
-    y: 0.3,
-    w: 9,
-    h: 0.8,
-    fontSize: 20,
-    bold: true,
-    color: STYLES.colors.white,
-    align: 'center'
-  });
-  
-  // Gráfico de barras verticales (simulado con rectángulos)
-  const data = [
-    { label: 'Cumple', value: globalResult.cumple, color: STYLES.colors.optimal, x: 2.0 },
-    { label: 'No cumple', value: globalResult.noCumple, color: STYLES.colors.critical, x: 4.0 },
-    { label: 'Cumple Parcialmente', value: globalResult.parcial, color: STYLES.colors.acceptable, x: 6.0 }
-  ];
-  
-  const maxHeight = 2.5;
-  const maxValue = Math.max(globalResult.cumple, globalResult.noCumple, globalResult.parcial);
-  
-  data.forEach(item => {
-    const barHeight = maxValue > 0 ? (item.value / maxValue) * maxHeight : 0;
-    const yPos = 4.5 - barHeight;
-    
-    // Barra
-    slide.addShape('rect', {
-      x: item.x,
-      y: yPos,
-      w: 1.2,
-      h: barHeight,
-      fill: { color: item.color },
-      line: { type: 'none' }
-    });
-    
-    // Valor
-    slide.addText(item.value.toString(), {
-      x: item.x,
-      y: yPos - 0.3,
-      w: 1.2,
-      h: 0.3,
-      fontSize: 14,
-      color: STYLES.colors.white,
-      align: 'center',
-      bold: true
-    });
-    
-    // Etiqueta
-    slide.addText(item.label, {
-      x: item.x - 0.3,
-      y: 4.6,
-      w: 1.8,
-      h: 0.4,
-      fontSize: 10,
-      color: STYLES.colors.white,
-      align: 'center'
-    });
-  });
-  
-  // Línea base
-  slide.addShape('line', {
-    x: 1.5,
-    y: 4.5,
-    w: 6.5,
-    h: 0,
-    line: { color: STYLES.colors.white, width: 2 }
-  });
-}
+function drawSubAspectoCard(slide, subAspecto, x, y, w, h) {
+  const pct = subAspecto.porcentaje;
+  const color = getComplianceColor(pct);
+  const barW = w - 1.35; // Leave room for percentage label
 
-/**
- * Slide: Gráfico de barras verticales por sección (Cumple / No cumple / Parcial)
- */
-export function createSeccionBarChart(pptx, title, sectionStats, percentage) {
-  const slide = pptx.addSlide();
-  slide.background = { color: STYLES.colors.bgBlue };
-  
-  addDecorativeElements(slide);
-  
-  const color = getComplianceColor(percentage);
-  
-  // Título
-  slide.addText(title.toUpperCase(), {
-    x: 0.5,
-    y: 0.3,
-    w: 8.5,
-    h: 0.6,
-    fontSize: 18,
-    bold: true,
-    color: STYLES.colors.white
-  });
-  
-  // Indicador de cumplimiento (barra de color)
+  // Card background
   slide.addShape('rect', {
-    x: 9.2,
-    y: 0.3,
-    w: 0.3,
-    h: 0.6,
-    fill: { color: color },
+    x, y, w, h,
+    fill: { color: '1A4F72', transparency: 10 },
+    line: { color: STYLES.colors.accent, width: 0.75 }
+  });
+
+  // Small compliance circle
+  const r = 0.2;
+  slide.addShape('ellipse', {
+    x: x + 0.12, y: y + 0.13, w: r * 2, h: r * 2,
+    fill: { color },
     line: { type: 'none' }
   });
-  
-  // Porcentaje
-  slide.addText(`${percentage.toFixed(1)}%`, {
-    x: 8.8,
-    y: 0.35,
-    w: 0.8,
-    h: 0.5,
-    fontSize: 12,
-    color: STYLES.colors.white,
-    align: 'right',
-    bold: true
+
+  // Sub-aspect name
+  slide.addText(subAspecto.nombre, {
+    x: x + 0.55, y: y + 0.06, w: w - 0.62, h: h * 0.45,
+    fontSize: 9, bold: true, color: STYLES.colors.white, valign: 'top'
   });
-  
-  // Subtítulo
-  slide.addText('DISTRIBUCIÓN DE CUMPLIMIENTO', {
-    x: 0.5,
-    y: 1.1,
-    w: 9,
-    h: 0.4,
-    fontSize: 14,
-    color: STYLES.colors.textLight,
-    align: 'center'
+
+  // Progress bar
+  const barY = y + h * 0.58;
+  const barH = 0.16;
+
+  // Background
+  slide.addShape('rect', {
+    x: x + 0.12, y: barY, w: barW, h: barH,
+    fill: { color: '2C3E50', transparency: 20 },
+    line: { type: 'none' }
   });
-  
-  // Gráfico de barras verticales
-  const data = [
-    { label: 'Cumple', value: sectionStats.cumple, color: STYLES.colors.optimal, x: 2.5 },
-    { label: 'No cumple', value: sectionStats.noCumple, color: STYLES.colors.critical, x: 4.5 },
-    { label: 'Parcial', value: sectionStats.parcial, color: STYLES.colors.acceptable, x: 6.5 }
-  ];
-  
-  const maxHeight = 2.2;
-  const barBaseY = 4.2;
-  const maxValue = Math.max(sectionStats.cumple, sectionStats.noCumple, sectionStats.parcial, 1);
-  
-  data.forEach(item => {
-    const barHeight = maxValue > 0 ? (item.value / maxValue) * maxHeight : 0;
-    const yPos = barBaseY - barHeight;
-    
-    // Barra
-    if (barHeight > 0) {
-      slide.addShape('rect', {
-        x: item.x,
-        y: yPos,
-        w: 1.2,
-        h: barHeight,
-        fill: { color: item.color },
-        line: { type: 'none' }
-      });
-    }
-    
-    // Valor numérico encima de la barra
-    slide.addText(item.value.toString(), {
-      x: item.x,
-      y: yPos - 0.35,
-      w: 1.2,
-      h: 0.35,
-      fontSize: 16,
-      color: STYLES.colors.white,
-      align: 'center',
-      bold: true
-    });
-    
-    // Etiqueta debajo de la barra
-    slide.addText(item.label, {
-      x: item.x - 0.3,
-      y: barBaseY + 0.15,
-      w: 1.8,
-      h: 0.4,
-      fontSize: 11,
-      color: STYLES.colors.white,
-      align: 'center'
-    });
+  // Fill
+  const fillW = Math.max(0.01, (pct / 100) * barW);
+  slide.addShape('rect', {
+    x: x + 0.12, y: barY, w: fillW, h: barH,
+    fill: { color },
+    line: { type: 'none' }
   });
-  
-  // Línea base
-  slide.addShape('line', {
-    x: 2.0,
-    y: barBaseY,
-    w: 6.2,
-    h: 0,
-    line: { color: STYLES.colors.white, width: 2 }
-  });
-  
-  // Total de ítems
-  slide.addText(`Total ítems evaluados: ${sectionStats.total}`, {
-    x: 0.5,
-    y: 4.9,
-    w: 9,
-    h: 0.4,
-    fontSize: 11,
-    color: STYLES.colors.textLight,
-    align: 'center'
+
+  // Percentage text
+  slide.addText(`${pct.toFixed(1)}%`, {
+    x: x + 0.12 + barW + 0.04, y: barY - 0.06, w: 0.6, h: 0.28,
+    fontSize: 8, bold: true, color, align: 'right', valign: 'middle'
   });
 }
 
 /**
- * Obtener color de texto según el estado de cumplimiento
+ * Slide: Vista general de un aspecto con indicador circular central y sub-aspectos
+ * @param {object} pptx - Instancia PptxGenJS
+ * @param {string} aspectTitle - Título del aspecto (e.g. 'ASPECTOS ADMINISTRATIVOS')
+ * @param {Array} subAspectos - Array de { nombre, porcentaje, cumple, parcial, noCumple, total, observaciones }
+ * @param {object} globalStats - { porcentaje, cumple, parcial, noCumple, total }
+ */
+export function createAspectoOverview(pptx, aspectTitle, subAspectos, globalStats) {
+  const slide = pptx.addSlide();
+  slide.background = { color: STYLES.colors.bgBlue };
+
+  // Header bar
+  slide.addShape('rect', {
+    x: 0, y: 0, w: 10, h: 0.95,
+    fill: { color: STYLES.colors.bgDarkBlue },
+    line: { type: 'none' }
+  });
+  slide.addText(`DIAGNÓSTICO DOCUMENTAL – ${aspectTitle}`, {
+    x: 0.4, y: 0.17, w: 9.0, h: 0.62,
+    fontSize: 15, bold: true, color: STYLES.colors.white, valign: 'middle'
+  });
+
+  // Split sub-aspects: left = first half (ceil), right = second half
+  const midpoint = Math.ceil(subAspectos.length / 2);
+  const leftItems = subAspectos.slice(0, midpoint);
+  const rightItems = subAspectos.slice(midpoint);
+
+  const maxColItems = Math.max(leftItems.length, rightItems.length);
+  const availableH = 3.25; // y=1.05 to y=4.3
+  const cardH = Math.min(1.4, availableH / maxColItems);
+  const startY = 1.1;
+  const colW = 2.75;
+
+  // Left column (x=0.3)
+  leftItems.forEach((sub, i) => {
+    drawSubAspectoCard(slide, sub, 0.3, startY + i * cardH, colW, cardH - 0.07);
+  });
+
+  // Right column (x=6.95)
+  rightItems.forEach((sub, i) => {
+    drawSubAspectoCard(slide, sub, 6.95, startY + i * cardH, colW, cardH - 0.07);
+  });
+
+  // ── Central compliance donut ───────────────────────────────
+  const pct = globalStats.porcentaje;
+  const color = getComplianceColor(pct);
+
+  // Center area: x=3.3 to x=6.9 (w=3.6")
+  const outerD = 2.3;
+  const innerD = 1.45;
+  const circleX = 3.3 + (3.6 - outerD) / 2; // = 3.3 + 0.65 = 3.95
+  const circleY = 1.3;
+
+  // Outer filled circle
+  slide.addShape('ellipse', {
+    x: circleX, y: circleY, w: outerD, h: outerD,
+    fill: { color },
+    line: { type: 'none' }
+  });
+
+  // Inner hole (background color)
+  const holeOffset = (outerD - innerD) / 2;
+  slide.addShape('ellipse', {
+    x: circleX + holeOffset, y: circleY + holeOffset, w: innerD, h: innerD,
+    fill: { color: STYLES.colors.bgBlue },
+    line: { type: 'none' }
+  });
+
+  // Percentage text centered in circle
+  slide.addText(`${pct.toFixed(1)}%`, {
+    x: circleX, y: circleY + outerD / 2 - 0.33,
+    w: outerD, h: 0.5,
+    fontSize: 19, bold: true, color: STYLES.colors.white, align: 'center', valign: 'middle'
+  });
+
+  // "CUMPLIMIENTO" label below circle
+  slide.addText('CUMPLIMIENTO\nGLOBAL', {
+    x: circleX, y: circleY + outerD + 0.12,
+    w: outerD, h: 0.5,
+    fontSize: 9, bold: true, color: STYLES.colors.textLight, align: 'center'
+  });
+
+  // Items total
+  slide.addText(`${globalStats.total} ítems evaluados`, {
+    x: circleX - 0.2, y: circleY + outerD + 0.68,
+    w: outerD + 0.4, h: 0.28,
+    fontSize: 8, color: STYLES.colors.textLight, align: 'center'
+  });
+
+  // Cumple / Parcial / No cumple legend
+  const legendY = circleY + outerD + 1.05;
+  [
+    { label: `✓ Cumple: ${globalStats.cumple}`, color: STYLES.colors.optimal },
+    { label: `≈ Parcial: ${globalStats.parcial}`, color: STYLES.colors.acceptable },
+    { label: `✗ No cumple: ${globalStats.noCumple}`, color: STYLES.colors.critical }
+  ].forEach((item, i) => {
+    slide.addText(item.label, {
+      x: circleX - 0.3, y: legendY + i * 0.27,
+      w: outerD + 0.6, h: 0.27,
+      fontSize: 8, bold: true, color: item.color, align: 'center'
+    });
+  });
+
+}
+
+/**
+ * Helper: Map compliance text value to color
  */
 function getStatusColor(value) {
-  if (value === 'Cumple') return STYLES.colors.optimal;
-  if (value === 'No cumple') return STYLES.colors.critical;
-  if (value === 'Parcial') return STYLES.colors.acceptable;
-  return STYLES.colors.white;
+  if (value === 'Cumple' || value === 'Indica') return STYLES.colors.optimal;
+  if (value === 'Parcial' || value === 'Cumple parcial') return STYLES.colors.acceptable;
+  // MGDA maturity levels
+  if (value === 'Avanzado' || value === 'Optimizado') return STYLES.colors.optimal;
+  if (value === 'Básico' || value === 'Intermedio') return STYLES.colors.acceptable;
+  if (value === 'Inicial') return STYLES.colors.critical;
+  return STYLES.colors.critical;
 }
 
 /**
- * Slide: Informe por sección con listado completo de ítems (títulos + estado)
- * @param {object} pptx - Instancia PptxGenJS
- * @param {string} title - Título de la sección
- * @param {Array<{key, title, value, observation}>} items - Ítems con título y estado
- * @param {number} percentage - Porcentaje de cumplimiento
+ * Slides: Detalle de preguntas por sub-aspecto
+ * Generates one or more slides per sub-aspecto showing all items with status and observation
+ * @param {object} pptx - PptxGenJS instance
+ * @param {string} aspectTitle - e.g. 'ASPECTOS ADMINISTRATIVOS'
+ * @param {Array} subAspectos - Array with { nombre, items: [{ key, title, value, observation }] }
  */
-export function createInformeSeccion(pptx, title, items, percentage) {
-  const color = getComplianceColor(percentage);
-  
-  // Dividir en múltiples slides
-  const maxItemsPerSlide = 5;
-  const chunks = items.length > 0 ? chunkArray(items, maxItemsPerSlide) : [];
-  
-  if (chunks.length === 0) return;
-  
-  chunks.forEach((chunk, index) => {
-    const slide = pptx.addSlide();
-    slide.background = { color: STYLES.colors.bgBlue };
-    
-    addDecorativeElements(slide);
-    
-    // Título
-    slide.addText(title.toUpperCase(), {
-      x: 0.5,
-      y: 0.3,
-      w: 8.5,
-      h: 0.6,
-      fontSize: 18,
-      bold: true,
-      color: STYLES.colors.white
-    });
-    
-    // Indicador de cumplimiento (barra de color)
-    slide.addShape('rect', {
-      x: 9.2,
-      y: 0.3,
-      w: 0.3,
-      h: 0.6,
-      fill: { color: color },
-      line: { type: 'none' }
-    });
-    
-    // Porcentaje
-    slide.addText(`${percentage.toFixed(1)}%`, {
-      x: 8.8,
-      y: 0.35,
-      w: 0.8,
-      h: 0.5,
-      fontSize: 12,
-      color: STYLES.colors.white,
-      align: 'right',
-      bold: true
-    });
-    
-    // Ítems como viñetas con título + estado coloreado
-    let yPos = 1.2;
-    chunk.forEach(item => {
-      const statusColor = getStatusColor(item.value);
-      
-      // Título de la pregunta + estado
-      slide.addText([
-        { text: `• ${item.title}: `, options: { fontSize: 9.5, color: STYLES.colors.white } },
-        { text: item.value, options: { fontSize: 9.5, color: statusColor, bold: true } }
-      ], {
-        x: 0.6,
-        y: yPos,
-        w: 8.8,
-        h: 0.3,
-        valign: 'top'
+export function createDetalleAspecto(pptx, aspectTitle, subAspectos) {
+  subAspectos.forEach(sub => {
+    if (!sub.items || sub.items.length === 0) return;
+
+    const chunks = chunkArray(sub.items, 8);
+    chunks.forEach((chunk, chunkIdx) => {
+      const slide = pptx.addSlide();
+      slide.background = { color: STYLES.colors.bgBlue };
+
+      // Header bar
+      slide.addShape('rect', {
+        x: 0, y: 0, w: 10, h: 0.95,
+        fill: { color: STYLES.colors.bgDarkBlue },
+        line: { type: 'none' }
       });
-      
-      // Observación si existe
-      if (item.observation && item.observation.trim()) {
-        yPos += 0.3;
-        slide.addText(`   Obs: ${item.observation}`, {
-          x: 0.6,
-          y: yPos,
-          w: 8.8,
-          h: 0.25,
-          fontSize: 8,
-          color: STYLES.colors.textLight,
-          italic: true,
-          valign: 'top'
+      slide.addText(aspectTitle, {
+        x: 0.4, y: 0.05, w: 9.0, h: 0.45,
+        fontSize: 13, bold: true, color: STYLES.colors.white, valign: 'middle'
+      });
+      slide.addText(sub.nombre, {
+        x: 0.4, y: 0.5, w: 9.0, h: 0.38,
+        fontSize: 10, color: STYLES.colors.textLight, valign: 'middle'
+      });
+
+      // Item list
+      let currentY = 1.1;
+      chunk.forEach(item => {
+        const statusColor = getStatusColor(item.value);
+        // Line 1: key + title (left) + status (right)
+        const keyTitle = `● ${item.key}: ${item.title}`;
+        const truncated = keyTitle.length > 100 ? keyTitle.substring(0, 100) + '…' : keyTitle;
+        slide.addText(truncated, {
+          x: 0.4, y: currentY, w: 7.8, h: 0.3,
+          fontSize: 9, bold: true, color: STYLES.colors.white, valign: 'middle'
+        });
+        slide.addText(item.value, {
+          x: 8.2, y: currentY, w: 1.5, h: 0.3,
+          fontSize: 8, bold: true, color: statusColor, align: 'right', valign: 'middle'
+        });
+
+        currentY += 0.42;
+      });
+
+      // Page indicator for multi-chunk sub-aspects
+      if (chunks.length > 1) {
+        slide.addText(`${sub.nombre} ${chunkIdx + 1}/${chunks.length}`, {
+          x: 7.0, y: 6.8, w: 2.8, h: 0.25,
+          fontSize: 7, color: STYLES.colors.textLight, align: 'right', valign: 'middle'
         });
       }
-      
-      yPos += 0.52;
     });
-    
-    // Indicador de página si hay múltiples
-    if (chunks.length > 1) {
-      slide.addText(`${index + 1} / ${chunks.length}`, {
-        x: 9.0,
-        y: 5.2,
-        w: 0.5,
-        h: 0.3,
-        fontSize: 9,
-        color: STYLES.colors.textLight,
-        align: 'right'
-      });
-    }
   });
 }
 
 /**
- * Slide: Informe con gráfico de barras horizontales
+ * Slide: Resumen IA de observaciones por sección
  */
-export function createInformeConGrafico(pptx, title, items, percentage) {
+export function createObservacionesIA(pptx, sectionTitle, bullets) {
+  if (!bullets || bullets.length === 0) return;
+
   const slide = pptx.addSlide();
   slide.background = { color: STYLES.colors.bgBlue };
-  
-  addDecorativeElements(slide);
-  
-  const color = getComplianceColor(percentage);
-  
-  // Título
-  slide.addText(title.toUpperCase(), {
-    x: 0.5,
-    y: 0.3,
-    w: 8.5,
-    h: 0.6,
-    fontSize: 18,
-    bold: true,
-    color: STYLES.colors.white
-  });
-  
-  // Indicador de cumplimiento
+
+  // Header bar
   slide.addShape('rect', {
-    x: 9.2,
-    y: 0.3,
-    w: 0.3,
-    h: 0.6,
-    fill: { color: color },
+    x: 0, y: 0, w: 10, h: 0.95,
+    fill: { color: STYLES.colors.bgDarkBlue },
     line: { type: 'none' }
   });
-  
-  // Hallazgos en la parte izquierda
-  let yPos = 1.3;
-  items.slice(0, 5).forEach(item => {
-    slide.addText(`• ${item}`, {
-      x: 0.8,
-      y: yPos,
-      w: 4.5,
-      h: 0.5,
-      fontSize: 10,
-      color: STYLES.colors.white
+  slide.addText('ANÁLISIS DE OBSERVACIONES', {
+    x: 0.4, y: 0.05, w: 9.0, h: 0.45,
+    fontSize: 13, bold: true, color: STYLES.colors.white, valign: 'middle'
+  });
+  slide.addText(sectionTitle + '  •  Síntesis generada por IA', {
+    x: 0.4, y: 0.5, w: 9.0, h: 0.38,
+    fontSize: 9, color: STYLES.colors.textLight, valign: 'middle'
+  });
+
+  // Bullets
+  let y = 1.2;
+  bullets.forEach(bullet => {
+    slide.addText(`▸  ${bullet}`, {
+      x: 0.5, y, w: 9.0, h: 0.6,
+      fontSize: 10, color: STYLES.colors.white, valign: 'top',
+      wrap: true
     });
-    yPos += 0.6;
+    y += 0.7;
   });
-  
-  // Gráfico de barras en la parte derecha
-  slide.addText('CUMPLIMIENTO', {
-    x: 5.5,
-    y: 1.3,
-    w: 4.0,
-    h: 0.4,
-    fontSize: 11,
-    color: STYLES.colors.white,
-    bold: true,
-    align: 'center'
-  });
-  
-  const barData = [{ label: '', value: percentage }];
-  
-  // Barra horizontal grande
-  const maxBarWidth = 3.5;
-  const barWidth = (percentage / 100) * maxBarWidth;
-  
-  slide.addShape('rect', {
-    x: 5.8,
-    y: 2.0,
-    w: maxBarWidth,
-    h: 0.6,
-    fill: { color: '2C3E50', transparency: 50 },
-    line: { type: 'none' }
-  });
-  
-  if (barWidth > 0) {
-    slide.addShape('rect', {
-      x: 5.8,
-      y: 2.0,
-      w: barWidth,
-      h: 0.6,
-      fill: { color: color },
-      line: { type: 'none' }
-    });
-  }
-  
-  slide.addText(`${percentage.toFixed(1)}%`, {
-    x: 6.5,
-    y: 2.1,
-    w: 2.0,
-    h: 0.4,
-    fontSize: 16,
-    color: STYLES.colors.white,
-    align: 'center',
-    bold: true
+
+  // Footer
+  slide.addText('Generado automáticamente a partir de las observaciones del diagnóstico', {
+    x: 0.4, y: 6.85, w: 9.2, h: 0.2,
+    fontSize: 7, color: STYLES.colors.textLight, italic: true, align: 'right'
   });
 }
 

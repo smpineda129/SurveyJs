@@ -25,6 +25,7 @@
     "helmet": "^7.1.0",
     "mongoose": "^8.0.3",
     "morgan": "^1.10.0",
+    "openai": "^6.32.0",
     "pptxgenjs": "^3.12.0"
   },
   "devDependencies": {

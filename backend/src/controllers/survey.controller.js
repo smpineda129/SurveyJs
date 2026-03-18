@@ -1,4 +1,5 @@
 import Survey from '../models/Survey.js';
+import { summarizeObservaciones } from '../services/gptSummarizer.js';
 
 /**
  * Crear nueva respuesta de formulario
@@ -191,111 +192,67 @@ export const generateIndividualPresentation = async (req, res, next) => {
       });
     }
 
-    if (survey.formType !== 'entidades_privadas') {
+    if (!['entidades_privadas', 'entidades_publicas', 'mgda'].includes(survey.formType)) {
       return res.status(400).json({
         success: false,
-        message: 'La generación de presentación solo está disponible para el formulario de Entidades Privadas'
+        message: 'La generación de presentación solo está disponible para Entidades Privadas, Entidades Públicas y MGDA'
       });
     }
 
     const pptxgenModule = await import('pptxgenjs');
     const PptxGenJS = pptxgenModule.default;
     const pptx = new PptxGenJS();
-    
+
     // Importar módulos de arquitectura modular
     const { DiagnosticCalculator } = await import('../services/pptx/calculators/diagnosticCalculator.js');
+    const { PublicaDiagnosticCalculator } = await import('../services/pptx/calculators/publicaDiagnosticCalculator.js');
+    const { MGDADiagnosticCalculator } = await import('../services/pptx/calculators/mgdaDiagnosticCalculator.js');
     const staticSlides = await import('../services/pptx/generators/staticSlides.js');
     const dynamicSlides = await import('../services/pptx/generators/dynamicSlides.js');
     const helpers = await import('../services/pptx/generators/helpers.js');
-    
+
     const data = survey.surveyData;
-    const calculator = new DiagnosticCalculator(data);
-    const entityName = data.nombre_entidad || 'Entidad';
+    const calculator = survey.formType === 'entidades_publicas'
+      ? new PublicaDiagnosticCalculator(data)
+      : survey.formType === 'mgda'
+      ? new MGDADiagnosticCalculator(data)
+      : new DiagnosticCalculator(data);
+    const entityName = data.nombre_entidad || data.NOMBRE_ENTIDAD || 'Entidad';
     const date = helpers.formatDateSpanish(survey.createdAt);
     
-    // === SLIDES INFORMATIVOS (FIJOS) ===
+    // ── Slides informativos (fijos) ─────────────────────────
     staticSlides.createPortada(pptx, entityName, date);
-    staticSlides.createTituloSlide(pptx);
     staticSlides.createContextualizacion(pptx);
     staticSlides.createObjetivos(pptx);
     staticSlides.createMetodologia(pptx);
     staticSlides.createQueSeEvaluo(pptx);
-    staticSlides.createParaTenerEnCuenta(pptx);
-    staticSlides.createSeparator(pptx, 'INFORME DIAGNÓSTICO DOCUMENTAL');
-    
-    // === SLIDES DINÁMICOS (BASADOS EN DATOS) ===
-    
-    // Calcular resultados
+
+    // ── Resultado global ─────────────────────────────────────
     const globalResult = calculator.calculateGlobal();
-    
-    // Resultado global
     dynamicSlides.createResultadoGlobal(pptx, globalResult);
-    
-    // Estado porcentual general
-    dynamicSlides.createEstadoPorcentual(pptx, globalResult);
-    
-    // Aspectos administrativos - gráfico + listado completo
-    const adminItems = [
-      ...calculator.generateAllItemsBySection('1_'),
-      ...calculator.generateAllItemsBySection('2_'),
-      ...calculator.generateAllItemsBySection('3_'),
-      ...calculator.generateAllItemsBySection('4_')
+
+    // ── Vista general por aspecto ────────────────────────────
+    const allSubAspectos = calculator.calculateAllSubAspectos();
+
+    // MGDA returns { categories: [...] }; legacy returns { admin, func, pres }
+    const categoriasSlides = allSubAspectos.categories ?? [
+      { title: 'ASPECTOS ADMINISTRATIVOS',         global: allSubAspectos.admin.global, subAspectos: allSubAspectos.admin.subAspectos },
+      { title: 'ASPECTOS DE FUNCIÓN ARCHIVÍSTICA', global: allSubAspectos.func.global, subAspectos: allSubAspectos.func.subAspectos },
+      { title: 'ASPECTOS DE PRESERVACIÓN',         global: allSubAspectos.pres.global, subAspectos: allSubAspectos.pres.subAspectos }
     ];
-    
-    dynamicSlides.createSeccionBarChart(
-      pptx,
-      'INFORME DIAGNÓSTICO DOCUMENTAL – ASPECTOS ADMINISTRATIVOS',
-      globalResult.bySection.admin,
-      globalResult.bySection.admin.porcentaje
-    );
-    dynamicSlides.createInformeSeccion(
-      pptx,
-      'INFORME DIAGNÓSTICO DOCUMENTAL – ASPECTOS ADMINISTRATIVOS',
-      adminItems,
-      globalResult.bySection.admin.porcentaje
-    );
-    
-    // Función archivística - gráfico + listado completo
-    const funcItems = [
-      ...calculator.generateAllItemsBySection('5_'),
-      ...calculator.generateAllItemsBySection('6_'),
-      ...calculator.generateAllItemsBySection('7_')
-    ];
-    
-    dynamicSlides.createSeccionBarChart(
-      pptx,
-      'INFORME DIAGNÓSTICO DOCUMENTAL – ASPECTOS DE FUNCIÓN ARCHIVÍSTICA',
-      globalResult.bySection.func,
-      globalResult.bySection.func.porcentaje
-    );
-    dynamicSlides.createInformeSeccion(
-      pptx,
-      'INFORME DIAGNÓSTICO DOCUMENTAL – ASPECTOS DE FUNCIÓN ARCHIVÍSTICA',
-      funcItems,
-      globalResult.bySection.func.porcentaje
-    );
-    
-    // Preservación - gráfico + listado completo
-    const presItems = calculator.generateAllItemsBySection('8_');
-    
-    dynamicSlides.createSeccionBarChart(
-      pptx,
-      'INFORME DIAGNÓSTICO DOCUMENTAL – ASPECTOS DE PRESERVACIÓN',
-      globalResult.bySection.pres,
-      globalResult.bySection.pres.porcentaje
-    );
-    dynamicSlides.createInformeSeccion(
-      pptx,
-      'INFORME DIAGNÓSTICO DOCUMENTAL – ASPECTOS DE PRESERVACIÓN',
-      presItems,
-      globalResult.bySection.pres.porcentaje
-    );
-    
-    // Plan de acción
+
+    for (const cat of categoriasSlides) {
+      dynamicSlides.createAspectoOverview(pptx, cat.title, cat.subAspectos, cat.global);
+      const obsItems = cat.subAspectos.flatMap(sub =>
+        (sub.items || []).filter(item => item.observation?.trim())
+      );
+      const bullets = await summarizeObservaciones(cat.title, obsItems);
+      dynamicSlides.createObservacionesIA(pptx, cat.title, bullets);
+    }
+
+    // ── Plan de acción + Cierre ──────────────────────────────
     const recommendations = helpers.generateRecommendations(globalResult);
     dynamicSlides.createPlanAccion(pptx, recommendations);
-    
-    // Cierre
     dynamicSlides.createCierre(pptx, entityName);
     
     // Generar archivo PPTX

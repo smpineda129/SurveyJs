@@ -9,11 +9,21 @@ const api = axios.create({
   },
 });
 
-// Interceptor para manejo de errores
+// Attach stored token on every request
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('gdi_token');
+  if (token) config.headers['Authorization'] = `Bearer ${token}`;
+  return config;
+});
+
+// On 401, clear token and redirect to login
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error('API Error:', error.response?.data || error.message);
+    if (error.response?.status === 401) {
+      localStorage.removeItem('gdi_token');
+      window.location.href = '/login';
+    }
     return Promise.reject(error);
   }
 );

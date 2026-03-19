@@ -129,25 +129,31 @@ export function createResultadoGlobal(pptx, globalResult) {
         { label: 'ASPECTOS DE PRESERVACIÓN', value: globalResult.bySection.pres.porcentaje }
       ];
 
-  // For 5+ sections reduce spacing so bars fit above result box (y=4.2)
-  const barSpacing = chartData.length > 3 ? 0.5 : 0.6;
-  createHorizontalBarChart(slide, chartData, '', 2.0, barSpacing);
-  
+  // Dynamic layout: start and spacing so bars always clear the result box
+  const barH = 0.4;
+  const barSpacing = chartData.length > 3 ? 0.46 : 0.6;
+  const startY = chartData.length > 3 ? 1.5 : 2.0;
+  createHorizontalBarChart(slide, chartData, '', startY, barSpacing);
+
+  // Position the total box safely below the last bar
+  const lastBarBottom = startY + (chartData.length - 1) * barSpacing + barH;
+  const totalBoxY = Math.max(4.0, lastBarBottom + 0.3);
+
   // Resultado total en caja destacada
   const color = getComplianceColor(globalResult.porcentaje);
-  
+
   slide.addShape('rect', {
     x: 3.0,
-    y: 4.2,
+    y: totalBoxY,
     w: 4.0,
     h: 1.2,
     fill: { color: color },
     line: { type: 'none' }
   });
-  
+
   slide.addText(`Total cumplimiento\n${globalResult.porcentaje.toFixed(1)}%`, {
     x: 3.0,
-    y: 4.3,
+    y: totalBoxY + 0.1,
     w: 4.0,
     h: 1.0,
     fontSize: 18,
@@ -173,23 +179,26 @@ function drawSubAspectoCard(slide, subAspecto, x, y, w, h) {
     line: { color: STYLES.colors.accent, width: 0.75 }
   });
 
-  // Small compliance circle
-  const r = 0.2;
+  // Compliance circle — scaled to card height so it never overlaps the bar
+  const barAreaStart = h * 0.55; // bar starts at 55% of card height
+  const maxCircleD = Math.min(0.32, barAreaStart - 0.1); // stays above bar area
+  const r = maxCircleD / 2;
+  const circleTopY = y + (barAreaStart - maxCircleD) / 2; // vertically centered in top area
   slide.addShape('ellipse', {
-    x: x + 0.12, y: y + 0.13, w: r * 2, h: r * 2,
+    x: x + 0.1, y: circleTopY, w: maxCircleD, h: maxCircleD,
     fill: { color },
     line: { type: 'none' }
   });
 
-  // Sub-aspect name
+  // Sub-aspect name — starts after the circle horizontally
   slide.addText(subAspecto.nombre, {
-    x: x + 0.55, y: y + 0.06, w: w - 0.62, h: h * 0.45,
-    fontSize: 9, bold: true, color: STYLES.colors.white, valign: 'top'
+    x: x + 0.1 + maxCircleD + 0.08, y: y + 0.05, w: w - (0.18 + maxCircleD + 0.08), h: h * 0.50,
+    fontSize: 9, bold: true, color: STYLES.colors.white, valign: 'middle'
   });
 
   // Progress bar
-  const barY = y + h * 0.58;
-  const barH = 0.16;
+  const barY = y + h * 0.60;
+  const barH = 0.15;
 
   // Background
   slide.addShape('rect', {

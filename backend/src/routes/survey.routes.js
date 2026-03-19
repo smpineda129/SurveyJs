@@ -9,56 +9,19 @@ import {
   generateIndividualPresentation
 } from '../controllers/survey.controller.js';
 import { validateSurvey } from '../middleware/validators.js';
+import { authenticate } from '../middleware/authenticate.js';
 
 const router = express.Router();
 
-/**
- * @route   POST /api/surveys
- * @desc    Crear nueva respuesta de formulario
- * @access  Public
- */
+// POST is public — form submissions don't require login
 router.post('/', validateSurvey, createSurvey);
 
-/**
- * @route   GET /api/surveys
- * @desc    Obtener todas las respuestas
- * @access  Public
- */
-router.get('/', getAllSurveys);
-
-/**
- * @route   GET /api/surveys/stats
- * @desc    Obtener estadísticas
- * @access  Public
- */
-router.get('/stats', getSurveyStats);
-
-/**
- * @route   GET /api/surveys/:id/presentation
- * @desc    Generar presentación PPTX individual para un registro
- * @access  Public
- */
-router.get('/:id/presentation', generateIndividualPresentation);
-
-/**
- * @route   GET /api/surveys/:id
- * @desc    Obtener respuesta por ID
- * @access  Public
- */
-router.get('/:id', getSurveyById);
-
-/**
- * @route   PUT /api/surveys/:id
- * @desc    Actualizar respuesta
- * @access  Public
- */
-router.put('/:id', validateSurvey, updateSurvey);
-
-/**
- * @route   DELETE /api/surveys/:id
- * @desc    Eliminar respuesta
- * @access  Public
- */
-router.delete('/:id', deleteSurvey);
+// All read/write/delete routes require authentication
+router.get('/', authenticate, getAllSurveys);
+router.get('/stats', authenticate, getSurveyStats);
+router.get('/:id/presentation', authenticate, generateIndividualPresentation);
+router.get('/:id', authenticate, getSurveyById);
+router.put('/:id', authenticate, validateSurvey, updateSurvey);
+router.delete('/:id', authenticate, deleteSurvey);
 
 export default router;

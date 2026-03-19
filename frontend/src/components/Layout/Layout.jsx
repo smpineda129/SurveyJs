@@ -1,29 +1,50 @@
-import { Box } from '@mui/material';
+import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { Box, Toolbar } from '@mui/material';
+import Sidebar, { SIDEBAR_WIDTH } from './Sidebar';
 import Header from './Header';
-import Footer from './Footer';
 
-function Layout({ children }) {
+const PAGE_TITLES = {
+  '/': 'Inicio',
+  '/survey': 'Formulario',
+  '/results': 'Resultados',
+};
+
+export default function Layout({ children }) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
+  const title = PAGE_TITLES[location.pathname] ?? 'GDI';
+
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-      }}
-    >
-      <Header />
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+      <Sidebar mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
+
       <Box
-        component="main"
+        component="div"
         sx={{
           flex: 1,
-          backgroundColor: 'background.default',
+          ml: { md: `${SIDEBAR_WIDTH}px` },
+          display: 'flex',
+          flexDirection: 'column',
+          minWidth: 0,
         }}
       >
-        {children}
+        <Header onMenuClick={() => setMobileOpen(true)} title={title} />
+
+        {/* Push content below fixed AppBar */}
+        <Toolbar sx={{ minHeight: { xs: 56, md: 64 } }} />
+
+        <Box
+          component="main"
+          sx={{
+            flex: 1,
+            p: { xs: 2, sm: 3 },
+            minHeight: 0,
+          }}
+        >
+          {children}
+        </Box>
       </Box>
-      <Footer />
     </Box>
   );
 }
-
-export default Layout;

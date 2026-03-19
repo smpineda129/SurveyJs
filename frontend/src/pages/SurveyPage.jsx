@@ -1,14 +1,10 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
-  Box,
-  Typography,
-  Container,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+  Box, Typography, FormControl, InputLabel, Select, MenuItem,
+  Paper, Chip,
 } from '@mui/material';
+import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import SurveyComponent from '../components/Survey/SurveyComponent';
 import entidadesPublicasConfig from '../config/EntidadesPublicasConfig';
 import mgdaConfig from '../config/MGMAconfig';
@@ -17,88 +13,128 @@ import entidadesPrivadasConfig from '../config/surveyConfig';
 const formularios = [
   {
     key: 'entidades_publicas',
-    label: 'Diagnóstico Integral de Archivos – Entidades Públicas',
+    label: 'Diagnóstico Integral – Entidades Públicas',
     config: entidadesPublicasConfig,
   },
   {
     key: 'mgda',
-    label: 'Modelo de Gestión Documental y Administración de Archivos (MGDA)',
+    label: 'Modelo de Gestión Documental (MGDA)',
     config: mgdaConfig,
   },
   {
     key: 'entidades_privadas',
-    label: 'Diagnóstico Integral de Archivos – Entidades Privadas',
+    label: 'Diagnóstico Integral – Entidades Privadas',
     config: entidadesPrivadasConfig,
   },
 ];
 
-function SurveyPage() {
+export default function SurveyPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [selectedForm, setSelectedForm] = useState('');
 
-  const handleSurveyComplete = (data) => {
-    console.log('Survey completed with data:', data);
-    // Redirigir a resultados después de completar
-    setTimeout(() => {
-      navigate('/results');
-    }, 2000);
+  // Pre-select form from URL param (e.g. /survey?form=entidades_publicas)
+  useEffect(() => {
+    const formParam = searchParams.get('form');
+    if (formParam && formularios.find((f) => f.key === formParam)) {
+      setSelectedForm(formParam);
+    }
+  }, [searchParams]);
+
+  const handleSurveyComplete = () => {
+    setTimeout(() => navigate('/results'), 1800);
   };
 
-  const activeConfig = formularios.find((f) => f.key === selectedForm)?.config;
+  const activeForm = formularios.find((f) => f.key === selectedForm);
 
   return (
-    <Container maxWidth="md">
-      <Box className="fade-in" sx={{ py: 4 }}>
-        <Typography
-          variant="h3"
-          component="h1"
-          gutterBottom
-          textAlign="center"
-          sx={{ mb: 2, fontWeight: 600 }}
-        >
-          Instrumentos Archivísticos
-        </Typography>
-        <Typography
-          variant="body1"
-          color="text.secondary"
-          textAlign="center"
-          paragraph
-          sx={{ mb: 4 }}
-        >
-          Seleccione el formulario que desea diligenciar. Todos los campos
-          marcados con asterisco (*) son obligatorios.
-        </Typography>
+    <Box className="fade-in" sx={{ maxWidth: 900, mx: 'auto' }}>
+      {/* Selector header */}
+      <Paper
+        elevation={0}
+        sx={{
+          p: { xs: 2.5, sm: 3 },
+          mb: 3,
+          border: '1px solid #E5E7EB',
+          borderRadius: 3,
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2.5 }}>
+          <Box sx={{
+            width: 40, height: 40, borderRadius: 2,
+            bgcolor: '#E1F0F7',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <AssignmentOutlinedIcon sx={{ color: '#0076C6', fontSize: 20 }} />
+          </Box>
+          <Box>
+            <Typography variant="h6" fontWeight={700}>
+              Seleccionar instrumento
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Elija el formulario que desea diligenciar
+            </Typography>
+          </Box>
+        </Box>
 
-        <FormControl fullWidth sx={{ mb: 4 }}>
-          <InputLabel id="formulario-select-label">
-            Seleccione un formulario
-          </InputLabel>
+        <FormControl fullWidth>
+          <InputLabel id="form-select-label">Instrumento archivístico</InputLabel>
           <Select
-            labelId="formulario-select-label"
-            id="formulario-select"
+            labelId="form-select-label"
             value={selectedForm}
-            label="Seleccione un formulario"
+            label="Instrumento archivístico"
             onChange={(e) => setSelectedForm(e.target.value)}
+            sx={{ borderRadius: 2 }}
           >
-            {formularios.map((form) => (
-              <MenuItem key={form.key} value={form.key}>
-                {form.label}
+            {formularios.map((f) => (
+              <MenuItem key={f.key} value={f.key}>
+                {f.label}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
 
-        {activeConfig && (
-          <SurveyComponent
-            key={selectedForm}
-            surveyConfig={activeConfig}
-            formType={selectedForm}
-            onComplete={handleSurveyComplete}
-          />
+        {selectedForm && (
+          <Box sx={{ mt: 1.5, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+            <Chip
+              label={`Formulario: ${activeForm?.label}`}
+              size="small"
+              color="primary"
+              variant="outlined"
+            />
+          </Box>
         )}
-      </Box>
-    </Container>
+      </Paper>
+
+      {/* Survey form */}
+      {activeForm && (
+        <SurveyComponent
+          key={selectedForm}
+          surveyConfig={activeForm.config}
+          formType={selectedForm}
+          onComplete={handleSurveyComplete}
+        />
+      )}
+
+      {!selectedForm && (
+        <Paper
+          elevation={0}
+          sx={{
+            p: 6, textAlign: 'center',
+            border: '2px dashed #E5E7EB',
+            borderRadius: 3,
+            bgcolor: 'transparent',
+          }}
+        >
+          <AssignmentOutlinedIcon sx={{ fontSize: 48, color: '#CBD5E1', mb: 2 }} />
+          <Typography variant="h6" color="text.secondary" fontWeight={500}>
+            Seleccione un instrumento para comenzar
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+            Use el selector de arriba para elegir el formulario correspondiente.
+          </Typography>
+        </Paper>
+      )}
+    </Box>
   );
 }
-
-export default SurveyPage;

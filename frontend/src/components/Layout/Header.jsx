@@ -1,47 +1,38 @@
-import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
-import { useNavigate, useLocation } from 'react-router-dom';
-import Logo from '../../public/Logo.png';
+import { AppBar, Toolbar, IconButton, Typography, Box } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import { SIDEBAR_WIDTH } from './Sidebar';
 
-function Header() {
-  const navigate = useNavigate();
-  const location = useLocation();
-
+export default function Header({ onMenuClick, title }) {
   return (
-    <AppBar position="static" elevation={2}>
-      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Box component="img" src={Logo} alt="GDI Logo" sx={{ height: 40, mr: 2, cursor: 'pointer' }} onClick={() => navigate('/')} />
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button
-            color="inherit"
-            onClick={() => navigate('/')}
-            sx={{
-              fontWeight: location.pathname === '/' ? 'bold' : 'normal',
-            }}
-          >
-            Inicio
-          </Button>
-          <Button
-            color="inherit"
-            onClick={() => navigate('/survey')}
-            sx={{
-              fontWeight: location.pathname === '/survey' ? 'bold' : 'normal',
-            }}
-          >
-            Formulario
-          </Button>
-          <Button
-            color="inherit"
-            onClick={() => navigate('/results')}
-            sx={{
-              fontWeight: location.pathname === '/results' ? 'bold' : 'normal',
-            }}
-          >
-            Resultados
-          </Button>
+    <AppBar
+      position="fixed"
+      elevation={0}
+      sx={{
+        width: { md: `calc(100% - ${SIDEBAR_WIDTH}px)` },
+        ml: { md: `${SIDEBAR_WIDTH}px` },
+        bgcolor: '#FFFFFF',
+        borderBottom: '1px solid #E5E7EB',
+        zIndex: (theme) => theme.zIndex.drawer - 1,
+      }}
+    >
+      <Toolbar sx={{ minHeight: { xs: 56, md: 64 }, px: { xs: 2, md: 3 } }}>
+        <IconButton
+          edge="start"
+          onClick={onMenuClick}
+          sx={{ mr: 2, display: { md: 'none' }, color: 'text.primary' }}
+          aria-label="Abrir menú"
+        >
+          <MenuIcon />
+        </IconButton>
+        <Box sx={{ flex: 1 }}>
+          {title && (
+            <Typography variant="h6" fontWeight={600} color="text.primary" noWrap>
+              {title}
+            </Typography>
+          )}
         </Box>
+        {/* Reserved for future: notifications, user badge, etc. */}
       </Toolbar>
     </AppBar>
   );
 }
-
-export default Header;

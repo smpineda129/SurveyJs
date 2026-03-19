@@ -3,44 +3,13 @@
  * Usa scoring numérico ponderado (valor seleccionado / valor máximo * 100)
  */
 
-import { surveyJson } from '../../../../../frontend/src/config/EntidadesPublicasConfig.js';
+import { publicaChoiceMap } from '../config/publicaChoiceMap.js';
 import { getQuestionTitle } from '../config/questionTitles.js';
 
 export class PublicaDiagnosticCalculator {
   constructor(surveyData) {
     this.data = surveyData;
-    this.choiceMap = this.buildChoiceMap();
-  }
-
-  /**
-   * Recorre todos los elementos del surveyJson y construye un mapa
-   * { questionKey: { maxValue, choices: [{value, text}] } }
-   */
-  buildChoiceMap() {
-    const map = {};
-
-    const processElement = (el) => {
-      if (!el || typeof el !== 'object') return;
-
-      if (el.type === 'radiogroup' && el.name && Array.isArray(el.choices)) {
-        const numericChoices = el.choices.filter(c => typeof c.value === 'number');
-        if (numericChoices.length > 0) {
-          const maxValue = Math.max(...numericChoices.map(c => c.value));
-          map[el.name] = { maxValue, choices: numericChoices };
-        }
-      }
-
-      if (Array.isArray(el.elements)) el.elements.forEach(processElement);
-      if (Array.isArray(el.panels)) el.panels.forEach(processElement);
-    };
-
-    if (Array.isArray(surveyJson.pages)) {
-      surveyJson.pages.forEach(page => {
-        if (Array.isArray(page.elements)) page.elements.forEach(processElement);
-      });
-    }
-
-    return map;
+    this.choiceMap = publicaChoiceMap;
   }
 
   /**

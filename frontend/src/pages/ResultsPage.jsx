@@ -20,23 +20,27 @@ import { surveyAPI } from '../services/api';
 import entidadesPublicasConfig from '../config/EntidadesPublicasConfig';
 import mgdaConfig from '../config/MGMAconfig';
 import entidadesPrivadasConfig from '../config/surveyConfig';
+import pinarConfig from '../config/pinarConfig';
 
 const FORM_LABELS = {
   entidades_publicas: 'Entidades Públicas',
   mgda: 'MGDA',
   entidades_privadas: 'Entidades Privadas',
+  pinar: 'PINAR',
 };
 
 const FORM_COLORS = {
   entidades_publicas: { color: '#0076C6', bg: '#E1F0F7', icon: AccountBalanceOutlinedIcon },
   mgda: { color: '#005585', bg: '#E1F0F7', icon: DescriptionOutlinedIcon },
   entidades_privadas: { color: '#00446A', bg: '#E1F0F7', icon: BusinessOutlinedIcon },
+  pinar: { color: '#0B6BCB', bg: '#EAF4FF', icon: DescriptionOutlinedIcon },
 };
 
 const FORM_CONFIGS = {
   entidades_publicas: entidadesPublicasConfig,
   mgda: mgdaConfig,
   entidades_privadas: entidadesPrivadasConfig,
+  pinar: pinarConfig,
 };
 
 const extractElements = (elements = []) => {
@@ -158,6 +162,7 @@ export default function ResultsPage() {
     { key: 'entidades_publicas', label: 'Públ.' },
     { key: 'mgda', label: 'MGDA' },
     { key: 'entidades_privadas', label: 'Priv.' },
+    { key: 'pinar', label: 'PINAR' },
   ];
 
   return (

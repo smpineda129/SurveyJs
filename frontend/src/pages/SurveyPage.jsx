@@ -9,7 +9,7 @@ import SurveyComponent from '../components/Survey/SurveyComponent';
 import entidadesPublicasConfig from '../config/EntidadesPublicasConfig';
 import mgdaConfig from '../config/MGMAconfig';
 import entidadesPrivadasConfig from '../config/surveyConfig';
-import pinarConfig from '../config/PINARconfig';
+import pinarConfig from '../config/pinarConfig';
 
 const formularios = [
   {

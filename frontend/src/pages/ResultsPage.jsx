@@ -184,19 +184,19 @@ export default function ResultsPage() {
 
       {/* Stats */}
       <Grid container spacing={2} sx={{ mb: 3 }}>
-        <Grid item xs={12} sm={6} md={4} lg={2}>
+        <Grid item xs={12} sm={6} md={4}>
           <StatCard icon={AssessmentOutlinedIcon} label="Total registros" value={stats?.total ?? surveys.length} color="#0076C6" bg="#E1F0F7" />
         </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={2}>
+        <Grid item xs={12} sm={6} md={4}>
           <StatCard icon={AccountBalanceOutlinedIcon} label="Entidades Públicas" value={stats?.byFormType?.entidades_publicas ?? surveys.filter(s => s.formType === 'entidades_publicas').length} color="#005585" bg="#E1F0F7" />
         </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={2}>
+        <Grid item xs={12} sm={6} md={4}>
           <StatCard icon={DescriptionOutlinedIcon} label="MGDA" value={stats?.byFormType?.mgda ?? surveys.filter(s => s.formType === 'mgda').length} color="#00446A" bg="#E1F0F7" />
         </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={2}>
+        <Grid item xs={12} sm={6} md={4}>
           <StatCard icon={BusinessOutlinedIcon} label="Entidades Privadas" value={stats?.byFormType?.entidades_privadas ?? surveys.filter(s => s.formType === 'entidades_privadas').length} color="#636569" bg="#F4F4F5" />
         </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={2}>
+        <Grid item xs={12} sm={6} md={4}>
           <StatCard icon={BusinessOutlinedIcon} label="PINAR" value={stats?.byFormType?.pinar ?? surveys.filter(s => s.formType === 'pinar').length} color="#0B6BCB" bg="#EAF4FF" />
         </Grid>
       </Grid>

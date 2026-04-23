@@ -9,6 +9,7 @@ import SurveyComponent from '../components/Survey/SurveyComponent';
 import entidadesPublicasConfig from '../config/EntidadesPublicasConfig';
 import mgdaConfig from '../config/MGMAconfig';
 import entidadesPrivadasConfig from '../config/surveyConfig';
+import pinarConfig from '../config/PINARconfig';
 
 const formularios = [
   {
@@ -25,6 +26,11 @@ const formularios = [
     key: 'entidades_privadas',
     label: 'Diagnóstico Integral – Entidades Privadas',
     config: entidadesPrivadasConfig,
+  },
+  {
+    key: 'pinar',
+    label: 'Plan Institucional de Archivos (PINAR)',
+    config: pinarConfig,
   },
 ];
 

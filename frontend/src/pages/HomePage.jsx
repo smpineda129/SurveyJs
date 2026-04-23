@@ -45,6 +45,17 @@ const instruments = [
     description:
       'Diagnóstico para el sector privado: organización, función archivística, preservación documental y generación de informe en presentación PPTX.',
   },
+  {
+    key: 'pinar',
+    icon: AssignmentOutlinedIcon,
+    color: '#00695C',
+    bg: '#E0F2F1',
+    label: 'PINAR',
+    title: 'Plan Institucional de Archivos',
+    subtitle: 'Planeación Estratégica Archivística',
+    description:
+      'Formulación del PINAR conforme lineamientos del Archivo General de la Nación: riesgos, objetivos, proyectos, cronograma y seguimiento.',
+  },
 ];
 
 export default function HomePage() {

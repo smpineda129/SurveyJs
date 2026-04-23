@@ -75,7 +75,7 @@ export default function SurveyPage() {
           </Box>
           <Box>
             <Typography variant="h6" fontWeight={700}>
-              Seleccionar instrumento
+              Seleccionar
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Elija el formulario que desea diligenciar

@@ -137,7 +137,7 @@ export default function HomePage() {
         {instruments.map((inst) => {
           const Icon = inst.icon;
           return (
-            <Grid item xs={12} sm={6} md={4} key={inst.key}>
+            <Grid item xs={12} sm={6} md={6} key={inst.key}>
               <Card
                 sx={{
                   height: '100%',

@@ -24,6 +24,8 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
     const data = survey.getValue("matriz_calificacion");
     if (!data) return;
 
+    let cambiado = false;
+
     const actualizada = data.map(row => {
       const total =
         (Number(row.admin) || 0) +
@@ -32,10 +34,18 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
         (Number(row.tecnologia) || 0) +
         (Number(row.fortalecimiento) || 0);
 
-      return { ...row, total };
+      if (row.total !== total) {
+        cambiado = true;
+        return { ...row, total };
+      }
+
+      return row;
     });
 
-    survey.setValue("matriz_calificacion", actualizada);
+    // 🔥 solo actualizar si cambió (evita loop)
+    if (cambiado) {
+      survey.setValue("matriz_calificacion", actualizada);
+    }
   };
 
   // 🔥 CREAR SURVEY
@@ -101,11 +111,11 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
         allValuesRef.current[options.name] = options.value;
       }
 
-      if (
-        formTypeRef.current === "pinar" &&
-        options.name === "matriz_calificacion"
-      ) {
-        calcularTotales(sender);
+      // 🔥 detectar cambios en la matriz (aunque sea interno)
+      if (formTypeRef.current === "pinar") {
+        setTimeout(() => {
+          calcularTotales(sender);
+        }, 50);
       }
     };
 

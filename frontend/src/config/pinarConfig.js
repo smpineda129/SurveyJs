@@ -1,255 +1,291 @@
 const pinarConfig = {
-  title: "Plan Institucional de Archivos (PINAR)",
-  logoPosition: "right",
+  title: "PLAN INSTITUCIONAL DE ARCHIVOS – PINAR",
   showProgressBar: "top",
   progressBarType: "buttons",
   showQuestionNumbers: "off",
-  completedHtml:
-    "<div style='font-size:18px;font-weight:bold;margin-top:20px;'>El formulario PINAR ha sido diligenciado correctamente.</div>",
 
   pages: [
+
+    // 🟦 1. PORTADA
     {
-      name: "identificacion",
-      title: "Identificación Institucional",
+      name: "portada",
       elements: [
         {
-          type: "text",
-          name: "nombre_entidad",
-          title: "Nombre de la entidad",
-          isRequired: true
+          type: "html",
+          name: "titulo_portada",
+          html: `
+            <h2 style="text-align:center;">PLAN INSTITUCIONAL DE ARCHIVOS – PINAR</h2>
+          `
         },
         {
           type: "text",
-          name: "nit",
-          title: "NIT"
-        },
-        {
-          type: "dropdown",
-          name: "sector",
-          title: "Sector",
-          choices: ["Público", "Privado", "Mixto"],
-          isRequired: true
+          name: "nombre_empresa",
+          title: "Nombre de la empresa"
         },
         {
           type: "text",
-          name: "ciudad",
-          title: "Ciudad"
+          name: "mes_anio",
+          title: "Mes y año (ej: Enero 2026)"
+        }
+      ]
+    },
+
+    // 🟦 2. INTRODUCCIÓN
+    {
+      name: "introduccion",
+      elements: [
+        {
+          type: "html",
+          html: `
+          <h3>1. Introducción</h3>
+          <p>
+          La {nombre_empresa}, como entidad del Estado que cumple una función pública...
+          </p>
+          `
         },
         {
           type: "text",
-          name: "responsable",
-          title: "Responsable del PINAR"
-        },
-        {
-          type: "dropdown",
           name: "vigencia",
-          title: "Vigencia del plan",
-          choices: ["2026-2029", "2027-2030", "2028-2031"]
+          title: "Vigencia del plan (ej: 2025-2028)"
         }
       ]
     },
 
+    // 🟦 3. ALCANCE
     {
-      name: "contexto_estrategico",
-      title: "Contexto Estratégico",
+      name: "alcance",
       elements: [
         {
-          type: "comment",
-          name: "mision",
-          title: "Misión institucional"
-        },
-        {
-          type: "comment",
-          name: "vision",
-          title: "Visión institucional"
-        },
-        {
-          type: "comment",
-          name: "objetivos_entidad",
-          title: "Objetivos estratégicos institucionales"
+          type: "html",
+          html: `
+          <h3>2. Alcance</h3>
+          <p>
+          El PINAR del {nombre_empresa} se proyectará para las vigencias {vigencia}...
+          </p>
+          `
         }
       ]
     },
 
+    // 🟦 4. CONTEXTO ESTRATÉGICO
     {
-      name: "aspectos_criticos",
-      title: "Aspectos Críticos",
-      elements: [
-        {
-          type: "matrixdynamic",
-          name: "riesgos",
-          title: "Registrar aspectos críticos",
-          addRowText: "Agregar aspecto",
-          columns: [
-            {
-              name: "aspecto",
-              title: "Aspecto crítico",
-              cellType: "text"
-            },
-            {
-              name: "riesgo",
-              title: "Riesgo asociado",
-              cellType: "comment"
-            },
-            {
-              name: "impacto",
-              title: "Impacto",
-              cellType: "dropdown",
-              choices: ["Alto", "Medio", "Bajo"]
-            }
-          ]
-        }
-      ]
-    },
-
-    {
-      name: "vision_objetivos",
-      title: "Visión y Objetivos PINAR",
-      elements: [
-        {
-          type: "comment",
-          name: "vision_pinar",
-          title: "Visión estratégica del PINAR"
-        },
-        {
-          type: "matrixdynamic",
-          name: "objetivos_pinar",
-          title: "Objetivos estratégicos",
-          addRowText: "Agregar objetivo",
-          columns: [
-            {
-              name: "objetivo",
-              title: "Objetivo",
-              cellType: "comment"
-            },
-            {
-              name: "indicador",
-              title: "Indicador",
-              cellType: "text"
-            }
-          ]
-        }
-      ]
-    },
-
-    {
-      name: "planes_proyectos",
-      title: "Planes y Proyectos",
+      name: "contexto",
       elements: [
         {
           type: "paneldynamic",
-          name: "proyectos",
-          panelAddText: "Agregar proyecto",
-          templateTitle: "Proyecto {panelIndex}",
+          name: "contexto_estrategico",
+          title: "3. Contexto estratégico",
           templateElements: [
             {
               type: "text",
-              name: "nombre_proyecto",
+              name: "titulo",
+              title: "Título"
+            },
+            {
+              type: "comment",
+              name: "contenido",
+              title: "Contenido"
+            }
+          ],
+          panelAddText: "Agregar ítem"
+        }
+      ]
+    },
+
+    // 🟦 5. ¿TENÍA PINAR ANTERIOR?
+    {
+      name: "pinar_anterior",
+      elements: [
+        {
+          type: "radiogroup",
+          name: "tenia_pinar",
+          title: "¿La entidad ha tenido PINAR anteriormente?",
+          choices: ["Si", "No"]
+        }
+      ]
+    },
+
+    // 🟦 6. ANÁLISIS (CONDICIONAL)
+    {
+      name: "analisis",
+      visibleIf: "{tenia_pinar} = 'Si'",
+      elements: [
+        {
+          type: "html",
+          html: `
+          <h3>4. Análisis de la situación actual</h3>
+          <p>
+          Con el objeto de fortalecer la política archivística...
+          </p>
+          `
+        },
+        {
+          type: "file",
+          name: "evidencia_anterior",
+          title: "Subir imagen del plan anterior"
+        }
+      ]
+    },
+
+    // 🟦 7. ASPECTOS CRÍTICOS
+    {
+      name: "aspectos",
+      elements: [
+        {
+          type: "matrixdynamic",
+          name: "aspectos_criticos",
+          title: "Aspectos críticos",
+          columns: [
+            { name: "aspecto", title: "Aspecto crítico" },
+            { name: "riesgo", title: "Riesgo asociado" }
+          ],
+          addRowText: "Agregar aspecto"
+        }
+      ]
+    },
+
+    // 🟦 8. EJES ARTICULADORES
+    {
+      name: "ejes",
+      elements: [
+        {
+          type: "html",
+          html: `
+          <h3>Ejes articuladores</h3>
+          <ul>
+            <li>Administración de archivos</li>
+            <li>Acceso a la información</li>
+            <li>Preservación de la información</li>
+            <li>Aspectos tecnológicos y de seguridad</li>
+            <li>Fortalecimiento y articulación</li>
+          </ul>
+          `
+        }
+      ]
+    },
+
+    // 🟦 9. MATRIZ DE CALIFICACIÓN
+    {
+      name: "calificacion",
+      elements: [
+        {
+          type: "matrixdynamic",
+          name: "matriz_calificacion",
+          title: "Calificación de aspectos",
+          columns: [
+            { name: "aspecto", title: "Aspecto crítico" },
+            { name: "admin", title: "Administración de archivos" },
+            { name: "acceso", title: "Acceso a la información" },
+            { name: "preservacion", title: "Preservación" },
+            { name: "tecnologia", title: "Tecnología y seguridad" },
+            { name: "fortalecimiento", title: "Fortalecimiento" }
+          ]
+        }
+      ]
+    },
+
+    // 🟦 10. VISIÓN ESTRATÉGICA
+    {
+      name: "vision",
+      elements: [
+        {
+          type: "html",
+          html: `
+          <h3>Visión estratégica</h3>
+          <p>
+          La {nombre_empresa}, a través del PINAR, busca...
+          </p>
+          `
+        }
+      ]
+    },
+
+    // 🟦 11. OBJETIVOS
+    {
+      name: "objetivos",
+      elements: [
+        {
+          type: "comment",
+          name: "objetivo_general",
+          title: "Objetivo general"
+        },
+        {
+          type: "paneldynamic",
+          name: "objetivos_especificos",
+          title: "Objetivos específicos",
+          templateElements: [
+            {
+              type: "text",
+              name: "objetivo",
+              title: "Objetivo"
+            }
+          ]
+        }
+      ]
+    },
+
+    // 🟦 12. PLANES Y PROYECTOS
+    {
+      name: "planes",
+      elements: [
+        {
+          type: "paneldynamic",
+          name: "planes_proyectos",
+          title: "Planes y proyectos",
+          templateElements: [
+            {
+              type: "text",
+              name: "nombre",
               title: "Nombre del proyecto"
             },
             {
               type: "comment",
-              name: "descripcion_proyecto",
-              title: "Descripción"
-            },
-            {
-              type: "text",
-              name: "responsable_proyecto",
-              title: "Responsable"
-            },
-            {
-              type: "dropdown",
-              name: "prioridad",
-              title: "Prioridad",
-              choices: ["Alta", "Media", "Baja"]
+              name: "alcance",
+              title: "Alcance"
             }
           ]
         }
       ]
     },
 
+    // 🟦 13. MAPA DE RUTA
     {
-      name: "cronograma",
-      title: "Cronograma",
+      name: "mapa",
       elements: [
         {
           type: "matrixdynamic",
-          name: "cronograma_general",
-          title: "Mapa de ruta del PINAR",
-          addRowText: "Agregar actividad",
+          name: "mapa_ruta",
+          title: "Mapa de ruta",
           columns: [
-            {
-              name: "actividad",
-              title: "Actividad",
-              cellType: "comment"
-            },
-            {
-              name: "y2026",
-              title: "2026",
-              cellType: "checkbox"
-            },
-            {
-              name: "y2027",
-              title: "2027",
-              cellType: "checkbox"
-            },
-            {
-              name: "y2028",
-              title: "2028",
-              cellType: "checkbox"
-            },
-            {
-              name: "y2029",
-              title: "2029",
-              cellType: "checkbox"
-            }
+            { name: "plan", title: "Plan o proyecto" },
+            { name: "2025", title: "2025" },
+            { name: "2026", title: "2026" },
+            { name: "2027", title: "2027" }
           ]
         }
       ]
     },
 
+    // 🟦 14. MEDICIÓN
     {
-      name: "seguimiento",
-      title: "Seguimiento",
+      name: "medicion",
       elements: [
         {
           type: "matrixdynamic",
-          name: "indicadores",
-          title: "Control y seguimiento",
-          addRowText: "Agregar indicador",
+          name: "medicion",
+          title: "Herramienta de medición",
           columns: [
-            {
-              name: "meta",
-              title: "Meta",
-              cellType: "text"
-            },
-            {
-              name: "avance",
-              title: "% Avance",
-              cellType: "text"
-            },
-            {
-              name: "estado",
-              title: "Estado",
-              cellType: "dropdown",
-              choices: ["Pendiente", "En ejecución", "Finalizado"]
-            }
+            { name: "indicador", title: "Indicador" },
+            { name: "meta", title: "Meta" },
+            { name: "t1", title: "T1" },
+            { name: "t2", title: "T2" },
+            { name: "t3", title: "T3" },
+            { name: "t4", title: "T4" }
           ]
-        }
-      ]
-    },
-
-    {
-      name: "observaciones_finales",
-      title: "Observaciones Finales",
-      elements: [
-        {
-          type: "comment",
-          name: "comentarios_finales",
-          title: "Observaciones y recomendaciones"
         }
       ]
     }
+
   ]
 };
 

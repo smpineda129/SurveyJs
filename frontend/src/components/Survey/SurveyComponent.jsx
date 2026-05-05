@@ -10,13 +10,16 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  console.log('>>> SurveyComponent v5 LOADED <<<');
+  console.log('>>> SurveyComponent FIXED <<<');
 
-  // Acumulador de todos los valores capturados durante la interacción
   const allValuesRef = useRef({});
-  // Refs para callbacks actuales (evita stale closures)
   const onCompleteRef = useRef(onComplete);
   const formTypeRef = useRef(formType);
+
+  onCompleteRef.current = onComplete;
+  formTypeRef.current = formType;
+
+  // 🔥 FUNCIÓN PARA CALCULAR TOTALES
   const calcularTotales = (survey) => {
     const data = survey.getValue("matriz_calificacion");
     if (!data) return;
@@ -29,67 +32,64 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
         (Number(row.tecnologia) || 0) +
         (Number(row.fortalecimiento) || 0);
 
-      return {
-        ...row,
-        total
-      };
+      return { ...row, total };
     });
 
     survey.setValue("matriz_calificacion", actualizada);
   };
-  onCompleteRef.current = onComplete;
-  formTypeRef.current = formType;
 
-  // Crear modelo UNA SOLA VEZ
+  // 🔥 CREAR SURVEY
   const survey = useMemo(() => {
     const s = new Model(surveyConfig);
+
     s.clearInvisibleValues = 'none';
     s.keepIncorrectValues = true;
     s.storeOthersAsComment = false;
     s.textUpdateMode = 'onTyping';
+
     s.applyTheme({
       themeName: 'defaultV2',
       colorPalette: 'light',
       isPanelless: false,
     });
+
     return s;
   }, [surveyConfig]);
 
+  // 🔥 INYECTAR DATOS PINAR
   useEffect(() => {
+    if (formType !== "pinar") return;
 
-    const onAfterRenderSurvey = (sender) => {
-      if (formTypeRef.current !== "pinar") return;
+    const aspectosDiagnostico = [
+      "Falta de actualización de TRD",
+      "Deficiente organización documental",
+      "Falta de digitalización"
+    ];
 
-      const aspectosDiagnostico = [
-        "Falta de actualización de TRD",
-        "Deficiente organización documental",
-        "Falta de digitalización"
-      ];
+    const aspectosFormateados = aspectosDiagnostico.map(a => ({
+      aspecto: a,
+      riesgo: ""
+    }));
 
-      const aspectosFormateados = aspectosDiagnostico.map(a => ({
-        aspecto: a,
-        riesgo: ""
-      }));
+    const matriz = aspectosDiagnostico.map(a => ({
+      aspecto: a,
+      admin: "",
+      acceso: "",
+      preservacion: "",
+      tecnologia: "",
+      fortalecimiento: "",
+      total: 0
+    }));
 
-      const matriz = aspectosDiagnostico.map(a => ({
-        aspecto: a,
-        admin: "",
-        acceso: "",
-        preservacion: "",
-        tecnologia: "",
-        fortalecimiento: "",
-        total: 0
-      }));
+    setTimeout(() => {
+      survey.setValue("aspectos_criticos", aspectosFormateados);
+      survey.setValue("matriz_calificacion", matriz);
+    }, 200);
 
-      sender.setValue("aspectos_criticos", []);
-      sender.setValue("matriz_calificacion", []);
+  }, [survey, formType]);
 
-      setTimeout(() => {
-        sender.setValue("aspectos_criticos", aspectosFormateados);
-        sender.setValue("matriz_calificacion", matriz);
-      }, 50);
-    };
-
+  // 🔥 EVENTOS
+  useEffect(() => {
 
     const onValueChanged = (sender, options) => {
       if (
@@ -109,7 +109,6 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
       }
     };
 
-
     const onPageChanging = (sender) => {
       const page = sender.currentPage;
       if (page && page.questions) {
@@ -124,13 +123,7 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
           }
         });
       }
-
-      console.log(
-        '[PAGE] obs captured:',
-        Object.keys(allValuesRef.current).filter(k => k.includes('_obs')).length
-      );
     };
-
 
     const onSurveyComplete = async (sender) => {
       setLoading(true);
@@ -174,14 +167,11 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
       }
     };
 
-
-    survey.onAfterRenderSurvey.add(onAfterRenderSurvey);
     survey.onValueChanged.add(onValueChanged);
     survey.onCurrentPageChanging.add(onPageChanging);
     survey.onComplete.add(onSurveyComplete);
 
     return () => {
-      survey.onAfterRenderSurvey.remove(onAfterRenderSurvey);
       survey.onValueChanged.remove(onValueChanged);
       survey.onCurrentPageChanging.remove(onPageChanging);
       survey.onComplete.remove(onSurveyComplete);

@@ -136,8 +136,8 @@ const pinarConfig = {
           name: "aspectos_criticos",
           title: "Aspectos críticos",
           columns: [
-            { name: "aspecto", title: "Aspecto crítico" },
-            { name: "riesgo", title: "Riesgo asociado" }
+            { name: "aspecto", title: "Aspecto crítico", cellType: "text" },
+            { name: "riesgo", title: "Riesgo asociado", cellType: "text" }
           ],
           addRowText: "Agregar aspecto"
         }
@@ -173,12 +173,12 @@ const pinarConfig = {
           name: "matriz_calificacion",
           title: "Calificación de aspectos",
           columns: [
-            { name: "aspecto", title: "Aspecto crítico" },
-            { name: "admin", title: "Administración de archivos" },
-            { name: "acceso", title: "Acceso a la información" },
-            { name: "preservacion", title: "Preservación" },
-            { name: "tecnologia", title: "Tecnología y seguridad" },
-            { name: "fortalecimiento", title: "Fortalecimiento" }
+            { name: "aspecto", title: "Aspecto crítico", cellType: "text" },
+            { name: "admin", title: "Administración de archivos", cellType: "text" },
+            { name: "acceso", title: "Acceso a la información", cellType: "text" },
+            { name: "preservacion", title: "Preservación", cellType: "text" },
+            { name: "tecnologia", title: "Tecnología y seguridad", cellType: "text" },
+            { name: "fortalecimiento", title: "Fortalecimiento", cellType: "text" },
           ]
         }
       ]
@@ -258,9 +258,9 @@ const pinarConfig = {
           title: "Mapa de ruta",
           columns: [
             { name: "plan", title: "Plan o proyecto" },
-            { name: "2025", title: "2025" },
-            { name: "2026", title: "2026" },
-            { name: "2027", title: "2027" }
+            { name: "corto", title: "Corto plazo (1 año)" },
+            { name: "mediano", title: "Mediano plazo (1-4 años)" },
+            { name: "largo", title: "Largo plazo" }
           ]
         }
       ]

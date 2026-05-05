@@ -55,36 +55,6 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
     return s;
   }, [surveyConfig]);
 
-  useEffect(() => {
-    if (formType !== "pinar") return;
-
-    // Simulación 
-    const aspectosDiagnostico = [
-      "Falta de actualización de TRD",
-      "Deficiente organización documental",
-      "Falta de digitalización"
-    ];
-
-    const aspectosFormateados = aspectosDiagnostico.map(a => ({
-      aspecto: a,
-      riesgo: ""
-    }));
-
-    const matriz = aspectosDiagnostico.map(a => ({
-      aspecto: a,
-      admin: "",
-      acceso: "",
-      preservacion: "",
-      tecnologia: "",
-      fortalecimiento: "",
-      total: 0
-    }));
-
-    survey.setValue("aspectos_criticos", aspectosFormateados);
-    survey.setValue("matriz_calificacion", matriz);
-
-  }, [survey, formType]);
-
   // Asignar eventos UNA SOLA VEZ al modelo estable
   useEffect(() => {
     const onValueChanged = (sender, options) => {
@@ -115,6 +85,33 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
     };
 
     const onSurveyComplete = async (sender) => {
+      const onAfterRenderSurvey = (sender) => {
+        if (formTypeRef.current !== "pinar") return;
+
+        const aspectosDiagnostico = [
+          "Falta de actualización de TRD",
+          "Deficiente organización documental",
+          "Falta de digitalización"
+        ];
+
+        const aspectosFormateados = aspectosDiagnostico.map(a => ({
+          aspecto: a,
+          riesgo: ""
+        }));
+
+        const matriz = aspectosDiagnostico.map(a => ({
+          aspecto: a,
+          admin: "",
+          acceso: "",
+          preservacion: "",
+          tecnologia: "",
+          fortalecimiento: "",
+          total: 0
+        }));
+
+        sender.setValue("aspectos_criticos", aspectosFormateados);
+        sender.setValue("matriz_calificacion", matriz);
+      };
       setLoading(true);
       setError(null);
 
@@ -155,11 +152,13 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
     survey.onValueChanged.add(onValueChanged);
     survey.onCurrentPageChanging.add(onPageChanging);
     survey.onComplete.add(onSurveyComplete);
+    survey.onAfterRenderSurvey.add(onAfterRenderSurvey);
 
     return () => {
       survey.onValueChanged.remove(onValueChanged);
       survey.onCurrentPageChanging.remove(onPageChanging);
       survey.onComplete.remove(onSurveyComplete);
+      survey.onAfterRenderSurvey.remove(onAfterRenderSurvey);
     };
   }, [survey]);
 

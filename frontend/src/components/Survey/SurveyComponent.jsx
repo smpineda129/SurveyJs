@@ -17,6 +17,26 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
   // Refs para callbacks actuales (evita stale closures)
   const onCompleteRef = useRef(onComplete);
   const formTypeRef = useRef(formType);
+  const calcularTotales = (survey) => {
+    const data = survey.getValue("matriz_calificacion");
+    if (!data) return;
+
+    const actualizada = data.map(row => {
+      const total =
+        (Number(row.admin) || 0) +
+        (Number(row.acceso) || 0) +
+        (Number(row.preservacion) || 0) +
+        (Number(row.tecnologia) || 0) +
+        (Number(row.fortalecimiento) || 0);
+
+      return {
+        ...row,
+        total
+      };
+    });
+
+    survey.setValue("matriz_calificacion", actualizada);
+  };
   onCompleteRef.current = onComplete;
   formTypeRef.current = formType;
 
@@ -35,6 +55,36 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
     return s;
   }, [surveyConfig]);
 
+  useEffect(() => {
+    if (formType !== "pinar") return;
+
+    // Simulación 
+    const aspectosDiagnostico = [
+      "Falta de actualización de TRD",
+      "Deficiente organización documental",
+      "Falta de digitalización"
+    ];
+
+    const aspectosFormateados = aspectosDiagnostico.map(a => ({
+      aspecto: a,
+      riesgo: ""
+    }));
+
+    const matriz = aspectosDiagnostico.map(a => ({
+      aspecto: a,
+      admin: "",
+      acceso: "",
+      preservacion: "",
+      tecnologia: "",
+      fortalecimiento: "",
+      total: 0
+    }));
+
+    survey.setValue("aspectos_criticos", aspectosFormateados);
+    survey.setValue("matriz_calificacion", matriz);
+
+  }, [survey, formType]);
+
   // Asignar eventos UNA SOLA VEZ al modelo estable
   useEffect(() => {
     const onValueChanged = (sender, options) => {
@@ -50,6 +100,15 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
           if (q.name && q.value !== undefined && q.value !== null && q.value !== '') {
             allValuesRef.current[q.name] = q.value;
           }
+          const onValueChanged = (sender, options) => {
+            if (options.name && options.value !== undefined && options.value !== null && options.value !== '') {
+              allValuesRef.current[options.name] = options.value;
+            }
+            // SOLO PARA PINAR
+            if (formTypeRef.current === "pinar" && options.name === "matriz_calificacion") {
+              calcularTotales(sender);
+            }
+          };
         });
       }
       console.log('[PAGE] obs captured:', Object.keys(allValuesRef.current).filter(k => k.includes('_obs')).length);
@@ -71,7 +130,7 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
 
       // Merge: acumulados + sender.data (sender.data tiene prioridad para radiogroups)
       const surveyData = { ...allValuesRef.current, ...sender.data };
-      
+
       const obsKeys = Object.keys(surveyData).filter(k => k.includes('_obs'));
       console.log('FINAL _obs keys:', obsKeys.length, obsKeys);
       console.log('Total keys:', Object.keys(surveyData).length);
@@ -137,7 +196,7 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
             <CircularProgress />
           </Box>
         )}
-        
+
         <Survey model={survey} />
       </Paper>
     </Box>

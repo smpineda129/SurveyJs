@@ -55,92 +55,117 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
     return s;
   }, [surveyConfig]);
 
-  // Asignar eventos UNA SOLA VEZ al modelo estable
   useEffect(() => {
+
+    const onAfterRenderSurvey = (sender) => {
+      if (formTypeRef.current !== "pinar") return;
+
+      const aspectosDiagnostico = [
+        "Falta de actualización de TRD",
+        "Deficiente organización documental",
+        "Falta de digitalización"
+      ];
+
+      const aspectosFormateados = aspectosDiagnostico.map(a => ({
+        aspecto: a,
+        riesgo: ""
+      }));
+
+      const matriz = aspectosDiagnostico.map(a => ({
+        aspecto: a,
+        admin: "",
+        acceso: "",
+        preservacion: "",
+        tecnologia: "",
+        fortalecimiento: "",
+        total: 0
+      }));
+
+      sender.setValue("aspectos_criticos", []);
+      sender.setValue("matriz_calificacion", []);
+
+      setTimeout(() => {
+        sender.setValue("aspectos_criticos", aspectosFormateados);
+        sender.setValue("matriz_calificacion", matriz);
+      }, 50);
+    };
+
+
     const onValueChanged = (sender, options) => {
-      if (options.name && options.value !== undefined && options.value !== null && options.value !== '') {
+      if (
+        options.name &&
+        options.value !== undefined &&
+        options.value !== null &&
+        options.value !== ''
+      ) {
         allValuesRef.current[options.name] = options.value;
       }
+
+      if (
+        formTypeRef.current === "pinar" &&
+        options.name === "matriz_calificacion"
+      ) {
+        calcularTotales(sender);
+      }
     };
+
 
     const onPageChanging = (sender) => {
       const page = sender.currentPage;
       if (page && page.questions) {
         page.questions.forEach(q => {
-          if (q.name && q.value !== undefined && q.value !== null && q.value !== '') {
+          if (
+            q.name &&
+            q.value !== undefined &&
+            q.value !== null &&
+            q.value !== ''
+          ) {
             allValuesRef.current[q.name] = q.value;
           }
-          const onValueChanged = (sender, options) => {
-            if (options.name && options.value !== undefined && options.value !== null && options.value !== '') {
-              allValuesRef.current[options.name] = options.value;
-            }
-            // SOLO PARA PINAR
-            if (formTypeRef.current === "pinar" && options.name === "matriz_calificacion") {
-              calcularTotales(sender);
-            }
-          };
         });
       }
-      console.log('[PAGE] obs captured:', Object.keys(allValuesRef.current).filter(k => k.includes('_obs')).length);
+
+      console.log(
+        '[PAGE] obs captured:',
+        Object.keys(allValuesRef.current).filter(k => k.includes('_obs')).length
+      );
     };
 
+
     const onSurveyComplete = async (sender) => {
-      const onAfterRenderSurvey = (sender) => {
-        if (formTypeRef.current !== "pinar") return;
-
-        const aspectosDiagnostico = [
-          "Falta de actualización de TRD",
-          "Deficiente organización documental",
-          "Falta de digitalización"
-        ];
-
-        const aspectosFormateados = aspectosDiagnostico.map(a => ({
-          aspecto: a,
-          riesgo: ""
-        }));
-
-        const matriz = aspectosDiagnostico.map(a => ({
-          aspecto: a,
-          admin: "",
-          acceso: "",
-          preservacion: "",
-          tecnologia: "",
-          fortalecimiento: "",
-          total: 0
-        }));
-
-        sender.setValue("aspectos_criticos", aspectosFormateados);
-        sender.setValue("matriz_calificacion", matriz);
-      };
       setLoading(true);
       setError(null);
 
-      // Capturar última página antes de completar
       const lastPage = sender.currentPage;
       if (lastPage && lastPage.questions) {
         lastPage.questions.forEach(q => {
-          if (q.name && q.value !== undefined && q.value !== null && q.value !== '') {
+          if (
+            q.name &&
+            q.value !== undefined &&
+            q.value !== null &&
+            q.value !== ''
+          ) {
             allValuesRef.current[q.name] = q.value;
           }
         });
       }
 
-      // Merge: acumulados + sender.data (sender.data tiene prioridad para radiogroups)
       const surveyData = { ...allValuesRef.current, ...sender.data };
 
-      const obsKeys = Object.keys(surveyData).filter(k => k.includes('_obs'));
-      console.log('FINAL _obs keys:', obsKeys.length, obsKeys);
-      console.log('Total keys:', Object.keys(surveyData).length);
-
       try {
-        const response = await surveyAPI.create(surveyData, 'completed', formTypeRef.current);
-        console.log('Response:', response);
+        const response = await surveyAPI.create(
+          surveyData,
+          'completed',
+          formTypeRef.current
+        );
+
         setSuccess(true);
         setTimeout(() => setSuccess(false), 5000);
 
         if (onCompleteRef.current) {
           onCompleteRef.current(response.data);
         }
+
       } catch (err) {
         console.error('Error al enviar:', err);
         setError(err.response?.data?.message || 'Error al enviar el formulario.');
@@ -149,17 +174,19 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
       }
     };
 
+
+    survey.onAfterRenderSurvey.add(onAfterRenderSurvey);
     survey.onValueChanged.add(onValueChanged);
     survey.onCurrentPageChanging.add(onPageChanging);
     survey.onComplete.add(onSurveyComplete);
-    survey.onAfterRenderSurvey.add(onAfterRenderSurvey);
 
     return () => {
+      survey.onAfterRenderSurvey.remove(onAfterRenderSurvey);
       survey.onValueChanged.remove(onValueChanged);
       survey.onCurrentPageChanging.remove(onPageChanging);
       survey.onComplete.remove(onSurveyComplete);
-      survey.onAfterRenderSurvey.remove(onAfterRenderSurvey);
     };
+
   }, [survey]);
 
   return (

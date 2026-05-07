@@ -81,44 +81,44 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
       };
     });
 
-    const generarRiesgos = (survey, priorizados) => {
-
-      const riesgos = priorizados.map((row) => {
-
-        let riesgo = "";
-
-        const aspecto = (row.aspecto || "").toLowerCase();
-
-        if (aspecto.includes("trd")) {
-          riesgo =
-            "Riesgo de pérdida de control documental e incumplimiento de la normatividad archivística.";
-        }
-
-        else if (aspecto.includes("digital")) {
-          riesgo =
-            "Riesgo de pérdida de información y dificultades en el acceso documental.";
-        }
-
-        else if (aspecto.includes("organización")) {
-          riesgo =
-            "Riesgo de desorganización documental y retrasos en la recuperación de información.";
-        }
-
-        else {
-          riesgo =
-            "Riesgo asociado a deficiencias en la gestión documental institucional.";
-        }
-
-        return {
-          aspecto: row.aspecto,
-          riesgo
-        };
-      });
-
-      survey.setValue("riesgos_automaticos", riesgos);
-    };
-
     survey.setValue("objetivos_estrategicos", objetivos);
+  };
+
+  const generarRiesgos = (survey, priorizados) => {
+
+    const riesgos = priorizados.map((row) => {
+
+      let riesgo = "";
+
+      const aspecto = (row.aspecto || "").toLowerCase();
+
+      if (aspecto.includes("trd")) {
+        riesgo =
+          "Riesgo de pérdida de control documental e incumplimiento de la normatividad archivística.";
+      }
+
+      else if (aspecto.includes("digital")) {
+        riesgo =
+          "Riesgo de pérdida de información y dificultades en el acceso documental.";
+      }
+
+      else if (aspecto.includes("organización")) {
+        riesgo =
+          "Riesgo de desorganización documental y retrasos en la recuperación de información.";
+      }
+
+      else {
+        riesgo =
+          "Riesgo asociado a deficiencias en la gestión documental institucional.";
+      }
+
+      return {
+        aspecto: row.aspecto,
+        riesgo
+      };
+    });
+
+    survey.setValue("riesgos_automaticos", riesgos);
   };
 
   const generarPriorizacion = (survey) => {

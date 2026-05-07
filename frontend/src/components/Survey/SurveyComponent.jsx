@@ -52,22 +52,27 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
     const data = survey.getValue("matriz_calificacion");
     if (!data) return;
 
-    const priorizados = data.map((row, index) => {
+    const priorizados = [...data]
 
-      let prioridad = "Baja";
+      // ordenar de mayor a menor por total
+      .sort((a, b) => (b.total || 0) - (a.total || 0))
 
-      if (row.total >= 40) {
-        prioridad = "Alta";
-      } else if (row.total >= 25) {
-        prioridad = "Media";
-      }
+      .map((row, index) => {
 
-      return {
-        numero: index + 1,
-        aspecto: row.aspecto,
-        prioridad
-      };
-    });
+        let prioridad = "Baja";
+
+        if (row.total >= 40) {
+          prioridad = "Alta";
+        } else if (row.total >= 25) {
+          prioridad = "Media";
+        }
+
+        return {
+          numero: index + 1,
+          aspecto: row.aspecto,
+          prioridad
+        };
+      });
 
     survey.setValue("priorizacion_criticos", priorizados);
   };

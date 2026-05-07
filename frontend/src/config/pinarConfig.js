@@ -179,6 +179,12 @@ const pinarConfig = {
             { name: "preservacion", title: "Preservación", cellType: "text" },
             { name: "tecnologia", title: "Tecnología y seguridad", cellType: "text" },
             { name: "fortalecimiento", title: "Fortalecimiento", cellType: "text" },
+            {
+              name: "total",
+              title: "TOTAL",
+              cellType: "text",
+              readOnly: true
+            }
           ]
         }
       ]

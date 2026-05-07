@@ -47,6 +47,42 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
     }
     generarPriorizacion(survey);
   };
+  const generarObjetivos = (survey, priorizados) => {
+
+    const objetivos = priorizados.map((row) => {
+
+      let objetivo = "";
+
+      const aspecto = (row.aspecto || "").toLowerCase();
+
+      if (aspecto.includes("trd")) {
+        objetivo =
+          "Actualizar, ajustar e implementar las Tablas de Retención Documental para fortalecer la gestión documental institucional.";
+      }
+
+      else if (aspecto.includes("digital")) {
+        objetivo =
+          "Fortalecer los procesos de digitalización documental para garantizar acceso y preservación de la información.";
+      }
+
+      else if (aspecto.includes("organización")) {
+        objetivo =
+          "Optimizar la organización documental mediante lineamientos archivísticos y buenas prácticas institucionales.";
+      }
+
+      else {
+        objetivo =
+          "Implementar acciones de mejora orientadas al fortalecimiento de la gestión documental institucional.";
+      }
+
+      return {
+        aspecto: row.aspecto,
+        objetivo
+      };
+    });
+
+    survey.setValue("objetivos_estrategicos", objetivos);
+  };
 
   const generarPriorizacion = (survey) => {
     const data = survey.getValue("matriz_calificacion");
@@ -75,6 +111,7 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
       });
 
     survey.setValue("priorizacion_criticos", priorizados);
+    generarObjetivos(survey, priorizados);
   };
 
   // CREAR SURVEY

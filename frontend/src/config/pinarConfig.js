@@ -211,6 +211,25 @@ const pinarConfig = {
               readOnly: true
             }
           ]
+        },
+        {
+          type: "matrixdynamic",
+          name: "objetivos_estrategicos",
+          title: "Objetivos estratégicos",
+          columns: [
+            {
+              name: "aspecto",
+              title: "Aspecto crítico",
+              cellType: "text",
+              readOnly: true
+            },
+            {
+              name: "objetivo",
+              title: "Objetivo estratégico",
+              cellType: "comment",
+              readOnly: true
+            }
+          ]
         }
       ]
     },

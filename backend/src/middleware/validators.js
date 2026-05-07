@@ -21,7 +21,7 @@ export const handleValidationErrors = (req, res, next) => {
 export const validateSurvey = [
   body('formType')
     .exists().withMessage('formType es requerido')
-    .isIn(['entidades_publicas', 'mgda', 'entidades_privadas']).withMessage('formType debe ser entidades_publicas, mgda o entidades_privadas'),
+    .isIn(['entidades_publicas', 'mgda', 'entidades_privadas', 'pinar']).withMessage('formType debe ser entidades_publicas, mgda o entidades_privadas'),
   body('surveyData')
     .exists().withMessage('surveyData es requerido')
     .isObject().withMessage('surveyData debe ser un objeto'),

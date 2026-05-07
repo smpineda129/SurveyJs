@@ -10,6 +10,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
+import DescriptionIcon from '@mui/icons-material/Description';
 import SearchIcon from '@mui/icons-material/Search';
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
@@ -147,7 +148,51 @@ export default function ResultsPage() {
       setToastMsg('Error al generar la presentación. Intente nuevamente.');
     } finally {
       setGeneratingId(null);
-    }
+    };
+    const handleGenerateDocx = async (survey) => {
+
+      setGeneratingId(survey._id);
+
+      try {
+
+        const blob = await surveyAPI.generatePinarDocx(
+          survey.surveyData
+        );
+
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+
+        link.href = url;
+
+        const entity =
+          getEntityName(survey).replace(/\s+/g, '_');
+
+        link.download =
+          `PINAR_${entity}_${Date.now()}.docx`;
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        document.body.removeChild(link);
+
+        window.URL.revokeObjectURL(url);
+
+        setToastMsg('Documento PINAR generado exitosamente.');
+
+      } catch {
+
+        setToastMsg(
+          'Error al generar el documento PINAR.'
+        );
+
+      } finally {
+
+        setGeneratingId(null);
+
+      }
+    };
   };
 
   const filtered = surveys.filter((s) => {
@@ -322,6 +367,23 @@ export default function ResultsPage() {
                                   {generatingId === survey._id
                                     ? <CircularProgress size={16} />
                                     : <SlideshowOutlinedIcon fontSize="small" />}
+                                </IconButton>
+                              </span>
+                            </Tooltip>
+                          )}
+                          {survey.formType === 'pinar' && (
+                            <Tooltip title="Generar PINAR DOCX">
+                              <span>
+                                <IconButton
+                                  size="small"
+                                  onClick={() => handleGenerateDocx(survey)}
+                                  disabled={generatingId === survey._id}
+                                  aria-label="Generar PINAR DOCX"
+                                  sx={{ color: '#2563EB' }}
+                                >
+                                  {generatingId === survey._id
+                                    ? <CircularProgress size={16} />
+                                    : <DescriptionIcon fontSize="small" />}
                                 </IconButton>
                               </span>
                             </Tooltip>

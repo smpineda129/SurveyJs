@@ -83,6 +83,19 @@ export const surveyAPI = {
     });
     return response.data;
   },
+  // Generar documento PINAR DOCX
+  generatePinarDocx: async (surveyData) => {
+
+    const response = await api.post(
+      '/pinar/generate-docx',
+      surveyData,
+      {
+        responseType: 'blob'
+      }
+    );
+
+    return response.data;
+  },
 };
 
 // Survey Definition API

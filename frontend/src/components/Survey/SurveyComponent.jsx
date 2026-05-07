@@ -121,6 +121,61 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
     survey.setValue("riesgos_automaticos", riesgos);
   };
 
+  const generarPlanes = (survey, priorizados) => {
+
+    const planes = priorizados.map((row) => {
+
+      let plan = "";
+      let actividad = "";
+
+      const aspecto = (row.aspecto || "").toLowerCase();
+
+      if (aspecto.includes("trd")) {
+
+        plan = "Actualización de instrumentos archivísticos";
+
+        actividad =
+          "Elaborar, actualizar e implementar las Tablas de Retención Documental.";
+
+      }
+
+      else if (aspecto.includes("digital")) {
+
+        plan = "Fortalecimiento de digitalización documental";
+
+        actividad =
+          "Implementar estrategias de digitalización y acceso electrónico de documentos.";
+
+      }
+
+      else if (aspecto.includes("organización")) {
+
+        plan = "Organización documental institucional";
+
+        actividad =
+          "Aplicar procesos técnicos archivísticos para la adecuada organización documental.";
+
+      }
+
+      else {
+
+        plan = "Fortalecimiento de gestión documental";
+
+        actividad =
+          "Implementar acciones de mejora para fortalecer la gestión documental institucional.";
+
+      }
+
+      return {
+        aspecto: row.aspecto,
+        plan,
+        actividad
+      };
+    });
+
+    survey.setValue("planes_proyectos", planes);
+  };
+
   const generarPriorizacion = (survey) => {
     const data = survey.getValue("matriz_calificacion");
     if (!data) return;
@@ -150,6 +205,7 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
     survey.setValue("priorizacion_criticos", priorizados);
     generarObjetivos(survey, priorizados);
     generarRiesgos(survey, priorizados);
+    generarPlanes(survey, priorizados);
   };
 
   // CREAR SURVEY

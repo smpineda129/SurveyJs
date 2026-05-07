@@ -45,6 +45,31 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
     if (cambiado) {
       survey.setValue("matriz_calificacion", actualizada);
     }
+    generarPriorizacion(survey);
+  };
+
+  const generarPriorizacion = (survey) => {
+    const data = survey.getValue("matriz_calificacion");
+    if (!data) return;
+
+    const priorizados = data.map((row, index) => {
+
+      let prioridad = "Baja";
+
+      if (row.total >= 40) {
+        prioridad = "Alta";
+      } else if (row.total >= 25) {
+        prioridad = "Media";
+      }
+
+      return {
+        numero: index + 1,
+        aspecto: row.aspecto,
+        prioridad
+      };
+    });
+
+    survey.setValue("priorizacion_criticos", priorizados);
   };
 
   // CREAR SURVEY

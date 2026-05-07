@@ -151,9 +151,6 @@ export default function ResultsPage() {
     };
 
     const handleGenerateDocx = async (survey) => {
-
-      console.log("CLICK DOCX");
-
       setGeneratingId(survey._id);
 
       try {
@@ -357,7 +354,7 @@ export default function ResultsPage() {
                               <VisibilityOutlinedIcon fontSize="small" />
                             </IconButton>
                           </Tooltip>
-                          {isPptxAvailable && (
+                          {isPptxAvailable && survey.formType !== 'pinar' && (
                             <Tooltip title="Generar PPTX">
                               <span>
                                 <IconButton
@@ -457,20 +454,49 @@ export default function ResultsPage() {
               ))}
             </DialogContent>
             <DialogActions sx={{ px: 3, py: 2 }}>
-              <Button onClick={() => setSelectedSurvey(null)} variant="outlined" sx={{ borderRadius: 2 }}>
+
+              <Button
+                onClick={() => setSelectedSurvey(null)}
+                variant="outlined"
+                sx={{ borderRadius: 2 }}
+              >
                 Cerrar
               </Button>
-              {(
+
+              {selectedSurvey?.formType !== 'pinar' ? (
+
                 <Button
                   variant="contained"
-                  startIcon={generatingId === selectedSurvey._id ? <CircularProgress size={16} sx={{ color: '#fff' }} /> : <SlideshowOutlinedIcon />}
+                  startIcon={
+                    generatingId === selectedSurvey._id
+                      ? <CircularProgress size={16} sx={{ color: '#fff' }} />
+                      : <SlideshowOutlinedIcon />
+                  }
                   onClick={() => handleGeneratePptx(selectedSurvey)}
                   disabled={generatingId === selectedSurvey._id}
                   sx={{ borderRadius: 2 }}
                 >
                   Generar PPTX
                 </Button>
+
+              ) : (
+
+                <Button
+                  variant="contained"
+                  startIcon={
+                    generatingId === selectedSurvey._id
+                      ? <CircularProgress size={16} sx={{ color: '#fff' }} />
+                      : <DescriptionIcon />
+                  }
+                  onClick={() => handleGenerateDocx(selectedSurvey)}
+                  disabled={generatingId === selectedSurvey._id}
+                  sx={{ borderRadius: 2 }}
+                >
+                  Generar Documento
+                </Button>
+
               )}
+
             </DialogActions>
           </>
         )}

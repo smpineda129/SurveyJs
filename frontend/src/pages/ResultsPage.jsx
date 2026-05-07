@@ -149,7 +149,10 @@ export default function ResultsPage() {
     } finally {
       setGeneratingId(null);
     };
+
     const handleGenerateDocx = async (survey) => {
+
+      console.log("CLICK DOCX");
 
       setGeneratingId(survey._id);
 

@@ -1,129 +1,116 @@
-import SurveyDefinition from '../models/SurveyDefinition.js';
+import {
+  Document,
+  Packer,
+  Paragraph,
+  TextRun,
+  HeadingLevel
+} from "docx";
 
-/**
- * Obtener definición activa del formulario
- */
-export const getActiveSurveyDefinition = async (req, res, next) => {
+export const generatePinarDocx = async (req, res) => {
+
   try {
-    const definition = await SurveyDefinition.findOne({ isActive: true })
-      .sort({ createdAt: -1 });
 
-    if (!definition) {
-      return res.status(404).json({
-        success: false,
-        message: 'No hay definición activa del formulario'
-      });
-    }
+    const data = req.body.surveyData || req.body;
 
-    res.status(200).json({
-      success: true,
-      data: definition
+    const doc = new Document({
+      sections: [
+        {
+          children: [
+
+            // PORTADA
+            new Paragraph({
+              text: "PLAN INSTITUCIONAL DE ARCHIVOS - PINAR",
+              heading: HeadingLevel.TITLE,
+              spacing: {
+                after: 400
+              }
+            }),
+
+            new Paragraph({
+              text: data.nombre_empresa || "NOMBRE DE LA EMPRESA",
+              spacing: {
+                after: 300
+              }
+            }),
+
+            new Paragraph({
+              text: new Date().getFullYear().toString(),
+              spacing: {
+                after: 600
+              }
+            }),
+
+            // INTRODUCCIÓN
+            new Paragraph({
+              text: "1. INTRODUCCIÓN",
+              heading: HeadingLevel.HEADING_1
+            }),
+
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text:
+                    `La ${data.nombre_empresa || "entidad"} desarrolla el presente Plan Institucional de Archivos - PINAR con el propósito de fortalecer la gestión documental institucional y establecer acciones orientadas al mejoramiento archivístico.`,
+                })
+              ]
+            }),
+
+            // ASPECTOS CRÍTICOS
+            new Paragraph({
+              text: "2. ASPECTOS CRÍTICOS",
+              heading: HeadingLevel.HEADING_1,
+              spacing: {
+                before: 400
+              }
+            }),
+
+            ...(data.priorizacion_criticos || []).map(item =>
+              new Paragraph({
+                text: `• ${item.aspecto} (${item.prioridad})`
+              })
+            ),
+
+            // OBJETIVOS
+            new Paragraph({
+              text: "3. OBJETIVOS ESTRATÉGICOS",
+              heading: HeadingLevel.HEADING_1,
+              spacing: {
+                before: 400
+              }
+            }),
+
+            ...(data.objetivos_estrategicos || []).map(item =>
+              new Paragraph({
+                text: `• ${item.objetivo}`
+              })
+            )
+
+          ]
+        }
+      ]
     });
-  } catch (error) {
-    next(error);
-  }
-};
 
-/**
- * Crear o actualizar definición del formulario
- */
-export const createOrUpdateSurveyDefinition = async (req, res, next) => {
-  try {
-    const { name, version, definition, description, isActive } = req.body;
+    const buffer = await Packer.toBuffer(doc);
 
-    // Si se marca como activa, desactivar las demás
-    if (isActive) {
-      await SurveyDefinition.updateMany(
-        { name },
-        { isActive: false }
-      );
-    }
-
-    const surveyDefinition = await SurveyDefinition.findOneAndUpdate(
-      { name, version },
-      {
-        name,
-        version,
-        definition,
-        description,
-        isActive: isActive !== undefined ? isActive : true
-      },
-      {
-        new: true,
-        upsert: true,
-        runValidators: true
-      }
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     );
 
-    res.status(200).json({
-      success: true,
-      message: 'Definición del formulario guardada exitosamente',
-      data: surveyDefinition
-    });
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=PINAR.docx"
+    );
+
+    res.send(buffer);
+
   } catch (error) {
-    next(error);
-  }
-};
 
-/**
- * Obtener todas las definiciones
- */
-export const getAllSurveyDefinitions = async (req, res, next) => {
-  try {
-    const definitions = await SurveyDefinition.find()
-      .sort({ createdAt: -1 });
+    console.error(error);
 
-    res.status(200).json({
-      success: true,
-      data: definitions
+    res.status(500).json({
+      message: "Error generando documento"
     });
-  } catch (error) {
-    next(error);
-  }
-};
 
-/**
- * Obtener definición por ID
- */
-export const getSurveyDefinitionById = async (req, res, next) => {
-  try {
-    const definition = await SurveyDefinition.findById(req.params.id);
-
-    if (!definition) {
-      return res.status(404).json({
-        success: false,
-        message: 'Definición no encontrada'
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      data: definition
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/**
- * Eliminar definición
- */
-export const deleteSurveyDefinition = async (req, res, next) => {
-  try {
-    const definition = await SurveyDefinition.findByIdAndDelete(req.params.id);
-
-    if (!definition) {
-      return res.status(404).json({
-        success: false,
-        message: 'Definición no encontrada'
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      message: 'Definición eliminada exitosamente'
-    });
-  } catch (error) {
-    next(error);
   }
 };

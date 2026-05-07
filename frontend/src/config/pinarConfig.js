@@ -6,7 +6,7 @@ const pinarConfig = {
 
   pages: [
 
-    // 🟦 1. PORTADA
+    //  1. PORTADA
     {
       name: "portada",
       elements: [
@@ -30,7 +30,7 @@ const pinarConfig = {
       ]
     },
 
-    // 🟦 2. INTRODUCCIÓN
+    // 2. INTRODUCCIÓN
     {
       name: "introduccion",
       elements: [
@@ -51,7 +51,7 @@ const pinarConfig = {
       ]
     },
 
-    // 🟦 3. ALCANCE
+    //  3. ALCANCE
     {
       name: "alcance",
       elements: [
@@ -67,7 +67,7 @@ const pinarConfig = {
       ]
     },
 
-    // 🟦 4. CONTEXTO ESTRATÉGICO
+    // 4. CONTEXTO ESTRATÉGICO
     {
       name: "contexto",
       elements: [
@@ -92,7 +92,7 @@ const pinarConfig = {
       ]
     },
 
-    // 🟦 5. ¿TENÍA PINAR ANTERIOR?
+    // 5. ¿TENÍA PINAR ANTERIOR?
     {
       name: "pinar_anterior",
       elements: [
@@ -105,7 +105,7 @@ const pinarConfig = {
       ]
     },
 
-    // 🟦 6. ANÁLISIS (CONDICIONAL)
+    // 6. ANÁLISIS (CONDICIONAL)
     {
       name: "analisis",
       visibleIf: "{tenia_pinar} = 'Si'",
@@ -127,7 +127,7 @@ const pinarConfig = {
       ]
     },
 
-    // 🟦 7. ASPECTOS CRÍTICOS
+    //  7. ASPECTOS CRÍTICOS
     {
       name: "aspectos",
       elements: [
@@ -144,7 +144,7 @@ const pinarConfig = {
       ]
     },
 
-    // 🟦 8. EJES ARTICULADORES
+    //  8. EJES ARTICULADORES
     {
       name: "ejes",
       elements: [
@@ -176,12 +176,37 @@ const pinarConfig = {
             { name: "aspecto", title: "Aspecto crítico", cellType: "text" },
             { name: "admin", title: "Administración de archivos", cellType: "text" },
             { name: "acceso", title: "Acceso a la información", cellType: "text" },
-            { name: "preservacion", title: "Preservación", cellType: "text" },
-            { name: "tecnologia", title: "Tecnología y seguridad", cellType: "text" },
-            { name: "fortalecimiento", title: "Fortalecimiento", cellType: "text" },
+            { name: "preservacion", title: "Preservación de la Información", cellType: "text" },
+            { name: "tecnologia", title: "Aspectos Tecnológicos y de Seguridad", cellType: "text" },
+            { name: "fortalecimiento", title: "Fortalecimiento y Articulación", cellType: "text" },
             {
               name: "total",
               title: "TOTAL",
+              cellType: "text",
+              readOnly: true
+            }
+          ]
+        },
+        {
+          type: "matrixdynamic",
+          name: "priorizacion_criticos",
+          title: "Aspectos críticos priorizados",
+          columns: [
+            {
+              name: "numero",
+              title: "N°",
+              cellType: "text",
+              readOnly: true
+            },
+            {
+              name: "aspecto",
+              title: "Aspecto crítico priorizado",
+              cellType: "text",
+              readOnly: true
+            },
+            {
+              name: "prioridad",
+              title: "Prioridad",
               cellType: "text",
               readOnly: true
             }
@@ -190,7 +215,7 @@ const pinarConfig = {
       ]
     },
 
-    // 🟦 10. VISIÓN ESTRATÉGICA
+    //  10. VISIÓN ESTRATÉGICA
     {
       name: "vision",
       elements: [
@@ -206,7 +231,7 @@ const pinarConfig = {
       ]
     },
 
-    // 🟦 11. OBJETIVOS
+    //  11. OBJETIVOS
     {
       name: "objetivos",
       elements: [
@@ -230,7 +255,7 @@ const pinarConfig = {
       ]
     },
 
-    // 🟦 12. PLANES Y PROYECTOS
+    // 12. PLANES Y PROYECTOS
     {
       name: "planes",
       elements: [
@@ -254,7 +279,7 @@ const pinarConfig = {
       ]
     },
 
-    // 🟦 13. MAPA DE RUTA
+    //  13. MAPA DE RUTA
     {
       name: "mapa",
       elements: [
@@ -272,7 +297,7 @@ const pinarConfig = {
       ]
     },
 
-    // 🟦 14. MEDICIÓN
+    // 14. MEDICIÓN
     {
       name: "medicion",
       elements: [

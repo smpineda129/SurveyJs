@@ -4,7 +4,7 @@ const surveySchema = new mongoose.Schema(
   {
     formType: {
       type: String,
-      enum: ['entidades_publicas', 'mgda', 'entidades_privadas'],
+      enum: ['entidades_publicas', 'mgda', 'entidades_privadas', 'pinar'],
       required: true,
       description: 'Tipo de formulario diligenciado'
     },
@@ -51,7 +51,7 @@ surveySchema.index({ createdAt: -1 });
 surveySchema.index({ completedAt: -1 });
 
 // Método para marcar como completado
-surveySchema.methods.markAsCompleted = function() {
+surveySchema.methods.markAsCompleted = function () {
   this.status = 'completed';
   this.completedAt = new Date();
   return this.save();

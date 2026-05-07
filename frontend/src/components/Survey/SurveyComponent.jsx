@@ -359,10 +359,17 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
         }
 
       } catch (err) {
-        console.error('Error al enviar:', err);
-        setError(err.response?.data?.message || 'Error al enviar el formulario.');
-      } finally {
-        setLoading(false);
+
+        console.error('ERROR COMPLETO:', err);
+
+        alert(
+          JSON.stringify(err.response?.data, null, 2)
+        );
+
+        setError(
+          err.response?.data?.message ||
+          'Error al enviar el formulario.'
+        );
       }
     };
 

@@ -181,6 +181,7 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
     });
 
     survey.setValue("planes_proyectos", planes);
+
     generarMapaRuta(survey, planes);
   };
 
@@ -210,210 +211,211 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
         };
       });
 
-    const generarMapaRuta = (survey, planes) => {
-
-      const mapa = planes.map((row, index) => {
-
-        return {
-          plan: row.plan,
-
-          vigencia1: "X",
-
-          vigencia2:
-            index % 2 === 0 ? "X" : "",
-
-          vigencia3:
-            index % 3 === 0 ? "X" : ""
-        };
-      });
-
-      survey.setValue("mapa_ruta_generado", mapa);
-    };
-
     survey.setValue("priorizacion_criticos", priorizados);
-    generarObjetivos(survey, priorizados);
-    generarRiesgos(survey, priorizados);
-    generarPlanes(survey, priorizados);
   };
 
-  // CREAR SURVEY
-  const survey = useMemo(() => {
-    const s = new Model(surveyConfig);
+  const generarMapaRuta = (survey, planes) => {
 
-    s.clearInvisibleValues = 'none';
-    s.keepIncorrectValues = true;
-    s.storeOthersAsComment = false;
-    s.textUpdateMode = 'onTyping';
+    const mapa = planes.map((row, index) => {
 
-    s.applyTheme({
-      themeName: 'defaultV2',
-      colorPalette: 'light',
-      isPanelless: false,
+      return {
+        plan: row.plan,
+
+        vigencia1: "X",
+
+        vigencia2:
+          index % 2 === 0 ? "X" : "",
+
+        vigencia3:
+          index % 3 === 0 ? "X" : ""
+      };
     });
 
-    return s;
-  }, [surveyConfig]);
+    survey.setValue("mapa_ruta_generado", mapa);
+  };
 
-  useEffect(() => {
-    if (formType !== "pinar") return;
+  generarObjetivos(survey, priorizados);
+  generarRiesgos(survey, priorizados);
+  generarPlanes(survey, priorizados);
+};
 
-    const aspectosDiagnostico = [
-      "Falta de actualización de TRD",
-      "Deficiente organización documental",
-      "Falta de digitalización"
-    ];
+// CREAR SURVEY
+const survey = useMemo(() => {
+  const s = new Model(surveyConfig);
 
-    const aspectosFormateados = aspectosDiagnostico.map(a => ({
-      aspecto: a,
-      riesgo: ""
-    }));
+  s.clearInvisibleValues = 'none';
+  s.keepIncorrectValues = true;
+  s.storeOthersAsComment = false;
+  s.textUpdateMode = 'onTyping';
 
-    const matriz = aspectosDiagnostico.map(a => ({
-      aspecto: a,
-      admin: "",
-      acceso: "",
-      preservacion: "",
-      tecnologia: "",
-      fortalecimiento: "",
-      total: 0
-    }));
+  s.applyTheme({
+    themeName: 'defaultV2',
+    colorPalette: 'light',
+    isPanelless: false,
+  });
 
-    setTimeout(() => {
-      survey.setValue("aspectos_criticos", aspectosFormateados);
-      survey.setValue("matriz_calificacion", matriz);
-    }, 200);
+  return s;
+}, [surveyConfig]);
 
-  }, [survey, formType]);
+useEffect(() => {
+  if (formType !== "pinar") return;
 
-  // EVENTOS
-  useEffect(() => {
+  const aspectosDiagnostico = [
+    "Falta de actualización de TRD",
+    "Deficiente organización documental",
+    "Falta de digitalización"
+  ];
 
-    const onValueChanged = (sender, options) => {
-      if (
-        options.name &&
-        options.value !== undefined &&
-        options.value !== null &&
-        options.value !== ''
-      ) {
-        allValuesRef.current[options.name] = options.value;
-      }
+  const aspectosFormateados = aspectosDiagnostico.map(a => ({
+    aspecto: a,
+    riesgo: ""
+  }));
 
-      // detectar cambios en la matriz (aunque sea interno)
-      if (formTypeRef.current === "pinar") {
-        setTimeout(() => {
-          calcularTotales(sender);
-        }, 50);
-      }
-    };
+  const matriz = aspectosDiagnostico.map(a => ({
+    aspecto: a,
+    admin: "",
+    acceso: "",
+    preservacion: "",
+    tecnologia: "",
+    fortalecimiento: "",
+    total: 0
+  }));
 
-    const onPageChanging = (sender) => {
-      const page = sender.currentPage;
-      if (page && page.questions) {
-        page.questions.forEach(q => {
-          if (
-            q.name &&
-            q.value !== undefined &&
-            q.value !== null &&
-            q.value !== ''
-          ) {
-            allValuesRef.current[q.name] = q.value;
-          }
-        });
-      }
-    };
+  setTimeout(() => {
+    survey.setValue("aspectos_criticos", aspectosFormateados);
+    survey.setValue("matriz_calificacion", matriz);
+  }, 200);
 
-    const onSurveyComplete = async (sender) => {
-      setLoading(true);
-      setError(null);
+}, [survey, formType]);
 
-      const lastPage = sender.currentPage;
-      if (lastPage && lastPage.questions) {
-        lastPage.questions.forEach(q => {
-          if (
-            q.name &&
-            q.value !== undefined &&
-            q.value !== null &&
-            q.value !== ''
-          ) {
-            allValuesRef.current[q.name] = q.value;
-          }
-        });
-      }
+// EVENTOS
+useEffect(() => {
 
-      const surveyData = { ...allValuesRef.current, ...sender.data };
+  const onValueChanged = (sender, options) => {
+    if (
+      options.name &&
+      options.value !== undefined &&
+      options.value !== null &&
+      options.value !== ''
+    ) {
+      allValuesRef.current[options.name] = options.value;
+    }
 
-      try {
-        const response = await surveyAPI.create(
-          surveyData,
-          'completed',
-          formTypeRef.current
-        );
+    // detectar cambios en la matriz (aunque sea interno)
+    if (formTypeRef.current === "pinar") {
+      setTimeout(() => {
+        calcularTotales(sender);
+      }, 50);
+    }
+  };
 
-        setSuccess(true);
-        setTimeout(() => setSuccess(false), 5000);
-
-        if (onCompleteRef.current) {
-          onCompleteRef.current(response.data);
+  const onPageChanging = (sender) => {
+    const page = sender.currentPage;
+    if (page && page.questions) {
+      page.questions.forEach(q => {
+        if (
+          q.name &&
+          q.value !== undefined &&
+          q.value !== null &&
+          q.value !== ''
+        ) {
+          allValuesRef.current[q.name] = q.value;
         }
+      });
+    }
+  };
 
-      } catch (err) {
-        console.error('Error al enviar:', err);
-        setError(err.response?.data?.message || 'Error al enviar el formulario.');
-      } finally {
-        setLoading(false);
+  const onSurveyComplete = async (sender) => {
+    setLoading(true);
+    setError(null);
+
+    const lastPage = sender.currentPage;
+    if (lastPage && lastPage.questions) {
+      lastPage.questions.forEach(q => {
+        if (
+          q.name &&
+          q.value !== undefined &&
+          q.value !== null &&
+          q.value !== ''
+        ) {
+          allValuesRef.current[q.name] = q.value;
+        }
+      });
+    }
+
+    const surveyData = { ...allValuesRef.current, ...sender.data };
+
+    try {
+      const response = await surveyAPI.create(
+        surveyData,
+        'completed',
+        formTypeRef.current
+      );
+
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 5000);
+
+      if (onCompleteRef.current) {
+        onCompleteRef.current(response.data);
       }
-    };
 
-    survey.onValueChanged.add(onValueChanged);
-    survey.onCurrentPageChanging.add(onPageChanging);
-    survey.onComplete.add(onSurveyComplete);
+    } catch (err) {
+      console.error('Error al enviar:', err);
+      setError(err.response?.data?.message || 'Error al enviar el formulario.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return () => {
-      survey.onValueChanged.remove(onValueChanged);
-      survey.onCurrentPageChanging.remove(onPageChanging);
-      survey.onComplete.remove(onSurveyComplete);
-    };
+  survey.onValueChanged.add(onValueChanged);
+  survey.onCurrentPageChanging.add(onPageChanging);
+  survey.onComplete.add(onSurveyComplete);
 
-  }, [survey]);
+  return () => {
+    survey.onValueChanged.remove(onValueChanged);
+    survey.onCurrentPageChanging.remove(onPageChanging);
+    survey.onComplete.remove(onSurveyComplete);
+  };
 
-  return (
-    <Box className="fade-in">
-      {error && (
-        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
-          {error}
-        </Alert>
+}, [survey]);
+
+return (
+  <Box className="fade-in">
+    {error && (
+      <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
+        {error}
+      </Alert>
+    )}
+
+    {success && (
+      <Alert severity="success" sx={{ mb: 3 }}>
+        ¡Formulario enviado exitosamente! Gracias por su participación.
+      </Alert>
+    )}
+
+    <Paper elevation={3} sx={{ p: 3, position: 'relative' }}>
+      {loading && (
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+            zIndex: 1000,
+          }}
+        >
+          <CircularProgress />
+        </Box>
       )}
 
-      {success && (
-        <Alert severity="success" sx={{ mb: 3 }}>
-          ¡Formulario enviado exitosamente! Gracias por su participación.
-        </Alert>
-      )}
-
-      <Paper elevation={3} sx={{ p: 3, position: 'relative' }}>
-        {loading && (
-          <Box
-            sx={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'rgba(255, 255, 255, 0.8)',
-              zIndex: 1000,
-            }}
-          >
-            <CircularProgress />
-          </Box>
-        )}
-
-        <Survey model={survey} />
-      </Paper>
-    </Box>
-  );
-}
+      <Survey model={survey} />
+    </Paper>
+  </Box>
+);
 
 export default SurveyComponent;

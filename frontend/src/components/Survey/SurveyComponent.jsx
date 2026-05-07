@@ -19,7 +19,7 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
   onCompleteRef.current = onComplete;
   formTypeRef.current = formType;
 
-  // 🔥 FUNCIÓN PARA CALCULAR TOTALES
+  // FUNCIÓN PARA CALCULAR TOTALES
   const calcularTotales = (survey) => {
     const data = survey.getValue("matriz_calificacion");
     if (!data) return;
@@ -42,13 +42,12 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
       return row;
     });
 
-    // 🔥 solo actualizar si cambió (evita loop)
     if (cambiado) {
       survey.setValue("matriz_calificacion", actualizada);
     }
   };
 
-  // 🔥 CREAR SURVEY
+  // CREAR SURVEY
   const survey = useMemo(() => {
     const s = new Model(surveyConfig);
 
@@ -66,7 +65,6 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
     return s;
   }, [surveyConfig]);
 
-  // 🔥 INYECTAR DATOS PINAR
   useEffect(() => {
     if (formType !== "pinar") return;
 
@@ -98,7 +96,7 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
 
   }, [survey, formType]);
 
-  // 🔥 EVENTOS
+  // EVENTOS
   useEffect(() => {
 
     const onValueChanged = (sender, options) => {
@@ -111,7 +109,7 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
         allValuesRef.current[options.name] = options.value;
       }
 
-      // 🔥 detectar cambios en la matriz (aunque sea interno)
+      // detectar cambios en la matriz (aunque sea interno)
       if (formTypeRef.current === "pinar") {
         setTimeout(() => {
           calcularTotales(sender);

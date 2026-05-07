@@ -230,7 +230,26 @@ const pinarConfig = {
               readOnly: true
             }
           ]
-        }
+        },
+        {
+          type: "matrixdynamic",
+          name: "riesgos_automaticos",
+          title: "Riesgos asociados",
+          columns: [
+            {
+              name: "aspecto",
+              title: "Aspecto crítico",
+              cellType: "text",
+              readOnly: true
+            },
+            {
+              name: "riesgo",
+              title: "Riesgo asociado",
+              cellType: "comment",
+              readOnly: true
+            }
+          ]
+        },
       ]
     },
 

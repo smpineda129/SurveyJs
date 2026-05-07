@@ -274,6 +274,37 @@ const pinarConfig = {
               readOnly: true
             }
           ]
+        },
+        {
+          type: "matrixdynamic",
+          name: "mapa_ruta_generado",
+          title: "Mapa de ruta",
+          columns: [
+            {
+              name: "plan",
+              title: "Plan o proyecto",
+              cellType: "text",
+              readOnly: true
+            },
+            {
+              name: "vigencia1",
+              title: "Año 1",
+              cellType: "text",
+              readOnly: true
+            },
+            {
+              name: "vigencia2",
+              title: "Año 2",
+              cellType: "text",
+              readOnly: true
+            },
+            {
+              name: "vigencia3",
+              title: "Año 3",
+              cellType: "text",
+              readOnly: true
+            }
+          ]
         }
       ]
     },

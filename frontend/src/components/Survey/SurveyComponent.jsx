@@ -15,6 +15,13 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
   const allValuesRef = useRef({});
   const onCompleteRef = useRef(onComplete);
   const formTypeRef = useRef(formType);
+  const currentYear = new Date().getFullYear();
+
+  const years = [
+    currentYear,
+    currentYear + 1,
+    currentYear + 2
+  ];
 
   onCompleteRef.current = onComplete;
   formTypeRef.current = formType;
@@ -174,6 +181,7 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
     });
 
     survey.setValue("planes_proyectos", planes);
+    generarMapaRuta(survey, planes);
   };
 
   const generarPriorizacion = (survey) => {
@@ -201,6 +209,26 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
           prioridad
         };
       });
+
+    const generarMapaRuta = (survey, planes) => {
+
+      const mapa = planes.map((row, index) => {
+
+        return {
+          plan: row.plan,
+
+          vigencia1: "X",
+
+          vigencia2:
+            index % 2 === 0 ? "X" : "",
+
+          vigencia3:
+            index % 3 === 0 ? "X" : ""
+        };
+      });
+
+      survey.setValue("mapa_ruta_generado", mapa);
+    };
 
     survey.setValue("priorizacion_criticos", priorizados);
     generarObjetivos(survey, priorizados);

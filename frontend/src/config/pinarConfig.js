@@ -250,6 +250,31 @@ const pinarConfig = {
             }
           ]
         },
+        {
+          type: "matrixdynamic",
+          name: "planes_proyectos",
+          title: "Planes y proyectos sugeridos",
+          columns: [
+            {
+              name: "aspecto",
+              title: "Aspecto crítico",
+              cellType: "text",
+              readOnly: true
+            },
+            {
+              name: "plan",
+              title: "Plan o proyecto",
+              cellType: "text",
+              readOnly: true
+            },
+            {
+              name: "actividad",
+              title: "Actividad principal",
+              cellType: "comment",
+              readOnly: true
+            }
+          ]
+        }
       ]
     },
 

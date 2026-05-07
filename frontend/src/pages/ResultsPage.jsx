@@ -156,7 +156,7 @@ export default function ResultsPage() {
       try {
 
         const blob = await surveyAPI.generatePinarDocx(
-          survey.surveyData
+          survey
         );
 
         const url = window.URL.createObjectURL(blob);

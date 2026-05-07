@@ -42,6 +42,18 @@ export const surveyAPI = {
     });
     return response.data;
   },
+  generatePinarDocx: async (surveyData) => {
+
+    const response = await api.post(
+      '/pinar/generate-docx',
+      surveyData,
+      {
+        responseType: 'blob',
+      }
+    );
+
+    return response.data;
+  },
 
   // Obtener todas las respuestas
   getAll: async (params = {}) => {

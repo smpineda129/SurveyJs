@@ -129,73 +129,108 @@ export default function ResultsPage() {
       setToastMsg('Error al eliminar el registro.');
     }
   };
-
   const handleGeneratePptx = async (survey) => {
+
     setGeneratingId(survey._id);
+
     try {
-      const blob = await surveyAPI.generateIndividualPresentation(survey._id);
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
+
+      const blob =
+        await surveyAPI.generateIndividualPresentation(
+          survey._id
+        );
+
+      const url =
+        window.URL.createObjectURL(blob);
+
+      const link =
+        document.createElement('a');
+
       link.href = url;
-      const entity = getEntityName(survey).replace(/\s+/g, '_');
-      link.download = `Diagnostico_${entity}_${Date.now()}.pptx`;
+
+      const entity =
+        getEntityName(survey).replace(/\s+/g, '_');
+
+      link.download =
+        `Diagnostico_${entity}_${Date.now()}.pptx`;
+
       document.body.appendChild(link);
+
       link.click();
+
       document.body.removeChild(link);
+
       window.URL.revokeObjectURL(url);
-      setToastMsg('Presentación generada exitosamente.');
+
+      setToastMsg(
+        'Presentación generada exitosamente.'
+      );
+
     } catch {
-      setToastMsg('Error al generar la presentación. Intente nuevamente.');
+
+      setToastMsg(
+        'Error al generar la presentación.'
+      );
+
     } finally {
+
       setGeneratingId(null);
-    };
 
-    const handleGenerateDocx = async (survey) => {
+    }
+  };
 
-      alert("DOCX CLICK");
+  const handleGenerateDocx = async (survey) => {
 
-      setGeneratingId(survey._id);
+    alert("DOCX CLICK");
 
-      try {
+    setGeneratingId(survey._id);
 
-        const blob = await surveyAPI.generatePinarDocx(
+    try {
+
+      const blob =
+        await surveyAPI.generatePinarDocx(
           survey
         );
 
-        const url = window.URL.createObjectURL(blob);
+      const url =
+        window.URL.createObjectURL(blob);
 
-        const link = document.createElement('a');
+      const link =
+        document.createElement('a');
 
-        link.href = url;
+      link.href = url;
 
-        const entity =
-          getEntityName(survey).replace(/\s+/g, '_');
+      const entity =
+        getEntityName(survey).replace(/\s+/g, '_');
 
-        link.download =
-          `PINAR_${entity}_${Date.now()}.docx`;
+      link.download =
+        `PINAR_${entity}_${Date.now()}.docx`;
 
-        document.body.appendChild(link);
+      document.body.appendChild(link);
 
-        link.click();
+      link.click();
 
-        document.body.removeChild(link);
+      document.body.removeChild(link);
 
-        window.URL.revokeObjectURL(url);
+      window.URL.revokeObjectURL(url);
 
-        setToastMsg('Documento PINAR generado exitosamente.');
+      setToastMsg(
+        'Documento PINAR generado exitosamente.'
+      );
 
-      } catch {
+    } catch (err) {
 
-        setToastMsg(
-          'Error al generar el documento PINAR.'
-        );
+      console.error(err);
 
-      } finally {
+      setToastMsg(
+        'Error al generar el documento PINAR.'
+      );
 
-        setGeneratingId(null);
+    } finally {
 
-      }
-    };
+      setGeneratingId(null);
+
+    }
   };
 
   const filtered = surveys.filter((s) => {

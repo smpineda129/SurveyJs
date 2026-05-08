@@ -192,6 +192,8 @@ export default function ResultsPage() {
           survey
         );
 
+      console.log("BLOB:", blob);
+
       const url =
         window.URL.createObjectURL(blob);
 

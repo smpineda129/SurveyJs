@@ -98,6 +98,8 @@ const handleGenerateIndividualPresentation = async (survey) => {
   try {
     // 1. Llamar al API
     const blob = await surveyAPI.generateIndividualPresentation(survey._id);
+
+    console.log("BLOB:", blob);
     
     // 2. Crear URL temporal del blob
     const url = window.URL.createObjectURL(blob);

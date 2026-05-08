@@ -52,7 +52,7 @@ export const surveyAPI = {
       }
     );
 
-    return response.data;
+    return response;
   },
 
   // Obtener todas las respuestas

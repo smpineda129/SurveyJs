@@ -181,18 +181,16 @@ export default function ResultsPage() {
 
   const handleGenerateDocx = async (survey) => {
 
-    alert("DOCX CLICK");
-
     setGeneratingId(survey._id);
 
     try {
 
-      const blob =
+      const response =
         await surveyAPI.generatePinarDocx(
           survey
         );
 
-      alert(blob?.size);
+      const blob = response.data;
 
       const url =
         window.URL.createObjectURL(blob);

@@ -222,7 +222,15 @@ export default function ResultsPage() {
 
     } catch (err) {
 
-      console.error(err);
+      console.error("ERROR DOCX:", err);
+
+      alert(
+        JSON.stringify(
+          err.response?.data || err.message,
+          null,
+          2
+        )
+      );
 
       setToastMsg(
         'Error al generar el documento PINAR.'

@@ -222,12 +222,14 @@ export default function ResultsPage() {
 
       console.error("ERROR DOCX:", err);
 
+      console.error("ERROR COMPLETO DOCX:", err);
+
       alert(
-        JSON.stringify(
-          err.response?.data || err.message,
-          null,
-          2
-        )
+        `
+STATUS: ${err.response?.status}
+
+MESSAGE: ${err.message}
+`
       );
 
       setToastMsg(

@@ -9,6 +9,7 @@ import surveyDefinitionRoutes from './routes/surveyDefinition.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import errorHandler from './middleware/errorHandler.js';
 import User from './models/User.js';
+import pinarRoutes from "./routes/pinar.routes.js";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Conectar a MongoDB y sembrar usuario admin si no existe
+// redeploy
 connectDB().then(async () => {
   try {
     const count = await User.countDocuments();
@@ -61,6 +63,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/surveys', surveyRoutes);
 app.use('/api/survey-definitions', surveyDefinitionRoutes);
+app.use("/api/pinar", pinarRoutes);
 
 // Error handling
 app.use(errorHandler);

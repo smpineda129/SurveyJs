@@ -151,6 +151,9 @@ export default function ResultsPage() {
     };
 
     const handleGenerateDocx = async (survey) => {
+
+      alert("DOCX CLICK");
+
       setGeneratingId(survey._id);
 
       try {

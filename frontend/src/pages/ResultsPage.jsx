@@ -187,7 +187,7 @@ export default function ResultsPage() {
 
       const response =
         await surveyAPI.generatePinarDocx(
-          survey
+          survey.surveyData
         );
 
       const blob = new Blob(

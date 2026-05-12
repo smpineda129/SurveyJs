@@ -185,19 +185,12 @@ export default function ResultsPage() {
 
     try {
 
-      console.log(import.meta.env.VITE_API_URL);
-
       const response =
         await surveyAPI.generatePinarDocx(
           survey
         );
 
-      const blob = new Blob(
-        [response.data],
-        {
-          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        }
-      );
+      const blob = response.data;
 
       const url =
         window.URL.createObjectURL(blob);

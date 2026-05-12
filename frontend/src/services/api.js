@@ -12,7 +12,11 @@ const api = axios.create({
 // Attach stored token on every request
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('gdi_token');
-  if (token) config.headers['Authorization'] = `Bearer ${token}`;
+
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+
   return config;
 });
 
@@ -20,18 +24,22 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+
     if (error.response?.status === 401) {
       localStorage.removeItem('gdi_token');
       window.location.href = '/login';
     }
+
     return Promise.reject(error);
   }
 );
 
 // Survey API
 export const surveyAPI = {
+
   // Crear nueva respuesta de formulario
   create: async (surveyData, status = 'completed', formType) => {
+
     const response = await api.post('/surveys', {
       formType,
       surveyData,
@@ -40,15 +48,22 @@ export const surveyAPI = {
         sessionId: generateSessionId(),
       },
     });
+
     return response.data;
   },
+
+  // Generar documento PINAR DOCX
   generatePinarDocx: async (surveyData) => {
 
     const response = await api.post(
       '/pinar/generate-docx',
       surveyData,
       {
-        responseType: 'arraybuffer'
+        responseType: 'arraybuffer',
+        headers: {
+          Accept:
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        },
       }
     );
 
@@ -57,52 +72,56 @@ export const surveyAPI = {
 
   // Obtener todas las respuestas
   getAll: async (params = {}) => {
-    const response = await api.get('/surveys', { params });
+
+    const response = await api.get('/surveys', {
+      params
+    });
+
     return response.data;
   },
 
   // Obtener respuesta por ID
   getById: async (id) => {
+
     const response = await api.get(`/surveys/${id}`);
+
     return response.data;
   },
 
   // Actualizar respuesta
   update: async (id, surveyData, status) => {
+
     const response = await api.put(`/surveys/${id}`, {
       surveyData,
       status,
     });
+
     return response.data;
   },
 
   // Eliminar respuesta
   delete: async (id) => {
+
     const response = await api.delete(`/surveys/${id}`);
+
     return response.data;
   },
 
   // Obtener estadísticas
   getStats: async () => {
+
     const response = await api.get('/surveys/stats');
+
     return response.data;
   },
 
   // Generar presentación PPTX individual
   generateIndividualPresentation: async (id) => {
-    const response = await api.get(`/surveys/${id}/presentation`, {
-      responseType: 'blob'
-    });
-    return response.data;
-  },
-  // Generar documento PINAR DOCX
-  generatePinarDocx: async (surveyData) => {
 
-    const response = await api.post(
-      '/pinar/generate-docx',
-      surveyData,
+    const response = await api.get(
+      `/surveys/${id}/presentation`,
       {
-        responseType: 'blob'
+        responseType: 'blob',
       }
     );
 
@@ -112,40 +131,62 @@ export const surveyAPI = {
 
 // Survey Definition API
 export const surveyDefinitionAPI = {
+
   // Obtener definición activa
   getActive: async () => {
-    const response = await api.get('/survey-definitions/active');
+
+    const response =
+      await api.get('/survey-definitions/active');
+
     return response.data;
   },
 
   // Crear o actualizar definición
   createOrUpdate: async (definition) => {
-    const response = await api.post('/survey-definitions', definition);
+
+    const response =
+      await api.post(
+        '/survey-definitions',
+        definition
+      );
+
     return response.data;
   },
 
   // Obtener todas las definiciones
   getAll: async () => {
-    const response = await api.get('/survey-definitions');
+
+    const response =
+      await api.get('/survey-definitions');
+
     return response.data;
   },
 
   // Obtener definición por ID
   getById: async (id) => {
-    const response = await api.get(`/survey-definitions/${id}`);
+
+    const response =
+      await api.get(`/survey-definitions/${id}`);
+
     return response.data;
   },
 
   // Eliminar definición
   delete: async (id) => {
-    const response = await api.delete(`/survey-definitions/${id}`);
+
+    const response =
+      await api.delete(`/survey-definitions/${id}`);
+
     return response.data;
   },
 };
 
 // Utilidad para generar ID de sesión
 function generateSessionId() {
-  return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+  return `session_${Date.now()}_${Math.random()
+    .toString(36)
+    .substr(2, 9)}`;
 }
 
 export default api;

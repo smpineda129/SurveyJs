@@ -59,6 +59,10 @@ app.get('/health', (req, res) => {
   });
 });
 
+app.get('/test-pinar', (req, res) => {
+  res.send('PINAR OK');
+});
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/surveys', surveyRoutes);

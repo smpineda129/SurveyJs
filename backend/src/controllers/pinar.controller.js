@@ -19,8 +19,14 @@ export const generatePinarDocx = async (req, res) => {
 
     const priorizados = data.priorizacion_criticos || [];
     const objetivos = data.objetivos_estrategicos || [];
-    const riesgos = data.riesgos_documentales || [];
-    const planes = data.planes_mejoramiento || [];
+    const riesgos =
+      data.riesgos_documentales ||
+      data.riesgos_generados ||
+      [];
+    const planes =
+      data.planes_mejoramiento ||
+      data.planes_generados ||
+      [];
     const mapaRuta = data.mapa_ruta_generado || [];
 
     const doc = new Document({
@@ -39,8 +45,14 @@ export const generatePinarDocx = async (req, res) => {
             }),
 
             new Paragraph({
-              text: data.nombre_empresa || "NOMBRE DE LA ENTIDAD",
+              text:
+                data.nombre_empresa ||
+                data.entidad ||
+                data.nombreEntidad ||
+                "NOMBRE DE LA ENTIDAD",
+
               alignment: AlignmentType.CENTER,
+
               spacing: {
                 after: 200,
               },

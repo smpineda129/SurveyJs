@@ -5,11 +5,11 @@ console.log("PINAR ROUTES CARGADAS");
 
 const router = express.Router();
 
-router.get("/generate-docx", (req, res) => {
-    res.send("PINAR DOCX ROUTE OK");
-});
-
 router.post("/generate-docx", generatePinarDocx);
 
 export default router;
+
+
+
+
 

@@ -48,7 +48,7 @@ export const surveyAPI = {
       '/pinar/generate-docx',
       surveyData,
       {
-        responseType: 'blob',
+        responseType: 'arraybuffer'
       }
     );
 

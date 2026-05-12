@@ -190,7 +190,13 @@ export default function ResultsPage() {
           survey
         );
 
-      const blob = response.data;
+      const blob = new Blob(
+        [response.data],
+        {
+          type:
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        }
+      );
 
       const url =
         window.URL.createObjectURL(blob);

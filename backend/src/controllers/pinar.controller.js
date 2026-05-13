@@ -17,7 +17,8 @@ export const generatePinarDocx = async (req, res) => {
 
     const data = req.body.surveyData || req.body;
 
-    console.log(data);
+    res.json(data);
+    return;
 
     const priorizados = data.priorizacion_criticos || [];
     const objetivos = data.objetivos_estrategicos || [];

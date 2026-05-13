@@ -17,9 +17,6 @@ export const generatePinarDocx = async (req, res) => {
 
     const data = req.body.surveyData || req.body;
 
-    throw new Error("TEST JSON");
-    return;
-
     const priorizados = data.priorizacion_criticos || [];
     const objetivos = data.objetivos_estrategicos || [];
     const riesgos =

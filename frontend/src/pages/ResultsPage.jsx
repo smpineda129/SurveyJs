@@ -185,6 +185,14 @@ export default function ResultsPage() {
 
     try {
 
+      alert(
+        JSON.stringify(
+          survey.surveyData,
+          null,
+          2
+        )
+      );
+
       const response =
         await surveyAPI.generatePinarDocx(
           survey.surveyData

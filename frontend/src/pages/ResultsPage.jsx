@@ -185,13 +185,7 @@ export default function ResultsPage() {
 
     try {
 
-      alert(
-        JSON.stringify(
-          survey.surveyData,
-          null,
-          2
-        )
-      );
+      console.log(survey.surveyData);
 
       const response =
         await surveyAPI.generatePinarDocx(

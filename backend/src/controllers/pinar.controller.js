@@ -20,9 +20,7 @@ export const generatePinarDocx = async (req, res) => {
     const priorizados = data.priorizacion_criticos || [];
     const objetivos = data.objetivos_estrategicos || [];
     const riesgos =
-      data.riesgos_documentales ||
-      data.riesgos_generados ||
-      [];
+      data.aspectos_criticos || [];
     const planes =
       data.planes_mejoramiento ||
       data.planes_generados ||

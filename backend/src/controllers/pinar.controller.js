@@ -20,12 +20,13 @@ export const generatePinarDocx = async (req, res) => {
     const priorizados = data.priorizacion_criticos || [];
     const objetivos = data.objetivos_estrategicos || [];
     const riesgos =
-      data.aspectos_criticos || [];
+      data.riesgos_automaticos || [];
+
     const planes =
-      data.planes_mejoramiento ||
-      data.planes_generados ||
-      [];
-    const mapaRuta = data.mapa_ruta_generado || [];
+      data.planes_proyectos || [];
+
+    const mapaRuta =
+      data.mapa_ruta_generado || [];
 
     const doc = new Document({
       sections: [
@@ -172,7 +173,8 @@ export const generatePinarDocx = async (req, res) => {
 
             ...riesgos.map((item) =>
               new Paragraph({
-                text: `• ${item.riesgo}`,
+                text:
+                  `• ${item.descripcion || item.riesgo || ""}`,
               })
             ),
 

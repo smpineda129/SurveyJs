@@ -214,7 +214,7 @@ export const generatePinarDocx = async (req, res) => {
                       }),
                       new TableCell({
                         children: [
-                          new Paragraph(item.objetivo || ""),
+                          new Paragraph(item.actividad || ""),
                         ],
                       }),
                     ],

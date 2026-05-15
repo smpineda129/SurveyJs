@@ -1,5 +1,6 @@
 import {
-  generatePinarIntroduction
+  generatePinarIntroduction,
+  generatePinarVision
 } from "../services/gptSummarizer.js";
 
 import {

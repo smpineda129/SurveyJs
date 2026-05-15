@@ -1,5 +1,5 @@
 import Survey from '../models/Survey.js';
-import { summarizeObservaciones } from '../services/gptSummarizer.js';
+import { summarizeObservaciones, generatePlanAccionIA } from '../services/gptSummarizer.js';
 
 /**
  * Crear nueva respuesta de formulario
@@ -41,7 +41,7 @@ export const createSurvey = async (req, res, next) => {
 export const getAllSurveys = async (req, res, next) => {
   try {
     const { status, page = 1, limit = 10 } = req.query;
-    
+
     const query = {};
     if (status) {
       query.status = status;
@@ -184,7 +184,7 @@ export const getSurveyStats = async (req, res, next) => {
 export const generateIndividualPresentation = async (req, res, next) => {
   try {
     const survey = await Survey.findById(req.params.id);
-    
+
     if (!survey) {
       return res.status(404).json({
         success: false,
@@ -215,11 +215,11 @@ export const generateIndividualPresentation = async (req, res, next) => {
     const calculator = survey.formType === 'entidades_publicas'
       ? new PublicaDiagnosticCalculator(data)
       : survey.formType === 'mgda'
-      ? new MGDADiagnosticCalculator(data)
-      : new DiagnosticCalculator(data);
+        ? new MGDADiagnosticCalculator(data)
+        : new DiagnosticCalculator(data);
     const entityName = data.nombre_entidad || data.NOMBRE_ENTIDAD || 'Entidad';
     const date = helpers.formatDateSpanish(survey.createdAt);
-    
+
     // ── Slides informativos (fijos) ─────────────────────────
     staticSlides.createPortada(pptx, entityName, date);
     staticSlides.createContextualizacion(pptx);
@@ -236,9 +236,9 @@ export const generateIndividualPresentation = async (req, res, next) => {
 
     // MGDA returns { categories: [...] }; legacy returns { admin, func, pres }
     const categoriasSlides = allSubAspectos.categories ?? [
-      { title: 'ASPECTOS ADMINISTRATIVOS',         global: allSubAspectos.admin.global, subAspectos: allSubAspectos.admin.subAspectos },
+      { title: 'ASPECTOS ADMINISTRATIVOS', global: allSubAspectos.admin.global, subAspectos: allSubAspectos.admin.subAspectos },
       { title: 'ASPECTOS DE FUNCIÓN ARCHIVÍSTICA', global: allSubAspectos.func.global, subAspectos: allSubAspectos.func.subAspectos },
-      { title: 'ASPECTOS DE PRESERVACIÓN',         global: allSubAspectos.pres.global, subAspectos: allSubAspectos.pres.subAspectos }
+      { title: 'ASPECTOS DE PRESERVACIÓN', global: allSubAspectos.pres.global, subAspectos: allSubAspectos.pres.subAspectos }
     ];
 
     for (const cat of categoriasSlides) {
@@ -251,10 +251,18 @@ export const generateIndividualPresentation = async (req, res, next) => {
     }
 
     // ── Plan de acción + Cierre ──────────────────────────────
-    const recommendations = helpers.generateRecommendations(globalResult);
-    dynamicSlides.createPlanAccion(pptx, recommendations);
+    const planAccionIA =
+      await generatePlanAccionIA(
+        "Plan de acción",
+        globalResult
+      );
+
+    dynamicSlides.createPlanAccion(
+      pptx,
+      planAccionIA
+    );
     dynamicSlides.createCierre(pptx, entityName);
-    
+
     // Generar archivo PPTX
     const buffer = await pptx.write({ outputType: 'nodebuffer' });
     const fileName = `Informe_Diagnostico_${helpers.sanitizeFileName(entityName)}_${Date.now()}.pptx`;

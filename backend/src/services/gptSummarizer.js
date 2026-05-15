@@ -125,32 +125,43 @@ ${obsText}
 
     }
 
+  } catch (err) {
+
+    console.error(
+      'GPT PLAN ACCION ERROR:',
+      err.message
+    );
+
+    return [];
+
   }
+
+}
 
 export async function generatePinarIntroduction(data) {
 
-    try {
+  try {
 
-      const entidad =
-        data.nombre_empresa ||
-        "la entidad";
+    const entidad =
+      data.nombre_empresa ||
+      "la entidad";
 
-      const vigencia =
-        data.vigencia ||
-        "2026";
+    const vigencia =
+      data.vigencia ||
+      "2026";
 
-      const aspectos =
-        (data.aspectos_criticos || [])
-          .map(a => a.aspecto)
-          .join(", ");
+    const aspectos =
+      (data.aspectos_criticos || [])
+        .map(a => a.aspecto)
+        .join(", ");
 
-      const objetivos =
-        (data.objetivos_estrategicos || [])
-          .map(o => o.objetivo)
-          .join(", ");
+    const objetivos =
+      (data.objetivos_estrategicos || [])
+        .map(o => o.objetivo)
+        .join(", ");
 
-      const prompt =
-        `
+    const prompt =
+      `
 Eres un experto archivístico colombiano especializado en formulación de PINAR según lineamientos del Archivo General de la Nación.
 
 Redacta una introducción institucional formal para un Plan Institucional de Archivos - PINAR.
@@ -183,68 +194,68 @@ NO uses listas.
 NO uses títulos.
 `;
 
-      const client =
-        new OpenAI({
-          apiKey:
-            process.env.GPT_API
-        });
+    const client =
+      new OpenAI({
+        apiKey:
+          process.env.GPT_API
+      });
 
-      const response =
-        await client.chat.completions.create({
+    const response =
+      await client.chat.completions.create({
 
-          model: "gpt-4o-mini",
+        model: "gpt-4o-mini",
 
-          messages: [
-            {
-              role: "user",
-              content: prompt,
-            },
-          ],
+        messages: [
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
 
-          max_tokens: 500,
+        max_tokens: 500,
 
-          temperature: 0.5,
+        temperature: 0.5,
 
-        });
+      });
 
-      return response
-        .choices[0]
-        .message
-        .content
-        .trim();
+    return response
+      .choices[0]
+      .message
+      .content
+      .trim();
 
-    } catch (err) {
+  } catch (err) {
 
-      console.error(
-        "GPT PINAR INTRO ERROR:",
-        err.message
-      );
+    console.error(
+      "GPT PINAR INTRO ERROR:",
+      err.message
+    );
 
-      return "La entidad formula el presente Plan Institucional de Archivos - PINAR con el propósito de fortalecer la gestión documental institucional y garantizar el cumplimiento de la normatividad archivística vigente.";
-    }
-
+    return "La entidad formula el presente Plan Institucional de Archivos - PINAR con el propósito de fortalecer la gestión documental institucional y garantizar el cumplimiento de la normatividad archivística vigente.";
   }
 
-  export async function generatePinarVision(data) {
+}
 
-    try {
+export async function generatePinarVision(data) {
 
-      const entidad =
-        data.nombre_empresa ||
-        "la entidad";
+  try {
 
-      const aspectos =
-        (data.aspectos_criticos || [])
-          .map(a => a.aspecto)
-          .join(", ");
+    const entidad =
+      data.nombre_empresa ||
+      "la entidad";
 
-      const objetivos =
-        (data.objetivos_estrategicos || [])
-          .map(o => o.objetivo)
-          .join(", ");
+    const aspectos =
+      (data.aspectos_criticos || [])
+        .map(a => a.aspecto)
+        .join(", ");
 
-      const prompt =
-        `
+    const objetivos =
+      (data.objetivos_estrategicos || [])
+        .map(o => o.objetivo)
+        .join(", ");
+
+    const prompt =
+      `
 Eres un experto archivístico colombiano especializado en formulación de PINAR según lineamientos del Archivo General de la Nación.
 
 Redacta una visión estratégica institucional para un Plan Institucional de Archivos - PINAR.
@@ -276,45 +287,45 @@ NO uses títulos.
 NO uses listas.
 `;
 
-      const client =
-        new OpenAI({
-          apiKey:
-            process.env.GPT_API
-        });
+    const client =
+      new OpenAI({
+        apiKey:
+          process.env.GPT_API
+      });
 
-      const response =
-        await client.chat.completions.create({
+    const response =
+      await client.chat.completions.create({
 
-          model: "gpt-4o-mini",
+        model: "gpt-4o-mini",
 
-          messages: [
-            {
-              role: "user",
-              content: prompt,
-            },
-          ],
+        messages: [
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
 
-          max_tokens: 300,
+        max_tokens: 300,
 
-          temperature: 0.5,
+        temperature: 0.5,
 
-        });
+      });
 
-      return response
-        .choices[0]
-        .message
-        .content
-        .trim();
+    return response
+      .choices[0]
+      .message
+      .content
+      .trim();
 
-    } catch (err) {
+  } catch (err) {
 
-      console.error(
-        "GPT PINAR VISION ERROR:",
-        err.message
-      );
+    console.error(
+      "GPT PINAR VISION ERROR:",
+      err.message
+    );
 
-      return "La entidad orientará sus esfuerzos al fortalecimiento de la gestión documental institucional mediante estrategias archivísticas orientadas a la preservación, acceso y administración de la información institucional.";
-
-    }
+    return "La entidad orientará sus esfuerzos al fortalecimiento de la gestión documental institucional mediante estrategias archivísticas orientadas a la preservación, acceso y administración de la información institucional.";
 
   }
+
+}

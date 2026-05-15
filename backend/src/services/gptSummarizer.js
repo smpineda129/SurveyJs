@@ -34,3 +34,103 @@ ${obsText}`;
     return [];
   }
 }
+
+export async function generatePinarIntroduction(data) {
+
+  try {
+
+    const entidad =
+      data.nombre_empresa ||
+      "la entidad";
+
+    const vigencia =
+      data.vigencia ||
+      "2026";
+
+    const aspectos =
+      (data.aspectos_criticos || [])
+        .map(a => a.aspecto)
+        .join(", ");
+
+    const objetivos =
+      (data.objetivos_estrategicos || [])
+        .map(o => o.objetivo)
+        .join(", ");
+
+    const prompt =
+      `
+Eres un experto archivístico colombiano especializado en formulación de PINAR según lineamientos del Archivo General de la Nación.
+
+Redacta una introducción institucional formal para un Plan Institucional de Archivos - PINAR.
+
+DATOS:
+
+Entidad: ${entidad}
+
+Vigencia:
+${vigencia}
+
+Aspectos críticos:
+${aspectos}
+
+Objetivos estratégicos:
+${objetivos}
+
+La introducción debe:
+
+- tener tono técnico institucional
+- ser formal
+- mencionar fortalecimiento archivístico
+- mencionar gestión documental
+- mencionar normatividad archivística
+- mencionar preservación y acceso a la información
+- tener entre 1 y 2 párrafos
+- sonar como documento oficial colombiano
+
+NO uses listas.
+NO uses títulos.
+`;
+
+    const client =
+      new OpenAI({
+        apiKey:
+          process.env.GPT_API
+      });
+
+    const response =
+      await client.chat.completions.create({
+
+        model: "gpt-4o-mini",
+
+        messages: [
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+
+        max_tokens: 500,
+
+        temperature: 0.5,
+
+      });
+
+    return response
+      .choices[0]
+      .message
+      .content
+      .trim();
+
+  } catch (err) {
+
+    console.error(
+      "GPT PINAR INTRO ERROR:",
+      err.message
+    );
+
+    return
+    "La entidad formula el presente Plan Institucional de Archivos - PINAR con el propósito de fortalecer la gestión documental institucional y garantizar el cumplimiento de la normatividad archivística vigente.";
+
+  }
+
+}

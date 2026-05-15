@@ -50,13 +50,9 @@ export const generatePinarDocx = async (req, res) => {
     const totalObjetivos =
       objetivos.length;
 
-    // INTRODUCCIÓN DINÁMICA
+    //INTRODUCCIÓN IA
     const introduccionIA =
-      `${entidad} formula el presente Plan Institucional de Archivos - PINAR para la vigencia ${vigencia}, con el propósito de fortalecer la gestión documental institucional, mejorar la administración de la información y garantizar el cumplimiento de la normatividad archivística vigente. El presente instrumento archivístico se desarrolla teniendo en cuenta ${totalAspectos} aspectos críticos identificados en la función archivística institucional y ${totalObjetivos} objetivos estratégicos orientados al fortalecimiento de la preservación documental, el acceso a la información y la modernización de los procesos archivísticos.`;
-
-    // VISIÓN ESTRATÉGICA
-    const visionEstrategica =
-      `La ${entidad} orientará sus esfuerzos al fortalecimiento de la gestión documental institucional mediante la implementación de estrategias archivísticas orientadas a la preservación documental, organización de la información, fortalecimiento tecnológico y mejora continua de los procesos de acceso y administración documental, con el fin de garantizar la transparencia, conservación y disponibilidad de la información institucional.`;
+      await generatePinarIntroduction(data);
 
     // PLANES
     const responsableGeneral =
@@ -65,12 +61,86 @@ export const generatePinarDocx = async (req, res) => {
     const indicadorGeneral =
       "Cumplimiento de actividades archivísticas";
 
-    // CONCLUSIONES DINÁMICAS
-    const conclusionDinamica =
-      `De acuerdo con los resultados obtenidos en el diagnóstico archivístico institucional, se identificaron ${totalAspectos} aspectos críticos que requieren fortalecimiento mediante la implementación de estrategias orientadas a la organización documental, preservación de la información, actualización de instrumentos archivísticos y fortalecimiento de la gestión documental institucional.`;
+    // CONCLUSIONES CONTEXTUALES
+    const tieneDigitalizacion =
+      aspectos.some((item) =>
+        (item.aspecto || "")
+          .toLowerCase()
+          .includes("digital")
+      );
 
-    const recomendacionDinamica =
-      `Se recomienda fortalecer los procesos archivísticos institucionales mediante acciones de seguimiento continuo, implementación de instrumentos archivísticos, capacitación al personal y adopción de estrategias orientadas a garantizar el acceso, preservación y seguridad de la información institucional.`;
+    const tieneTRD =
+      aspectos.some((item) =>
+        (item.aspecto || "")
+          .toLowerCase()
+          .includes("trd")
+      );
+
+    const tieneOrganizacion =
+      aspectos.some((item) =>
+        (item.aspecto || "")
+          .toLowerCase()
+          .includes("organiz")
+      );
+
+    // VISIÓN ESTRATÉGICA CONTEXTUAL
+
+    let visionEstrategica =
+      `La ${entidad} orientará sus esfuerzos al fortalecimiento de la gestión documental institucional mediante estrategias archivísticas enfocadas en la preservación documental, organización de la información y mejora continua de los procesos administrativos relacionados con la función archivística.`;
+
+    if (tieneTRD) {
+
+      visionEstrategica +=
+        ` Asimismo, se promoverá la actualización e implementación de las Tablas de Retención Documental como instrumento fundamental para la organización y control documental institucional.`;
+
+    }
+
+    if (tieneDigitalizacion) {
+
+      visionEstrategica +=
+        ` La entidad impulsará acciones orientadas al fortalecimiento tecnológico y digitalización documental para garantizar la disponibilidad, acceso y preservación de la información institucional.`;
+
+    }
+
+    if (tieneOrganizacion) {
+
+      visionEstrategica +=
+        ` Igualmente, se fortalecerán las estrategias de organización documental y aplicación de buenas prácticas archivísticas para optimizar la administración de la información institucional.`;
+
+    }
+
+    let conclusionDinamica =
+      `De acuerdo con los resultados obtenidos en el diagnóstico archivístico institucional, se identificaron ${totalAspectos} aspectos críticos que requieren fortalecimiento mediante estrategias orientadas a la gestión documental, preservación de la información y fortalecimiento institucional.`;
+    if (tieneTRD) {
+
+      conclusionDinamica +=
+        ` Se evidenció la necesidad de fortalecer la actualización e implementación de las Tablas de Retención Documental como instrumento fundamental para la organización archivística institucional.`;
+
+    }
+
+    if (tieneDigitalizacion) {
+
+      conclusionDinamica +=
+        ` Asimismo, se identificó la necesidad de fortalecer los procesos de digitalización documental y modernización tecnológica para garantizar el acceso y disponibilidad de la información.`;
+
+    }
+
+    if (tieneOrganizacion) {
+
+      conclusionDinamica +=
+        ` También se identificaron oportunidades de mejora relacionadas con la organización documental y aplicación de buenas prácticas archivísticas.`;
+
+    }
+
+    let recomendacionDinamica =
+      `Se recomienda fortalecer la gestión documental institucional mediante acciones de seguimiento continuo, implementación de instrumentos archivísticos y fortalecimiento de los procesos administrativos relacionados con la función archivística.`;
+
+    if (riesgos.length >= 3) {
+
+      recomendacionDinamica +=
+        ` Igualmente, se recomienda priorizar acciones orientadas a mitigar los riesgos documentales identificados durante el diagnóstico archivístico institucional.`;
+
+    }
 
     const doc = new Document({
       sections: [

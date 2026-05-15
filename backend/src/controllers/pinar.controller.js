@@ -138,27 +138,27 @@ export const generatePinarDocx = async (req, res) => {
           children: [
 
             // PORTADA
+
             new Paragraph({
               text:
                 "PLAN INSTITUCIONAL DE ARCHIVOS - PINAR",
 
               heading: HeadingLevel.TITLE,
 
-              alignment: AlignmentType.CENTER,
+              alignment:
+                AlignmentType.CENTER,
 
               spacing: {
+                before: 5000,
                 after: 400,
               },
             }),
 
             new Paragraph({
-              text:
-                data.nombre_empresa ||
-                data.entidad ||
-                data.nombreEntidad ||
-                "NOMBRE DE LA ENTIDAD",
+              text: entidad,
 
-              alignment: AlignmentType.CENTER,
+              alignment:
+                AlignmentType.CENTER,
 
               spacing: {
                 after: 200,
@@ -166,16 +166,81 @@ export const generatePinarDocx = async (req, res) => {
             }),
 
             new Paragraph({
+              text: vigencia,
+
+              alignment:
+                AlignmentType.CENTER,
+            }),
+
+            // SALTO DE PÁGINA
+
+            new Paragraph({
+              pageBreakBefore: true,
+            }),
+
+            // TABLA CONTENIDO
+
+            new Paragraph({
+              text: "TABLA DE CONTENIDO",
+
+              heading:
+                HeadingLevel.HEADING_1,
+            }),
+
+            new Paragraph({
               text:
-                new Date()
-                  .getFullYear()
-                  .toString(),
+                "1. INTRODUCCIÓN",
+            }),
 
-              alignment: AlignmentType.CENTER,
+            new Paragraph({
+              text:
+                "2. MARCO NORMATIVO",
+            }),
 
-              spacing: {
-                after: 800,
-              },
+            new Paragraph({
+              text:
+                "3. VISIÓN ESTRATÉGICA DEL PINAR",
+            }),
+
+            new Paragraph({
+              text:
+                "4. ASPECTOS CRÍTICOS",
+            }),
+
+            new Paragraph({
+              text:
+                "5. OBJETIVOS ESTRATÉGICOS",
+            }),
+
+            new Paragraph({
+              text:
+                "6. RIESGOS DOCUMENTALES",
+            }),
+
+            new Paragraph({
+              text:
+                "7. PLANES Y PROYECTOS",
+            }),
+
+            new Paragraph({
+              text:
+                "8. MAPA DE RUTA",
+            }),
+
+            new Paragraph({
+              text:
+                "9. CONCLUSIONES",
+            }),
+
+            new Paragraph({
+              text:
+                "10. RECOMENDACIONES",
+            }),
+
+            // OTRO SALTO
+
+            new Paragraph({
+              pageBreakBefore: true,
             }),
 
             // INTRODUCCIÓN

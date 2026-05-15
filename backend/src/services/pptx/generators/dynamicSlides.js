@@ -491,24 +491,21 @@ export function createPlanAccion(
   const tableData = [
 
     [
-      'HALLAZGO',
-      'ACCIÓN',
-      'PRIORIDAD'
+      'ÍTEM',
+      'PLAN DE ACCIÓN'
     ]
 
   ];
 
   recommendations
     .slice(0, 5)
-    .forEach(rec => {
+    .forEach((rec, index) => {
 
       tableData.push([
 
-        rec.hallazgo || '',
+        `${index + 1}`,
 
-        rec.accion || '',
-
-        rec.prioridad || ''
+        rec || ''
 
       ]);
 

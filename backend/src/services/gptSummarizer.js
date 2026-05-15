@@ -53,12 +53,83 @@ export async function generatePlanAccionIA(
   items
 ) {
 
-  console.log(
-    'ITEMS PLAN IA:',
-    items
-  );
+  const obsItems =
+    (items || [])
+      .filter(i =>
+        i.observation?.trim()
+      );
 
-  return [];
+  if (obsItems.length === 0)
+    return [];
+
+  const obsText =
+    obsItems
+      .map(i =>
+        `- ${i.title}: ${i.observation}`
+      )
+      .join('\n');
+
+  const prompt = `
+Eres un experto archivístico colombiano.
+
+Analiza los siguientes hallazgos y genera
+máximo 5 acciones concretas de mejora.
+
+Responde SOLO con una acción por línea.
+No uses numeración.
+
+Hallazgos:
+${obsText}
+`;
+
+  try {
+
+    const client =
+      new OpenAI({
+        apiKey:
+          process.env.GPT_API
+      });
+
+    const response =
+      await client.chat.completions.create({
+
+        model: 'gpt-4o-mini',
+
+        messages: [
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+
+        max_tokens: 400,
+
+        temperature: 0.4,
+      });
+
+    const text =
+      response?.choices?.[0]?.message?.content;
+
+    if (!text)
+      return [];
+
+    return text
+      .trim()
+      .split('\n')
+      .filter(line =>
+        line.trim().length > 0
+      );
+
+  } catch (err) {
+
+    console.error(
+      'GPT PLAN ERROR:',
+      err.message
+    );
+
+    return [];
+
+  }
 
 }
 

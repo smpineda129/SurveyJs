@@ -263,16 +263,6 @@ export const generateIndividualPresentation = async (req, res, next) => {
       );
 
     // ── Plan de acción + Cierre ──────────────────────────────
-    const planAccionIA =
-      await generatePlanAccionIA(
-        "Plan de acción",
-        allObservaciones
-      );
-
-    dynamicSlides.createPlanAccion(
-      pptx,
-      planAccionIA
-    );
     dynamicSlides.createCierre(pptx, entityName);
 
     // Generar archivo PPTX

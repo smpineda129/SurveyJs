@@ -212,182 +212,194 @@ const pinarConfig = {
             }
           ]
         },
+      ]
+    },
+
+    // RESULTADOS GENERADOS
+    {
+      name: "resultados_generados",
+
+      elements: [
+
+        {
+          type: "html",
+
+          html: `
+  <div
+    style="
+      background:#eff6ff;
+      border:1px solid #bfdbfe;
+      border-radius:12px;
+      padding:20px;
+      margin-bottom:20px;
+    "
+  >
+
+    <h2
+      style="
+        color:#1d4ed8;
+        margin-top:0;
+      "
+    >
+      Resultados generados automáticamente
+    </h2>
+
+    <p
+      style="
+        color:#334155;
+        line-height:1.6;
+      "
+    >
+      El sistema ha analizado los aspectos
+      críticos identificados durante el
+      diagnóstico archivístico institucional
+      y ha generado automáticamente los
+      componentes estratégicos del PINAR,
+      incluyendo objetivos, riesgos,
+      planes de acción y mapa de ruta.
+    </p>
+
+  </div>
+  `
+        },
+
+        // OBJETIVOS
         {
           type: "matrixdynamic",
+
           name: "objetivos_estrategicos",
-          title: "Objetivos estratégicos",
+
+          title: "Objetivos estratégicos generados",
+
+          readOnly: true,
+
           columns: [
+
             {
               name: "aspecto",
               title: "Aspecto crítico",
               cellType: "text",
               readOnly: true
             },
+
             {
               name: "objetivo",
               title: "Objetivo estratégico",
               cellType: "comment",
               readOnly: true
             }
+
           ]
         },
+
+        // RIESGOS
         {
           type: "matrixdynamic",
+
           name: "riesgos_automaticos",
-          title: "Riesgos asociados",
+
+          title: "Riesgos documentales generados",
+
+          readOnly: true,
+
           columns: [
+
             {
               name: "aspecto",
               title: "Aspecto crítico",
               cellType: "text",
               readOnly: true
             },
+
             {
               name: "riesgo",
               title: "Riesgo asociado",
               cellType: "comment",
               readOnly: true
             }
+
           ]
         },
+
+        // PLANES
         {
           type: "matrixdynamic",
+
           name: "planes_proyectos",
+
           title: "Planes y proyectos sugeridos",
+
+          readOnly: true,
+
           columns: [
+
             {
               name: "aspecto",
               title: "Aspecto crítico",
               cellType: "text",
               readOnly: true
             },
+
             {
               name: "plan",
               title: "Plan o proyecto",
               cellType: "text",
               readOnly: true
             },
+
             {
               name: "actividad",
               title: "Actividad principal",
               cellType: "comment",
               readOnly: true
             }
+
           ]
         },
+
+        // MAPA
         {
           type: "matrixdynamic",
+
           name: "mapa_ruta_generado",
-          title: "Mapa de ruta",
+
+          title: "Mapa de ruta generado",
+
+          readOnly: true,
+
           columns: [
+
             {
               name: "plan",
               title: "Plan o proyecto",
               cellType: "text",
               readOnly: true
             },
+
             {
               name: "vigencia1",
               title: "Año 1",
               cellType: "text",
               readOnly: true
             },
+
             {
               name: "vigencia2",
               title: "Año 2",
               cellType: "text",
               readOnly: true
             },
+
             {
               name: "vigencia3",
               title: "Año 3",
               cellType: "text",
               readOnly: true
             }
+
           ]
         }
-      ]
-    },
 
-    //  10. VISIÓN ESTRATÉGICA
-    {
-      name: "vision",
-      elements: [
-        {
-          type: "html",
-          html: `
-          <h3>Visión estratégica</h3>
-          <p>
-          La {nombre_empresa}, a través del PINAR, busca...
-          </p>
-          `
-        }
-      ]
-    },
-
-    //  11. OBJETIVOS
-    {
-      name: "objetivos",
-      elements: [
-        {
-          type: "comment",
-          name: "objetivo_general",
-          title: "Objetivo general"
-        },
-        {
-          type: "paneldynamic",
-          name: "objetivos_especificos",
-          title: "Objetivos específicos",
-          templateElements: [
-            {
-              type: "text",
-              name: "objetivo",
-              title: "Objetivo"
-            }
-          ]
-        }
-      ]
-    },
-
-    // 12. PLANES Y PROYECTOS
-    {
-      name: "planes",
-      elements: [
-        {
-          type: "paneldynamic",
-          name: "planes_proyectos",
-          title: "Planes y proyectos",
-          templateElements: [
-            {
-              type: "text",
-              name: "nombre",
-              title: "Nombre del proyecto"
-            },
-            {
-              type: "comment",
-              name: "alcance",
-              title: "Alcance"
-            }
-          ]
-        }
-      ]
-    },
-
-    //  13. MAPA DE RUTA
-    {
-      name: "mapa",
-      elements: [
-        {
-          type: "matrixdynamic",
-          name: "mapa_ruta",
-          title: "Mapa de ruta",
-          columns: [
-            { name: "plan", title: "Plan o proyecto" },
-            { name: "corto", title: "Corto plazo (1 año)" },
-            { name: "mediano", title: "Mediano plazo (1-4 años)" },
-            { name: "largo", title: "Largo plazo" }
-          ]
-        }
       ]
     },
 

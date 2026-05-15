@@ -114,7 +114,12 @@ ${obsText}
 
     try {
 
-      return JSON.parse(text);
+      console.log(
+        'RESPUESTA GPT PLAN:',
+        text
+      );
+
+      return [];
 
     } catch (parseError) {
 

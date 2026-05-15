@@ -1,4 +1,8 @@
 import {
+  generatePinarIntroduction
+} from "../services/gptSummarizer.js";
+
+import {
   Document,
   Packer,
   Paragraph,
@@ -10,6 +14,8 @@ import {
   WidthType,
   AlignmentType,
 } from "docx";
+
+console.log(generatePinarIntroduction);
 
 export const generatePinarDocx = async (req, res) => {
 

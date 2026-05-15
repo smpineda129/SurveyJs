@@ -35,113 +35,17 @@ ${obsText}`;
   }
 }
 
-console.log(items);
+export async function generatePlanAccionIA(
+  sectionTitle,
+  items
+) {
 
-export async function generatePlanAccionIA(sectionTitle, items) {
+  console.log(
+    'ITEMS PLAN IA:',
+    items
+  );
 
-  const obsItems =
-    (items || [])
-      .filter(i => i.observation?.trim());
-
-  if (obsItems.length === 0)
-    return [];
-
-  const obsText =
-    obsItems
-      .map(i =>
-        `- ${i.title}: ${i.observation}`
-      )
-      .join('\n');
-
-  const prompt = `
-Eres un experto archivístico colombiano.
-
-Analiza los siguientes hallazgos de un diagnóstico documental y genera un plan de acción archivístico institucional.
-
-Debes devolver únicamente un JSON válido con máximo 5 acciones.
-
-Cada acción debe contener:
-
-- hallazgo
-- accion
-- responsable
-- prioridad
-- plazo
-
-Las prioridades solo pueden ser:
-Alta, Media o Baja.
-
-Los plazos solo pueden ser:
-Corto plazo, Mediano plazo o Largo plazo.
-
-Hallazgos:
-${obsText}
-`;
-
-  try {
-
-    const client =
-      new OpenAI({
-        apiKey:
-          process.env.GPT_API
-      });
-
-    const response =
-      await client.chat.completions.create({
-
-        model: 'gpt-4o-mini',
-
-        messages: [
-          {
-            role: 'user',
-            content: prompt
-          }
-        ],
-
-        max_tokens: 800,
-
-        temperature: 0.4,
-      });
-
-    const text =
-      response
-        .choices[0]
-        .message
-        .content
-        .trim();
-
-    console.log(text);
-
-    try {
-
-      console.log(
-        'RESPUESTA GPT PLAN:',
-        text
-      );
-
-      return [];
-
-    } catch (parseError) {
-
-      console.error(
-        'JSON PARSE ERROR:',
-        text
-      );
-
-      return [];
-
-    }
-
-  } catch (err) {
-
-    console.error(
-      'GPT PLAN ACCION ERROR:',
-      err.message
-    );
-
-    return [];
-
-  }
+  return [];
 
 }
 

@@ -246,17 +246,17 @@ export const generateIndividualPresentation = async (req, res, next) => {
       const obsItems = cat.subAspectos.flatMap(sub =>
         (sub.items || []).filter(item => item.observation?.trim())
       );
-      // const bullets =
-      //   await summarizeObservaciones(
-      //     cat.title,
-      //     obsItems
-      //   );
+      const bullets =
+        await summarizeObservaciones(
+          cat.title,
+          obsItems
+        );
 
-      // dynamicSlides.createObservacionesIA(
-      //   pptx,
-      //   cat.title,
-      //   bullets
-      // );
+      dynamicSlides.createObservacionesIA(
+        pptx,
+        cat.title,
+        bullets
+      );
     }
 
     console.log(globalResult);

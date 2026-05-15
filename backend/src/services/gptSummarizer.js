@@ -27,8 +27,21 @@ ${obsText}`;
       max_tokens: 400,
       temperature: 0.4,
     });
-    const text = response.choices[0].message.content.trim();
-    return text.split('\n').filter(l => l.trim().length > 0).slice(0, 5);
+    const text =
+      response?.choices?.[0]?.message?.content;
+
+    if (!text) {
+
+      console.error(
+        'GPT EMPTY RESPONSE'
+      );
+
+      return [];
+
+    }
+    return text
+      .trim()
+      .split('\n').filter(l => l.trim().length > 0).slice(0, 5);
   } catch (err) {
     console.error('GPT summarizer error:', err.message);
     return [];

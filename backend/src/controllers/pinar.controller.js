@@ -93,31 +93,10 @@ export const generatePinarDocx = async (req, res) => {
           .includes("organiz")
       );
 
-    // VISIÓN ESTRATÉGICA CONTEXTUAL
+    // VISIÓN ESTRATÉGICA IA
 
-    let visionEstrategica =
-      `La ${entidad} orientará sus esfuerzos al fortalecimiento de la gestión documental institucional mediante estrategias archivísticas enfocadas en la preservación documental, organización de la información y mejora continua de los procesos administrativos relacionados con la función archivística.`;
-
-    if (tieneTRD) {
-
-      visionEstrategica +=
-        ` Asimismo, se promoverá la actualización e implementación de las Tablas de Retención Documental como instrumento fundamental para la organización y control documental institucional.`;
-
-    }
-
-    if (tieneDigitalizacion) {
-
-      visionEstrategica +=
-        ` La entidad impulsará acciones orientadas al fortalecimiento tecnológico y digitalización documental para garantizar la disponibilidad, acceso y preservación de la información institucional.`;
-
-    }
-
-    if (tieneOrganizacion) {
-
-      visionEstrategica +=
-        ` Igualmente, se fortalecerán las estrategias de organización documental y aplicación de buenas prácticas archivísticas para optimizar la administración de la información institucional.`;
-
-    }
+    const visionEstrategica =
+      await generatePinarVision(data);
 
     let conclusionDinamica =
       `De acuerdo con los resultados obtenidos en el diagnóstico archivístico institucional, se identificaron ${totalAspectos} aspectos críticos que requieren fortalecimiento mediante estrategias orientadas a la gestión documental, preservación de la información y fortalecimiento institucional.`;

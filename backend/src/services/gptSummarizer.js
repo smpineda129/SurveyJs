@@ -132,3 +132,97 @@ NO uses títulos.
   }
 
 }
+
+export async function generatePinarVision(data) {
+
+  try {
+
+    const entidad =
+      data.nombre_empresa ||
+      "la entidad";
+
+    const aspectos =
+      (data.aspectos_criticos || [])
+        .map(a => a.aspecto)
+        .join(", ");
+
+    const objetivos =
+      (data.objetivos_estrategicos || [])
+        .map(o => o.objetivo)
+        .join(", ");
+
+    const prompt =
+      `
+Eres un experto archivístico colombiano especializado en formulación de PINAR según lineamientos del Archivo General de la Nación.
+
+Redacta una visión estratégica institucional para un Plan Institucional de Archivos - PINAR.
+
+DATOS:
+
+Entidad:
+${entidad}
+
+Aspectos críticos:
+${aspectos}
+
+Objetivos estratégicos:
+${objetivos}
+
+La visión estratégica debe:
+
+- tener tono institucional
+- sonar técnica
+- mencionar fortalecimiento archivístico
+- mencionar preservación documental
+- mencionar acceso a la información
+- mencionar mejora continua
+- mencionar modernización documental
+- ser máximo 1 párrafo
+- sonar como documento oficial colombiano
+
+NO uses títulos.
+NO uses listas.
+`;
+
+    const client =
+      new OpenAI({
+        apiKey:
+          process.env.GPT_API
+      });
+
+    const response =
+      await client.chat.completions.create({
+
+        model: "gpt-4o-mini",
+
+        messages: [
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+
+        max_tokens: 300,
+
+        temperature: 0.5,
+
+      });
+
+    return response
+      .choices[0]
+      .message
+      .content
+      .trim();
+
+  } catch (err) {
+
+    console.error(
+      "GPT PINAR VISION ERROR:",
+      err.message
+    );
+
+    return "La entidad orientará sus esfuerzos al fortalecimiento de la gestión documental institucional mediante estrategias archivísticas orientadas a la preservación, acceso y administración de la información institucional.";
+
+  }
+
+}

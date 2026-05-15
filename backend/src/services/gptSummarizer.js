@@ -35,6 +35,8 @@ ${obsText}`;
   }
 }
 
+console.log(items);
+
 export async function generatePlanAccionIA(sectionTitle, items) {
 
   const obsItems =

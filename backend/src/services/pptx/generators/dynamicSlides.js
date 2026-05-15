@@ -18,7 +18,7 @@ function addDecorativeElements(slide) {
     line: { type: 'none' },
     rotate: 45
   });
-  
+
   slide.addShape('triangle', {
     x: 0,
     y: 5.0,
@@ -36,13 +36,13 @@ function addDecorativeElements(slide) {
 function createHorizontalBarChart(slide, data, title, yStart, spacing = 0.6) {
   const maxBarWidth = 6.0;
   const barHeight = 0.4;
-  
+
   data.forEach((item, index) => {
     const yPos = yStart + (index * spacing);
     const percentage = item.value;
     const barWidth = (percentage / 100) * maxBarWidth;
     const color = getComplianceColor(percentage);
-    
+
     // Etiqueta
     slide.addText(item.label, {
       x: 0.8,
@@ -53,7 +53,7 @@ function createHorizontalBarChart(slide, data, title, yStart, spacing = 0.6) {
       color: STYLES.colors.white,
       valign: 'middle'
     });
-    
+
     // Barra de fondo (gris)
     slide.addShape('rect', {
       x: 3.0,
@@ -63,7 +63,7 @@ function createHorizontalBarChart(slide, data, title, yStart, spacing = 0.6) {
       fill: { color: '2C3E50', transparency: 50 },
       line: { type: 'none' }
     });
-    
+
     // Barra de progreso (color semáforo)
     if (barWidth > 0) {
       slide.addShape('rect', {
@@ -75,7 +75,7 @@ function createHorizontalBarChart(slide, data, title, yStart, spacing = 0.6) {
         line: { type: 'none' }
       });
     }
-    
+
     // Porcentaje
     slide.addText(`${percentage.toFixed(1)}%`, {
       x: 9.1,
@@ -96,9 +96,9 @@ function createHorizontalBarChart(slide, data, title, yStart, spacing = 0.6) {
 export function createResultadoGlobal(pptx, globalResult) {
   const slide = pptx.addSlide();
   slide.background = { color: STYLES.colors.bgBlue };
-  
+
   addDecorativeElements(slide);
-  
+
   // Título
   slide.addText('INFORME DIAGNÓSTICO DOCUMENTAL', {
     x: 0.5,
@@ -108,7 +108,7 @@ export function createResultadoGlobal(pptx, globalResult) {
     ...STYLES.fonts.titleMain,
     align: 'center'
   });
-  
+
   // Subtítulo
   slide.addText('RESULTADOS GENERALES POR ÍTEM', {
     x: 0.5,
@@ -119,15 +119,15 @@ export function createResultadoGlobal(pptx, globalResult) {
     color: STYLES.colors.textLight,
     align: 'center'
   });
-  
+
   // Gráfico de barras — usa sections[] si existe (MGDA: 5), sino 3 secciones clásicas
   const chartData = globalResult.sections
     ? globalResult.sections.map(s => ({ label: s.label, value: s.porcentaje }))
     : [
-        { label: 'ASPECTOS ADMINISTRATIVOS', value: globalResult.bySection.admin.porcentaje },
-        { label: 'ASPECTOS FUNCIÓN ARCHIVÍSTICA', value: globalResult.bySection.func.porcentaje },
-        { label: 'ASPECTOS DE PRESERVACIÓN', value: globalResult.bySection.pres.porcentaje }
-      ];
+      { label: 'ASPECTOS ADMINISTRATIVOS', value: globalResult.bySection.admin.porcentaje },
+      { label: 'ASPECTOS FUNCIÓN ARCHIVÍSTICA', value: globalResult.bySection.func.porcentaje },
+      { label: 'ASPECTOS DE PRESERVACIÓN', value: globalResult.bySection.pres.porcentaje }
+    ];
 
   // Dynamic layout: start and spacing so bars always clear the result box
   const barH = 0.4;
@@ -445,64 +445,117 @@ export function createObservacionesIA(pptx, sectionTitle, bullets) {
 /**
  * Slide: Plan de acción
  */
-export function createPlanAccion(pptx, recommendations) {
-  const slide = pptx.addSlide();
-  slide.background = { color: STYLES.colors.bgBlue };
-  
-  addDecorativeElements(slide);
-  
-  // Título
-  slide.addText('PLAN DE ACCIÓN', {
-    x: 0.5,
-    y: 0.3,
-    w: 9,
-    h: 0.6,
-    ...STYLES.fonts.titleMain,
-    align: 'center'
-  });
-  
-  // Subtítulo
-  slide.addText('ACCIONES A REALIZAR', {
-    x: 0.5,
-    y: 0.95,
-    w: 9,
-    h: 0.4,
-    fontSize: 14,
-    color: STYLES.colors.textLight,
-    align: 'center'
-  });
-  
-  // Tabla de recomendaciones (máximo 8 ítems, columna de texto vacía para llenar)
-  const totalRows = Math.min(recommendations.length, 8);
-  const tableData = [
-    ['ÍTEM', 'ACCIÓN']
-  ];
-  
-  for (let i = 0; i < totalRows; i++) {
-    tableData.push([`${i + 1}`, '']);
-  }
-  
-  slide.addTable(tableData, {
-    x: 0.8,
-    y: 1.6,
-    w: 8.4,
-    colW: [0.8, 7.6],
-    fontSize: 10,
-    color: STYLES.colors.white,
-    fill: { color: STYLES.colors.secondary },
-    border: { pt: 1, color: STYLES.colors.white },
-    rowH: 0.4,
-    valign: 'middle'
-  });
-}
+export function createPlanAccion(
+  pptx,
+  recommendations = []
+) {
 
+  const slide =
+    pptx.addSlide();
+
+  slide.background = {
+    color:
+      STYLES.colors.bgBlue
+  };
+
+  addDecorativeElements(slide);
+
+  // Título
+  slide.addText(
+    'PLAN DE ACCIÓN',
+    {
+      x: 0.5,
+      y: 0.3,
+      w: 9,
+      h: 0.6,
+      ...STYLES.fonts.titleMain,
+      align: 'center'
+    }
+  );
+
+  // Subtítulo
+  slide.addText(
+    'ACCIONES GENERADAS POR IA',
+    {
+      x: 0.5,
+      y: 0.95,
+      w: 9,
+      h: 0.4,
+      fontSize: 14,
+      color:
+        STYLES.colors.textLight,
+      align: 'center'
+    }
+  );
+
+  const tableData = [
+
+    [
+      'HALLAZGO',
+      'ACCIÓN',
+      'PRIORIDAD'
+    ]
+
+  ];
+
+  recommendations
+    .slice(0, 5)
+    .forEach(rec => {
+
+      tableData.push([
+
+        rec.hallazgo || '',
+
+        rec.accion || '',
+
+        rec.prioridad || ''
+
+      ]);
+
+    });
+
+  slide.addTable(tableData, {
+
+    x: 0.4,
+    y: 1.5,
+    w: 9.0,
+
+    colW: [
+      3.0,
+      4.8,
+      1.2
+    ],
+
+    fontSize: 9,
+
+    color:
+      STYLES.colors.white,
+
+    fill: {
+      color:
+        STYLES.colors.secondary
+    },
+
+    border: {
+      pt: 1,
+      color:
+        STYLES.colors.white
+    },
+
+    rowH: 0.55,
+
+    valign: 'middle'
+
+  });
+
+}
 /**
  * Slide: Cierre con agradecimiento
  */
 export function createCierre(pptx, entityName) {
   const slide = pptx.addSlide();
   slide.background = { color: STYLES.colors.bgBlue };
-  
+
   slide.addText('¡Gracias!', {
     x: 0.5,
     y: 2.5,
@@ -514,7 +567,7 @@ export function createCierre(pptx, entityName) {
     align: 'center',
     valign: 'middle'
   });
-  
+
   slide.addText(entityName.toUpperCase(), {
     x: 0.5,
     y: 3.8,

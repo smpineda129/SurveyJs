@@ -128,9 +128,7 @@ NO uses títulos.
       err.message
     );
 
-    return
-    "La entidad formula el presente Plan Institucional de Archivos - PINAR con el propósito de fortalecer la gestión documental institucional y garantizar el cumplimiento de la normatividad archivística vigente.";
-
+    return "La entidad formula el presente Plan Institucional de Archivos - PINAR con el propósito de fortalecer la gestión documental institucional y garantizar el cumplimiento de la normatividad archivística vigente.";
   }
 
 }

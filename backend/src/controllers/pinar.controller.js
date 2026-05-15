@@ -50,9 +50,13 @@ export const generatePinarDocx = async (req, res) => {
     const totalObjetivos =
       objetivos.length;
 
+    console.log("LLAMANDO GPT PINAR");
+
     //INTRODUCCIÓN IA
     const introduccionIA =
       await generatePinarIntroduction(data);
+
+    console.log(introduccionIA);
 
     // PLANES
     const responsableGeneral =

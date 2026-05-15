@@ -250,11 +250,23 @@ export const generateIndividualPresentation = async (req, res, next) => {
       dynamicSlides.createObservacionesIA(pptx, cat.title, bullets);
     }
 
+    console.log(globalResult);
+
+    const allObservaciones =
+      categoriasSlides.flatMap(cat =>
+        cat.subAspectos.flatMap(sub =>
+          (sub.items || [])
+            .filter(item =>
+              item.observation?.trim()
+            )
+        )
+      );
+
     // ── Plan de acción + Cierre ──────────────────────────────
     const planAccionIA =
       await generatePlanAccionIA(
         "Plan de acción",
-        globalResult
+        allObservaciones
       );
 
     dynamicSlides.createPlanAccion(

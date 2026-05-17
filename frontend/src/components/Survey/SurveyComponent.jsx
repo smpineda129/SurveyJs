@@ -134,6 +134,10 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
 
       let plan = "";
       let actividad = "";
+      let responsable = "";
+      let recursos = "";
+      let indicador = "";
+      let plazo = "";
 
       const aspecto = (row.aspecto || "").toLowerCase();
 
@@ -143,6 +147,17 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
 
         actividad =
           "Elaborar, actualizar e implementar las Tablas de Retención Documental.";
+        responsable =
+          "Área de Gestión Documental";
+
+        recursos =
+          "Talento humano archivístico, herramientas ofimáticas y acompañamiento técnico.";
+
+        indicador =
+          "Tablas de Retención Documental actualizadas e implementadas.";
+
+        plazo =
+          "Mediano plazo";
 
       }
 
@@ -153,6 +168,18 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
         actividad =
           "Implementar estrategias de digitalización y acceso electrónico de documentos.";
 
+        responsable =
+          "Área de Tecnología y Gestión Documental";
+
+        recursos =
+          "Infraestructura tecnológica, software documental y personal técnico.";
+
+        indicador =
+          "Documentos digitalizados y disponibles electrónicamente.";
+
+        plazo =
+          "Mediano plazo";
+
       }
 
       else if (aspecto.includes("organización")) {
@@ -161,6 +188,18 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
 
         actividad =
           "Aplicar procesos técnicos archivísticos para la adecuada organización documental.";
+
+        responsable =
+          "Área de Archivo Central";
+
+        recursos =
+          "Cajas, carpetas, mobiliario archivístico y talento humano.";
+
+        indicador =
+          "Fondos documentales organizados técnicamente.";
+
+        plazo =
+          "Corto plazo";
 
       }
 
@@ -171,12 +210,28 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
         actividad =
           "Implementar acciones de mejora para fortalecer la gestión documental institucional.";
 
+        responsable =
+          "Área de Gestión Documental";
+
+        recursos =
+          "Talento humano, recursos administrativos y herramientas archivísticas.";
+
+        indicador =
+          "Cumplimiento de actividades de fortalecimiento documental.";
+
+        plazo =
+          "Mediano plazo";
+
       }
 
       return {
         aspecto: row.aspecto,
         plan,
-        actividad
+        actividad,
+        responsable,
+        recursos,
+        indicador,
+        plazo
       };
     });
 

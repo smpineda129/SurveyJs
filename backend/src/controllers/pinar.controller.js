@@ -500,6 +500,21 @@ export const generatePinarDocx = async (req, res) => {
                         ),
                       ],
                     }),
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          "Recursos"
+                        ),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          "Plazo"
+                        ),
+                      ],
+                    }),
 
                   ],
                 }),
@@ -529,7 +544,7 @@ export const generatePinarDocx = async (req, res) => {
                       new TableCell({
                         children: [
                           new Paragraph(
-                            responsableGeneral
+                            item.responsable || ""
                           ),
                         ],
                       }),
@@ -537,7 +552,22 @@ export const generatePinarDocx = async (req, res) => {
                       new TableCell({
                         children: [
                           new Paragraph(
-                            indicadorGeneral
+                            item.indicador || ""
+                          ),
+                        ],
+                      }),
+                      new TableCell({
+                        children: [
+                          new Paragraph(
+                            item.recursos || ""
+                          ),
+                        ],
+                      }),
+
+                      new TableCell({
+                        children: [
+                          new Paragraph(
+                            item.plazo || ""
                           ),
                         ],
                       }),

@@ -327,7 +327,8 @@ const pinarConfig = {
 
           name: "planes_proyectos",
 
-          title: "Planes y proyectos sugeridos",
+          title:
+            "Planes y proyectos sugeridos",
 
           readOnly: true,
 
@@ -351,6 +352,34 @@ const pinarConfig = {
               name: "actividad",
               title: "Actividad principal",
               cellType: "comment",
+              readOnly: true
+            },
+
+            {
+              name: "responsable",
+              title: "Responsable",
+              cellType: "text",
+              readOnly: true
+            },
+
+            {
+              name: "recursos",
+              title: "Recursos",
+              cellType: "comment",
+              readOnly: true
+            },
+
+            {
+              name: "indicador",
+              title: "Indicador",
+              cellType: "comment",
+              readOnly: true
+            },
+
+            {
+              name: "plazo",
+              title: "Plazo",
+              cellType: "text",
               readOnly: true
             }
 

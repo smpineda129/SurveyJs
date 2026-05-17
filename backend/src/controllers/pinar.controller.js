@@ -573,9 +573,7 @@ export const generatePinarDocx = async (req, res) => {
                       }),
 
                     ],
-                  })
-
-                ),
+                  }))
 
               ],
             }),

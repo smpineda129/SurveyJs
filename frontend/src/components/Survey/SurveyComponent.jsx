@@ -389,9 +389,10 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
                 (d) => ({
                   value: d._id,
                   text:
-                    JSON.stringify(
-                      d.surveyData
-                    )
+                    `${d.formType.toUpperCase()} - ${d.surveyData
+                      ?.nombre_entidad ||
+                    "Sin nombre"
+                    }`
                 })
               );
 

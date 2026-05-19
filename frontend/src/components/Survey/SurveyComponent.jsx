@@ -493,6 +493,11 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
 
         }
 
+        console.log(
+          "ASPECTOS IA:",
+          aspectos
+        );
+
         survey.setValue(
           "aspectos_criticos",
           aspectos

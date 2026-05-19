@@ -454,6 +454,7 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
 
         const data =
           diagnostico
+            ?.data
             ?.surveyData || {};
 
         console.log(

@@ -35,24 +35,55 @@ const pinarConfig = {
     {
       name: "contexto",
       elements: [
+
+        {
+          type: "comment",
+          name: "mision",
+          title: "Misión institucional"
+        },
+
+        {
+          type: "comment",
+          name: "vision",
+          title: "Visión institucional"
+        },
+
+        {
+          type: "text",
+          name: "naturaleza_juridica",
+          title: "Naturaleza jurídica"
+        },
+
+        {
+          type: "comment",
+          name: "funciones_principales",
+          title: "Funciones principales"
+        },
+
         {
           type: "paneldynamic",
-          name: "contexto_estrategico",
-          title: "3. Contexto estratégico",
+          name: "contexto_adicional",
+          title: "Otros elementos estratégicos",
           templateElements: [
+
             {
               type: "text",
               name: "titulo",
               title: "Título"
             },
+
             {
               type: "comment",
               name: "contenido",
               title: "Contenido"
             }
+
           ],
-          panelAddText: "Agregar ítem"
+
+          panelAddText:
+            "Agregar elemento"
         }
+
       ]
     },
 

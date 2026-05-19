@@ -194,47 +194,129 @@ export const generatePinarDocx = async (req, res) => {
 
             new Paragraph({
               text:
-                "2. MARCO NORMATIVO",
+                "2. CONTEXTO INSTITUCIONAL",
+
+              heading:
+                HeadingLevel.HEADING_1,
+            }),
+
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Misión institucional: ",
+                  bold: true,
+                }),
+                new TextRun(
+                  data.mision || ""
+                ),
+              ],
+            }),
+
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Visión institucional: ",
+                  bold: true,
+                }),
+                new TextRun(
+                  data.vision || ""
+                ),
+              ],
+            }),
+
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text:
+                    "Naturaleza jurídica: ",
+                  bold: true,
+                }),
+                new TextRun(
+                  data.naturaleza_juridica || ""
+                ),
+              ],
+            }),
+
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text:
+                    "Funciones principales: ",
+                  bold: true,
+                }),
+                new TextRun(
+                  data.funciones_principales || ""
+                ),
+              ],
+            }),
+            // CONTEXTO ADICIONAL
+
+            ...(data.contexto_adicional || [])
+              .flatMap(item => [
+
+                new Paragraph({
+                  children: [
+                    new TextRun({
+                      text:
+                        `${item.titulo}: `,
+                      bold: true,
+                    }),
+
+                    new TextRun(
+                      item.contenido || ""
+                    ),
+                  ],
+
+                  spacing: {
+                    after: 200,
+                  },
+                }),
+
+              ]),
+
+            new Paragraph({
+              text:
+                "3. MARCO NORMATIVO",
             }),
 
             new Paragraph({
               text:
-                "3. VISIÓN ESTRATÉGICA DEL PINAR",
+                "4. VISIÓN ESTRATÉGICA DEL PINAR",
             }),
 
             new Paragraph({
               text:
-                "4. ASPECTOS CRÍTICOS",
+                "5. ASPECTOS CRÍTICOS",
             }),
 
             new Paragraph({
               text:
-                "5. OBJETIVOS ESTRATÉGICOS",
+                "6. OBJETIVOS ESTRATÉGICOS",
             }),
 
             new Paragraph({
               text:
-                "6. RIESGOS DOCUMENTALES",
+                "7. RIESGOS DOCUMENTALES",
             }),
 
             new Paragraph({
               text:
-                "7. PLANES Y PROYECTOS",
+                "8. PLANES Y PROYECTOS",
             }),
 
             new Paragraph({
               text:
-                "8. MAPA DE RUTA",
+                "9. MAPA DE RUTA",
             }),
 
             new Paragraph({
               text:
-                "9. CONCLUSIONES",
+                "10. CONCLUSIONES",
             }),
 
             new Paragraph({
               text:
-                "10. RECOMENDACIONES",
+                "11. RECOMENDACIONES",
             }),
 
             // OTRO SALTO

@@ -457,8 +457,8 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
             ?.surveyData || {};
 
         console.log(
-          "DATOS DIAGNÓSTICO:",
-          data
+          "DIAGNÓSTICO COMPLETO:",
+          diagnostico
         );
 
         const aspectos = [];

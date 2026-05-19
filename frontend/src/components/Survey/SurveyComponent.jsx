@@ -372,6 +372,10 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
           const diagnosticos =
             response.data || [];
 
+          console.log(
+            diagnosticos
+          );
+
           const question =
             survey.getQuestionByName(
               "diagnostico_origen"

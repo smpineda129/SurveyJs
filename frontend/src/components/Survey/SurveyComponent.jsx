@@ -456,6 +456,11 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
           diagnostico
             ?.surveyData || {};
 
+        console.log(
+          "DATOS DIAGNÓSTICO:",
+          data
+        );
+
         const aspectos = [];
 
         // PLAN DE ACCIÓN

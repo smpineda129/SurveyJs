@@ -370,11 +370,12 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
             });
 
           const diagnosticos =
-            response.data || [];
-
-          console.log(
-            diagnosticos
-          );
+            (response.data || [])
+              .filter(
+                d =>
+                  d.formType !==
+                  "pinar"
+              );
 
           const question =
             survey.getQuestionByName(
@@ -388,7 +389,10 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
                 (d) => ({
                   value: d._id,
                   text:
-                    d.nombre_empresa
+                    `${d.formType.toUpperCase()} - ${d.surveyData
+                      ?.nombre_empresa ||
+                    "Sin nombre"
+                    }`
                 })
               );
 

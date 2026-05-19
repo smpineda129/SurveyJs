@@ -273,24 +273,68 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
     generarPlanes(survey, priorizados);
   };
 
-  const generarMapaRuta = (survey, planes) => {
+  const generarMapaRuta = (
+    survey,
+    planes
+  ) => {
 
-    const mapa = planes.map((row, index) => {
+    const mapa = planes.map(
+      (row) => {
 
-      return {
-        plan: row.plan,
+        let vigencia1 = "";
+        let vigencia2 = "";
+        let vigencia3 = "";
 
-        vigencia1: "X",
+        if (
+          row.plazo ===
+          "Corto plazo"
+        ) {
 
-        vigencia2:
-          index % 2 === 0 ? "X" : "",
+          vigencia1 = "X";
 
-        vigencia3:
-          index % 3 === 0 ? "X" : ""
-      };
-    });
+        }
 
-    survey.setValue("mapa_ruta_generado", mapa);
+        else if (
+          row.plazo ===
+          "Mediano plazo"
+        ) {
+
+          vigencia1 = "X";
+          vigencia2 = "X";
+
+        }
+
+        else if (
+          row.plazo ===
+          "Largo plazo"
+        ) {
+
+          vigencia1 = "X";
+          vigencia2 = "X";
+          vigencia3 = "X";
+
+        }
+
+        return {
+
+          plan: row.plan,
+
+          vigencia1,
+
+          vigencia2,
+
+          vigencia3
+
+        };
+
+      }
+    );
+
+    survey.setValue(
+      "mapa_ruta_generado",
+      mapa
+    );
+
   };
 
   // CREAR SURVEY
@@ -313,6 +357,51 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
 
   useEffect(() => {
     if (formType !== "pinar") return;
+
+    const cargarDiagnosticos =
+      async () => {
+
+        try {
+
+          const response =
+            await surveyAPI.getAll({
+              formType:
+                "diagnostico"
+            });
+
+          const diagnosticos =
+            response.data || [];
+
+          const question =
+            survey.getQuestionByName(
+              "diagnostico_origen"
+            );
+
+          if (question) {
+
+            question.choices =
+              diagnosticos.map(
+                (d) => ({
+                  value: d._id,
+                  text:
+                    d.nombre_empresa
+                })
+              );
+
+          }
+
+        } catch (error) {
+
+          console.error(
+            "Error cargando diagnósticos:",
+            error
+          );
+
+        }
+
+      };
+
+    cargarDiagnosticos();
 
     const aspectosDiagnostico = [
       "Falta de actualización de TRD",

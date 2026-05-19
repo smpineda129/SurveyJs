@@ -22,6 +22,21 @@ const pinarConfig = {
           name: "nombre_empresa",
           title: "Nombre de la empresa"
         },
+
+        {
+          type: "dropdown",
+
+          name: "diagnostico_origen",
+
+          title:
+            "Diagnóstico base",
+
+          choices: [],
+
+          placeholder:
+            "Seleccione un diagnóstico"
+        },
+
         {
           type: "text",
           name: "mes_anio",

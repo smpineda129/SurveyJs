@@ -194,6 +194,88 @@ export const generatePinarDocx = async (req, res) => {
 
             new Paragraph({
               text:
+                "2. CONTEXTO INSTITUCIONAL"
+            }),
+
+            new Paragraph({
+              text:
+                "3. MARCO NORMATIVO",
+            }),
+
+            new Paragraph({
+              text:
+                "4. VISIÓN ESTRATÉGICA DEL PINAR",
+            }),
+
+            new Paragraph({
+              text:
+                "5. ASPECTOS CRÍTICOS",
+            }),
+
+            new Paragraph({
+              text:
+                "6. OBJETIVOS ESTRATÉGICOS",
+            }),
+
+            new Paragraph({
+              text:
+                "7. RIESGOS DOCUMENTALES",
+            }),
+
+            new Paragraph({
+              text:
+                "8. PLANES Y PROYECTOS",
+            }),
+
+            new Paragraph({
+              text:
+                "9. MAPA DE RUTA",
+            }),
+
+            new Paragraph({
+              text:
+                "10. CONCLUSIONES",
+            }),
+
+            new Paragraph({
+              text:
+                "11. RECOMENDACIONES",
+            }),
+
+            // OTRO SALTO
+
+            new Paragraph({
+              pageBreakBefore: true,
+            }),
+
+            // INTRODUCCIÓN
+            new Paragraph({
+              text: "1. INTRODUCCIÓN",
+              heading: HeadingLevel.HEADING_1,
+            }),
+
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: introduccionIA,
+                  size: 24,
+                  font: "Times New Roman",
+                }),
+              ],
+
+              spacing: {
+                after: 300,
+                line: 360,
+              },
+
+              alignment:
+                AlignmentType.JUSTIFIED,
+            }),
+
+            // CONTEXTO INSTITUCIONAL
+
+            new Paragraph({
+              text:
                 "2. CONTEXTO INSTITUCIONAL",
 
               heading:
@@ -273,81 +355,6 @@ export const generatePinarDocx = async (req, res) => {
                 }),
 
               ]),
-
-            new Paragraph({
-              text:
-                "3. MARCO NORMATIVO",
-            }),
-
-            new Paragraph({
-              text:
-                "4. VISIÓN ESTRATÉGICA DEL PINAR",
-            }),
-
-            new Paragraph({
-              text:
-                "5. ASPECTOS CRÍTICOS",
-            }),
-
-            new Paragraph({
-              text:
-                "6. OBJETIVOS ESTRATÉGICOS",
-            }),
-
-            new Paragraph({
-              text:
-                "7. RIESGOS DOCUMENTALES",
-            }),
-
-            new Paragraph({
-              text:
-                "8. PLANES Y PROYECTOS",
-            }),
-
-            new Paragraph({
-              text:
-                "9. MAPA DE RUTA",
-            }),
-
-            new Paragraph({
-              text:
-                "10. CONCLUSIONES",
-            }),
-
-            new Paragraph({
-              text:
-                "11. RECOMENDACIONES",
-            }),
-
-            // OTRO SALTO
-
-            new Paragraph({
-              pageBreakBefore: true,
-            }),
-
-            // INTRODUCCIÓN
-            new Paragraph({
-              text: "1. INTRODUCCIÓN",
-              heading: HeadingLevel.HEADING_1,
-            }),
-
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: introduccionIA,
-                  size: 24,
-                  font: "Times New Roman",
-                }),
-              ],
-
-              spacing: {
-                after: 300,
-                line: 360,
-              },
-
-              alignment:
-                AlignmentType.JUSTIFIED,
-            }),
 
             // MARCO NORMATIVO
             new Paragraph({

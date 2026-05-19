@@ -439,6 +439,76 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
 
   }, [survey, formType]);
 
+  const cargarDatosDiagnostico =
+    async (
+      survey,
+      id
+    ) => {
+
+      try {
+
+        const diagnostico =
+          await surveyAPI.getById(
+            id
+          );
+
+        const data =
+          diagnostico
+            ?.surveyData || {};
+
+        const aspectos = [];
+
+        // PLAN DE ACCIÓN
+        if (
+          data.plan_accion
+        ) {
+
+          data.plan_accion.forEach(
+            (item) => {
+
+              aspectos.push({
+
+                aspecto:
+                  item.item || "",
+
+                riesgo:
+                  item.plan_accion || ""
+
+              });
+
+            }
+          );
+
+        }
+
+        // ASPECTOS YA EXISTENTES
+        if (
+          data.aspectos_criticos
+        ) {
+
+          aspectos.push(
+            ...data
+              .aspectos_criticos
+          );
+
+        }
+
+        survey.setValue(
+          "aspectos_criticos",
+          aspectos
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Error cargando diagnóstico:",
+          error
+        );
+
+      }
+
+    };
+
   // EVENTOS
   useEffect(() => {
 
@@ -450,6 +520,18 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
         options.value !== ''
       ) {
         allValuesRef.current[options.name] = options.value;
+      }
+
+      if (
+        options.name ===
+        "diagnostico_origen"
+      ) {
+
+        cargarDatosDiagnostico(
+          sender,
+          options.value
+        );
+
       }
 
       // detectar cambios en la matriz (aunque sea interno)

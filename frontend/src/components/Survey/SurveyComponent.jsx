@@ -509,6 +509,27 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
           aspectos
         );
 
+        const priorizados =
+          aspectos.map(
+            (item, index) => ({
+
+              numero:
+                index + 1,
+
+              aspecto:
+                item.aspecto || "",
+
+              prioridad:
+                "Alta"
+
+            })
+          );
+
+        survey.setValue(
+          "priorizacion_criticos",
+          priorizados
+        );
+
       } catch (error) {
 
         console.error(

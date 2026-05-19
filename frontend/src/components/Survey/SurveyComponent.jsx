@@ -463,6 +463,33 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
 
         const aspectos = [];
 
+        const observaciones =
+          Object.entries(data)
+
+            .filter(
+              ([key, value]) =>
+
+                key.endsWith("_obs") &&
+
+                value &&
+                value.trim() !== ""
+            )
+
+            .map(
+              ([key, value]) => ({
+
+                codigo: key,
+
+                observacion: value
+
+              })
+            );
+
+        console.log(
+          "OBSERVACIONES:",
+          observaciones
+        );
+
         // PLAN DE ACCIÓN
         if (
           data.plan_accion

@@ -412,32 +412,6 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
 
     cargarDiagnosticos();
 
-    const aspectosDiagnostico = [
-      "Falta de actualización de TRD",
-      "Deficiente organización documental",
-      "Falta de digitalización"
-    ];
-
-    const aspectosFormateados = aspectosDiagnostico.map(a => ({
-      aspecto: a,
-      riesgo: ""
-    }));
-
-    const matriz = aspectosDiagnostico.map(a => ({
-      aspecto: a,
-      admin: "",
-      acceso: "",
-      preservacion: "",
-      tecnologia: "",
-      fortalecimiento: "",
-      total: 0
-    }));
-
-    setTimeout(() => {
-      survey.setValue("aspectos_criticos", aspectosFormateados);
-      survey.setValue("matriz_calificacion", matriz);
-    }, 200);
-
   }, [survey, formType]);
 
   const cargarDatosDiagnostico =

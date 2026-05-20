@@ -495,6 +495,10 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
               observaciones
             );
 
+        console.log(
+          response
+        );
+
         const aspectos =
           response.data || [];
 

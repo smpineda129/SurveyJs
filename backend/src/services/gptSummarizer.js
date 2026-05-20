@@ -214,12 +214,9 @@ ${obsText}
         .content
         .trim();
 
-    console.log(
-      "ASPECTOS IA RAW:",
-      text
-    );
-
-    return JSON.parse(text);
+    return {
+      raw: text
+    };
 
   } catch (error) {
 

@@ -25,8 +25,8 @@ export const generatePinarDocx = async (req, res) => {
 
     const data = req.body.surveyData || req.body;
 
-    const priorizados =
-      data.priorizacion_criticos || [];
+    const aspectosCriticos =
+      data.aspectos_criticos || [];
 
     const objetivos =
       data.objetivos_estrategicos || [];
@@ -444,7 +444,7 @@ export const generatePinarDocx = async (req, res) => {
                     new TableCell({
                       children: [
                         new Paragraph(
-                          "Prioridad"
+                          "Riesgo"
                         ),
                       ],
                     }),
@@ -452,7 +452,7 @@ export const generatePinarDocx = async (req, res) => {
                   ],
                 }),
 
-                ...priorizados.map(
+                ...aspectosCriticos.map(
                   (item, index) =>
 
                     new TableRow({
@@ -477,7 +477,7 @@ export const generatePinarDocx = async (req, res) => {
                         new TableCell({
                           children: [
                             new Paragraph(
-                              item.prioridad || ""
+                              item.riesgo || ""
                             ),
                           ],
                         }),

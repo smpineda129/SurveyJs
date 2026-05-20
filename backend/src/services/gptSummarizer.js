@@ -214,9 +214,21 @@ ${obsText}
         .content
         .trim();
 
-    return {
-      raw: text
-    };
+    const cleanText =
+      text
+        .replace(
+          /```json/g,
+          ""
+        )
+        .replace(
+          /```/g,
+          ""
+        )
+        .trim();
+
+    return JSON.parse(
+      cleanText
+    );
 
   } catch (error) {
 

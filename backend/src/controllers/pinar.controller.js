@@ -28,6 +28,12 @@ export const generatePinarDocx = async (req, res) => {
     const aspectosCriticos =
       data.aspectos_criticos || [];
 
+    const matrizCalificacion =
+      data.matriz_calificacion || [];
+
+    const priorizados =
+      data.priorizacion_criticos || [];
+
     const objetivos =
       data.objetivos_estrategicos || [];
 
@@ -487,6 +493,420 @@ export const generatePinarDocx = async (req, res) => {
                 ),
 
               ],
+            }),
+
+            // EJES ARTICULADORES
+            new Paragraph({
+              text:
+                "4.2. Ejes articuladores",
+
+              heading:
+                HeadingLevel.HEADING_2,
+
+              spacing: {
+                before: 300,
+                after: 200
+              }
+            }),
+
+            new Paragraph({
+              text:
+                "Teniendo en cuenta los principios de la función archivística contemplados en la Ley 594 de 2000, artículo 4, se establecen los siguientes ejes articuladores con los cuales se realiza el análisis de aspectos críticos de la gestión documental institucional, permitiendo su valoración y priorización.",
+
+              alignment:
+                AlignmentType.JUSTIFIED,
+
+              spacing: {
+                after: 200
+              }
+            }),
+
+            new Table({
+
+              width: {
+                size: 100,
+                type:
+                  WidthType.PERCENTAGE,
+              },
+
+              rows: [
+
+                new TableRow({
+                  children: [
+
+                    new TableCell({
+                      children: [
+                        new Paragraph("EJE"),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph("DESCRIPCIÓN"),
+                      ],
+                    }),
+
+                  ],
+                }),
+
+                new TableRow({
+                  children: [
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          "Administración de archivos"
+                        ),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          "Involucra aspectos de infraestructura, presupuesto, normatividad, política, procesos, procedimientos y personal."
+                        ),
+                      ],
+                    }),
+
+                  ],
+                }),
+
+                new TableRow({
+                  children: [
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          "Acceso a la información"
+                        ),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          "Comprende aspectos relacionados con transparencia, participación, servicio al ciudadano y organización documental."
+                        ),
+                      ],
+                    }),
+
+                  ],
+                }),
+
+                new TableRow({
+                  children: [
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          "Preservación de la información"
+                        ),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          "Incluye aspectos relacionados con conservación y almacenamiento de la información."
+                        ),
+                      ],
+                    }),
+
+                  ],
+                }),
+
+                new TableRow({
+                  children: [
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          "Aspectos tecnológicos y de seguridad"
+                        ),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          "Abarca aspectos relacionados con seguridad de la información e infraestructura tecnológica."
+                        ),
+                      ],
+                    }),
+
+                  ],
+                }),
+
+                new TableRow({
+                  children: [
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          "Fortalecimiento y articulación"
+                        ),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          "Involucra aspectos relacionados con armonización de la gestión documental y otros modelos de gestión."
+                        ),
+                      ],
+                    }),
+
+                  ],
+                }),
+
+              ],
+
+            }),
+
+            new Paragraph({
+              text:
+                "4.3. Priorización de aspectos críticos",
+
+              heading:
+                HeadingLevel.HEADING_2,
+
+              spacing: {
+                before: 300,
+                after: 200
+              }
+            }),
+
+            new Paragraph({
+              text:
+                "Los aspectos críticos institucionales fueron evaluados frente a cada uno de los ejes articuladores de la gestión documental, permitiendo identificar aquellos de mayor impacto para la entidad.",
+
+              alignment:
+                AlignmentType.JUSTIFIED,
+
+              spacing: {
+                after: 200
+              }
+            }),
+
+            new Table({
+
+              width: {
+                size: 100,
+                type:
+                  WidthType.PERCENTAGE,
+              },
+
+              rows: [
+
+                new TableRow({
+                  children: [
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          "Aspecto crítico"
+                        ),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph("EA1"),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph("EA2"),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph("EA3"),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph("EA4"),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph("EA5"),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph("TOTAL"),
+                      ],
+                    }),
+
+                  ],
+                }),
+
+                ...matrizCalificacion.map(
+                  (item) =>
+
+                    new TableRow({
+                      children: [
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(
+                              item.aspecto || ""
+                            ),
+                          ],
+                        }),
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(
+                              String(item.admin || "")
+                            ),
+                          ],
+                        }),
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(
+                              String(item.acceso || "")
+                            ),
+                          ],
+                        }),
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(
+                              String(item.preservacion || "")
+                            ),
+                          ],
+                        }),
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(
+                              String(item.tecnologia || "")
+                            ),
+                          ],
+                        }),
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(
+                              String(item.fortalecimiento || "")
+                            ),
+                          ],
+                        }),
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(
+                              String(item.total || "")
+                            ),
+                          ],
+                        }),
+
+                      ],
+                    })
+
+                ),
+
+              ],
+
+            }),
+
+            new Paragraph({
+              text:
+                "Resultado de priorización de aspectos críticos",
+
+              heading:
+                HeadingLevel.HEADING_3,
+
+              spacing: {
+                before: 300,
+                after: 200
+              }
+            }),
+
+            new Table({
+
+              width: {
+                size: 100,
+                type:
+                  WidthType.PERCENTAGE,
+              },
+
+              rows: [
+
+                new TableRow({
+                  children: [
+
+                    new TableCell({
+                      children: [
+                        new Paragraph("N°"),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          "Aspecto crítico"
+                        ),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          "Prioridad"
+                        ),
+                      ],
+                    }),
+
+                  ],
+                }),
+
+                ...priorizados.map(
+                  (item, index) =>
+
+                    new TableRow({
+                      children: [
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(
+                              String(index + 1)
+                            ),
+                          ],
+                        }),
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(
+                              item.aspecto || ""
+                            ),
+                          ],
+                        }),
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(
+                              item.prioridad || ""
+                            ),
+                          ],
+                        }),
+
+                      ],
+                    })
+
+                ),
+
+              ],
+
             }),
 
             // OBJETIVOS

@@ -23,38 +23,174 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
     currentYear + 1,
     currentYear + 2
   ];
-
   onCompleteRef.current = onComplete;
   formTypeRef.current = formType;
 
   // FUNCIÓN PARA CALCULAR TOTALES
-  const calcularTotales = (survey) => {
-    const data = survey.getValue("matriz_calificacion");
-    if (!data) return;
+  const calcularTotales =
+    (survey) => {
+      const data =
+        survey.getValue(
+          "matriz_calificacion"
+        );
 
-    let cambiado = false;
+      if (!data) return;
 
-    const actualizada = data.map(row => {
-      const total =
-        (Number(row.admin) || 0) +
-        (Number(row.acceso) || 0) +
-        (Number(row.preservacion) || 0) +
-        (Number(row.tecnologia) || 0) +
-        (Number(row.fortalecimiento) || 0);
+      const nuevaMatriz =
+        data.map((row) => {
 
-      if (row.total !== total) {
-        cambiado = true;
-        return { ...row, total };
-      }
+          const total =
 
-      return row;
-    });
+            Number(row.admin || 0) +
 
-    if (cambiado) {
-      survey.setValue("matriz_calificacion", actualizada);
-    }
-    generarPriorizacion(survey);
-  };
+            Number(row.acceso || 0) +
+
+            Number(row.preservacion || 0) +
+
+            Number(row.tecnologia || 0) +
+
+            Number(row.fortalecimiento || 0);
+
+          return {
+
+            ...row,
+
+            total
+
+          };
+
+        });
+
+      survey.setValue(
+        "matriz_calificacion",
+        nuevaMatriz
+      );
+
+      const priorizados =
+        nuevaMatriz.map(
+          (row, index) => {
+
+            let prioridad =
+              "Baja";
+
+            if (
+              row.total >= 30
+            ) {
+
+              prioridad =
+                "Alta";
+
+            }
+
+            else if (
+              row.total >= 20
+            ) {
+
+              prioridad =
+                "Media";
+
+            }
+
+            return {
+
+              numero:
+                index + 1,
+
+              aspecto:
+                row.aspecto,
+
+              prioridad
+
+            };
+
+          }
+        );
+
+      survey.setValue(
+        "priorizacion_criticos",
+        priorizados
+      );
+
+
+      if (!data) return;
+
+      const nuevaMatriz =
+        data.map((row) => {
+
+          const total =
+
+            Number(row.admin || 0) +
+
+            Number(row.acceso || 0) +
+
+            Number(row.preservacion || 0) +
+
+            Number(row.tecnologia || 0) +
+
+            Number(row.fortalecimiento || 0);
+
+          return {
+
+            ...row,
+
+            total
+
+          };
+
+        });
+
+      survey.setValue(
+        "matriz_calificacion",
+        nuevaMatriz
+      );
+
+      const priorizados =
+        nuevaMatriz.map(
+          (row, index) => {
+
+            let prioridad =
+              "Baja";
+
+            if (
+              row.total >= 30
+            ) {
+
+              prioridad =
+                "Alta";
+
+            }
+
+            else if (
+              row.total >= 20
+            ) {
+
+              prioridad =
+                "Media";
+
+            }
+
+            return {
+
+              numero:
+                index + 1,
+
+              aspecto:
+                row.aspecto,
+
+              prioridad
+
+            };
+
+          }
+        );
+
+      survey.setValue(
+        "priorizacion_criticos",
+        priorizados
+      );
+
+
+    };
   const generarObjetivos = (survey, priorizados) => {
 
     const objetivos = priorizados.map((row) => {
@@ -484,6 +620,29 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
         survey.setValue(
           "aspectos_criticos",
           aspectos
+        );
+
+        const matriz =
+          aspectos.map(
+            (item) => ({
+
+              aspecto:
+                item.aspecto || "",
+
+              admin: "",
+              acceso: "",
+              preservacion: "",
+              tecnologia: "",
+              fortalecimiento: "",
+
+              total: 0
+
+            })
+          );
+
+        survey.setValue(
+          "matriz_calificacion",
+          matriz
         );
 
         const priorizados =

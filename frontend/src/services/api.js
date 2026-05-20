@@ -70,6 +70,25 @@ export const surveyAPI = {
     return response;
   },
 
+  // Generar aspectos críticos IA
+  generateAspectosCriticos:
+    async (observaciones) => {
+
+      const response =
+        await api.post(
+
+          '/pinar/generate-aspectos',
+
+          {
+            observaciones
+          }
+
+        );
+
+      return response.data;
+
+    },
+
   // Obtener todas las respuestas
   getAll: async (params = {}) => {
 

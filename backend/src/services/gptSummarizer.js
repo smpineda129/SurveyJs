@@ -133,6 +133,107 @@ ${obsText}
 
 }
 
+export async function
+  generateAspectosCriticosIA(
+    observaciones
+  ) {
+
+  if (
+    !observaciones ||
+    observaciones.length === 0
+  ) {
+
+    return [];
+
+  }
+
+  const obsText =
+    observaciones
+      .map(
+        (o) =>
+          `- ${o.observacion}`
+      )
+      .join("\n");
+
+  const prompt = `
+
+Eres un experto archivístico colombiano especializado en PINAR y gestión documental.
+
+Analiza las siguientes observaciones obtenidas de un diagnóstico archivístico institucional.
+
+Debes identificar los aspectos críticos y su riesgo asociado.
+
+Devuelve únicamente un JSON válido.
+
+Formato esperado:
+
+[
+  {
+    "aspecto": "...",
+    "riesgo": "..."
+  }
+]
+
+Máximo 10 resultados.
+
+Observaciones:
+${obsText}
+
+`;
+
+  try {
+
+    const client =
+      new OpenAI({
+        apiKey:
+          process.env.GPT_API
+      });
+
+    const response =
+      await client.chat.completions.create({
+
+        model: "gpt-4o-mini",
+
+        messages: [
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+
+        temperature: 0.3,
+
+        max_tokens: 1200
+
+      });
+
+    const text =
+      response
+        .choices[0]
+        .message
+        .content
+        .trim();
+
+    console.log(
+      "ASPECTOS IA RAW:",
+      text
+    );
+
+    return JSON.parse(text);
+
+  } catch (error) {
+
+    console.error(
+      "ERROR ASPECTOS IA:",
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
 export async function generatePinarIntroduction(data) {
 
   try {

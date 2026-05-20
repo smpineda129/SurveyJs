@@ -5,6 +5,7 @@ import { Box, Paper, Alert, CircularProgress } from '@mui/material';
 import 'survey-core/defaultV2.min.css';
 import { surveyAPI } from '../../services/api';
 
+
 function SurveyComponent({ surveyConfig, formType, onComplete }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -461,8 +462,6 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
           Object.keys(data)
         );
 
-        const aspectos = [];
-
         const observaciones =
           Object.entries(data)
 
@@ -490,40 +489,14 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
           observaciones
         );
 
-        // PLAN DE ACCIÓN
-        if (
-          data.plan_accion
-        ) {
+        const response =
+          await surveyAPI
+            .generateAspectosCriticos(
+              observaciones
+            );
 
-          data.plan_accion.forEach(
-            (item) => {
-
-              aspectos.push({
-
-                aspecto:
-                  item.item || "",
-
-                riesgo:
-                  item.plan_accion || ""
-
-              });
-
-            }
-          );
-
-        }
-
-        // ASPECTOS YA EXISTENTES
-        if (
-          data.aspectos_criticos
-        ) {
-
-          aspectos.push(
-            ...data
-              .aspectos_criticos
-          );
-
-        }
+        const aspectos =
+          response.data || [];
 
         console.log(
           "ASPECTOS IA:",

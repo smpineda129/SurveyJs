@@ -1,6 +1,7 @@
 import {
   generatePinarIntroduction,
-  generatePinarVision
+  generatePinarVision,
+  generateAspectosCriticosIA
 } from "../services/gptSummarizer.js";
 
 import {
@@ -811,7 +812,6 @@ export const generatePinarDocx = async (req, res) => {
               alignment:
                 AlignmentType.JUSTIFIED,
             }),
-
           ],
         },
       ],
@@ -843,3 +843,43 @@ export const generatePinarDocx = async (req, res) => {
 
   }
 };
+
+export const
+  generateAspectosCriticos =
+    async (req, res) => {
+
+      try {
+
+        const {
+          observaciones
+        } = req.body;
+
+        const aspectos =
+          await generateAspectosCriticosIA(
+            observaciones
+          );
+
+        res.json({
+          success: true,
+          data: aspectos
+        });
+
+      } catch (error) {
+
+        console.error(
+          "ERROR GENERANDO ASPECTOS:",
+          error
+        );
+
+        res.status(500).json({
+
+          success: false,
+
+          error:
+            "Error generando aspectos críticos"
+
+        });
+
+      }
+
+    };

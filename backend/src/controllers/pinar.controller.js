@@ -1748,10 +1748,13 @@ export const generatePinarDocx = async (req, res) => {
     res.status(500).json({
 
       message:
-        error.message,
+        String(error),
 
       stack:
-        error.stack
+        error?.stack || "NO STACK",
+
+      name:
+        error?.name || "NO NAME"
 
     });
 

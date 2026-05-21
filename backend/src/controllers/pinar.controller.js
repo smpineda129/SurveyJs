@@ -64,22 +64,15 @@ export const generatePinarDocx = async (req, res) => {
       data.vigencia ||
       new Date().getFullYear();
 
-    //const fechaActual =
-    //  new Date();
-
-    // const mes =
-    // fechaActual.toLocaleString(
-    //    "es-CO",
-    //  {
-    //      month: "long"
-    //  }
-    // );
-
-    // const year =
-    // fechaActual.getFullYear();
-
-    //const fechaPortada =
-    //`${mes.charAt(0).toUpperCase() + mes.slice(1)} ${year}`;
+    const fechaPortada =
+      new Date()
+        .toLocaleDateString(
+          "es-CO",
+          {
+            month: "long",
+            year: "numeric"
+          }
+        );
 
     const objetivoGeneral =
       `Lograr en el período ${vigencia}, la implementación de planes y proyectos institucionales orientados al fortalecimiento de la gestión documental, garantizando el cumplimiento de la normatividad archivística vigente y la mejora continua de los procesos documentales de ${entidad}.`;
@@ -178,23 +171,38 @@ export const generatePinarDocx = async (req, res) => {
 
     }
 
-    console.log(
-      "ANTES DE DOC"
-    );
-
-    process.on(
-      "uncaughtException",
-      (err) => {
-
-        console.error(
-          "UNCAUGHT:",
-          err
-        );
-
-      }
-    );
-
     const doc = new Document({
+
+      styles: {
+
+        default: {
+
+          heading1: {
+            run: {
+              font: "Arial",
+              size: 28,
+              bold: true
+            }
+          },
+
+          heading2: {
+            run: {
+              font: "Arial",
+              size: 24,
+              bold: true
+            }
+          },
+
+          document: {
+            run: {
+              font: "Arial",
+              size: 24
+            }
+          }
+
+        }
+
+      },
 
       sections: [
         {
@@ -219,7 +227,7 @@ export const generatePinarDocx = async (req, res) => {
 
             new Paragraph({
               text:
-                "Mayo 2026",
+                fechaPortada,
 
               alignment:
                 AlignmentType.CENTER,
@@ -1443,45 +1451,6 @@ export const generatePinarDocx = async (req, res) => {
 
               rows: [
 
-                // AÑOS
-                new TableRow({
-                  children: [
-
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          String(years[0])
-                        ),
-                      ],
-                    }),
-
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          String(years[1])
-                        ),
-                      ],
-                    }),
-
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          String(years[2])
-                        ),
-                      ],
-                    }),
-
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          String(years[3])
-                        ),
-                      ],
-                    }),
-
-                  ],
-                }),
-
                 new TableRow({
                   children: [
 
@@ -1650,35 +1619,8 @@ export const generatePinarDocx = async (req, res) => {
       ],
     });
 
-    console.log(
-      "DOC OK"
-    );
-
-    console.log(
-      "ANTES DE BUFFER"
-    );
-
-    let buffer;
-
-    try {
-
-      buffer =
-        await Packer.toBuffer(doc);
-
-    } catch (err) {
-
-      console.error(
-        "ERROR BUFFER:",
-        err
-      );
-
-      throw err;
-
-    }
-
-    console.log(
-      "BUFFER OK"
-    );
+    const buffer =
+      await Packer.toBuffer(doc);
 
     res.setHeader(
       "Content-Type",

@@ -1606,61 +1606,6 @@ export const generatePinarDocx = async (req, res) => {
 
             }),
 
-            new Table({
-              width: {
-                size: 100,
-                type:
-                  WidthType.PERCENTAGE,
-              },
-
-              rows: [
-
-                ...mapaRuta.map((item) =>
-
-                  new TableRow({
-                    children: [
-
-                      new TableCell({
-                        children: [
-                          new Paragraph(
-                            item.plan || ""
-                          ),
-                        ],
-                      }),
-
-                      new TableCell({
-                        children: [
-                          new Paragraph(
-                            item.vigencia1 || ""
-                          ),
-                        ],
-                      }),
-
-                      new TableCell({
-                        children: [
-                          new Paragraph(
-                            item.vigencia2 || ""
-                          ),
-                        ],
-                      }),
-
-                      new TableCell({
-                        children: [
-                          new Paragraph(
-                            item.vigencia3 || ""
-                          ),
-                        ],
-                      }),
-
-                    ],
-                  })
-
-                ),
-
-              ],
-            }),
-
-
             // CONCLUSIONES
             new Paragraph({
               text: "9. CONCLUSIONES",

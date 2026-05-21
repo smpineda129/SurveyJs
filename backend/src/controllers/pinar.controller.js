@@ -182,6 +182,18 @@ export const generatePinarDocx = async (req, res) => {
       "ANTES DE DOC"
     );
 
+    process.on(
+      "uncaughtException",
+      (err) => {
+
+        console.error(
+          "UNCAUGHT:",
+          err
+        );
+
+      }
+    );
+
     const doc = new Document({
 
       sections: [
@@ -1655,8 +1667,23 @@ export const generatePinarDocx = async (req, res) => {
       "ANTES DE BUFFER"
     );
 
-    const buffer =
-      await Packer.toBuffer(doc);
+    let buffer;
+
+    try {
+
+      buffer =
+        await Packer.toBuffer(doc);
+
+    } catch (err) {
+
+      console.error(
+        "ERROR BUFFER:",
+        err
+      );
+
+      throw err;
+
+    }
 
     console.log(
       "BUFFER OK"

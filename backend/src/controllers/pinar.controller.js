@@ -178,6 +178,10 @@ export const generatePinarDocx = async (req, res) => {
 
     }
 
+    console.log(
+      "ANTES DE DOC"
+    );
+
     const doc = new Document({
 
       styles: {
@@ -1708,7 +1712,11 @@ export const generatePinarDocx = async (req, res) => {
     });
 
     console.log(
-      "DOC CREADO OK"
+      "DOC OK"
+    );
+
+    console.log(
+      "ANTES DE BUFFER"
     );
 
     const buffer =

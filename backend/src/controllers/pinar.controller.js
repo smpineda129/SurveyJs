@@ -67,6 +67,16 @@ export const generatePinarDocx = async (req, res) => {
     const objetivoGeneral =
       `Lograr en el período ${vigencia}, la implementación de planes y proyectos institucionales orientados al fortalecimiento de la gestión documental, garantizando el cumplimiento de la normatividad archivística vigente y la mejora continua de los procesos documentales de ${entidad}.`;
 
+    const yearStart =
+      Number(vigencia);
+
+    const years = [
+      yearStart,
+      yearStart + 1,
+      yearStart + 2,
+      yearStart + 3
+    ];
+
     const aspectos =
       data.aspectos_criticos || [];
 
@@ -377,17 +387,31 @@ export const generatePinarDocx = async (req, res) => {
 
             //MARCO NORMATIVO
             new Paragraph({
+              text:
+                "3. MARCO NORMATIVO",
+
+              heading:
+                HeadingLevel.HEADING_1,
+
+              spacing: {
+                before: 400,
+                after: 300
+              }
+            }),
+            // MARCO NORMATIVO
+            new Paragraph({
               children: [
 
                 new TextRun({
                   text:
-                    "LEY 1712 DE 2014: ",
+                    "LEY 1712 DE 2014:",
                   bold: true,
+                  break: 1
                 }),
 
                 new TextRun({
                   text:
-                    "Por medio de la cual se crea la Ley de Transparencia y del Derecho de Acceso a la Información Pública Nacional y se dictan otras disposiciones.",
+                    " Por medio de la cual se crea la Ley de Transparencia y del Derecho de Acceso a la Información Pública Nacional y se dictan otras disposiciones.",
                 }),
 
               ],
@@ -405,13 +429,14 @@ export const generatePinarDocx = async (req, res) => {
 
                 new TextRun({
                   text:
-                    "LEY 594 DE 2000: ",
+                    "LEY 594 DE 2000:",
                   bold: true,
+                  break: 1
                 }),
 
                 new TextRun({
                   text:
-                    "Por medio de la cual se dicta la Ley General de Archivos y se dictan otras disposiciones.",
+                    " Por medio de la cual se dicta la Ley General de Archivos y se dictan otras disposiciones.",
                 }),
 
               ],
@@ -429,13 +454,14 @@ export const generatePinarDocx = async (req, res) => {
 
                 new TextRun({
                   text:
-                    "DECRETO 612 DE 2018: ",
+                    "DECRETO 612 DE 2018:",
                   bold: true,
+                  break: 1
                 }),
 
                 new TextRun({
                   text:
-                    "Por el cual se fijan directrices para la integración de los planes institucionales y estratégicos al Plan de Acción.",
+                    " Por el cual se fijan directrices para la integración de los planes institucionales y estratégicos al Plan de Acción por parte de las entidades del Estado.",
                 }),
 
               ],
@@ -447,6 +473,132 @@ export const generatePinarDocx = async (req, res) => {
               alignment:
                 AlignmentType.JUSTIFIED,
             }),
+
+            new Paragraph({
+              children: [
+
+                new TextRun({
+                  text:
+                    "DECRETO 1080 DE 2015:",
+                  bold: true,
+                  break: 1
+                }),
+
+                new TextRun({
+                  text:
+                    " Por medio del cual se expide el Decreto Único Reglamentario del Sector Cultura.",
+                }),
+
+              ],
+
+              spacing: {
+                after: 200,
+              },
+
+              alignment:
+                AlignmentType.JUSTIFIED,
+            }),
+
+            new Paragraph({
+              children: [
+
+                new TextRun({
+                  text:
+                    "DECRETO 1499 DE 2017:",
+                  bold: true,
+                  break: 1
+                }),
+
+                new TextRun({
+                  text:
+                    " Por medio del cual se modifica el Decreto 1083 de 2015, Decreto Único Reglamentario del Sector Función Pública, en lo relacionado con el Sistema de Gestión establecido en el artículo 133 de la Ley 1753 de 2015.",
+                }),
+
+              ],
+
+              spacing: {
+                after: 200,
+              },
+
+              alignment:
+                AlignmentType.JUSTIFIED,
+            }),
+
+            new Paragraph({
+              children: [
+
+                new TextRun({
+                  text:
+                    "ACUERDO 006 DE 2014 DEL AGN:",
+                  bold: true,
+                  break: 1
+                }),
+
+                new TextRun({
+                  text:
+                    " Por el cual se desarrollan los artículos 47 y 48 del título XI “Conservación de documentos” de la Ley 594 de 2000.",
+                }),
+
+              ],
+
+              spacing: {
+                after: 200,
+              },
+
+              alignment:
+                AlignmentType.JUSTIFIED,
+            }),
+
+            new Paragraph({
+              children: [
+
+                new TextRun({
+                  text:
+                    "ACUERDO 002 DE 2014 DEL AGN:",
+                  bold: true,
+                  break: 1
+                }),
+
+                new TextRun({
+                  text:
+                    " Por medio del cual se establecen los criterios básicos para creación, conformación, organización, control y consulta de los expedientes de archivo y se dictan otras disposiciones.",
+                }),
+
+              ],
+
+              spacing: {
+                after: 200,
+              },
+
+              alignment:
+                AlignmentType.JUSTIFIED,
+            }),
+
+            new Paragraph({
+              children: [
+
+                new TextRun({
+                  text:
+                    "ACUERDO 042 DE 2002 DEL AGN:",
+                  bold: true,
+                  break: 1
+                }),
+
+                new TextRun({
+                  text:
+                    " Por el cual se establecen los criterios para la organización de los archivos de gestión en las entidades públicas y privadas que cumplen funciones públicas, se regula el Inventario Único Documental y se desarrollan los artículos 21, 22, 23 y 26 de la Ley General de Archivos, Ley 594 de 2000.",
+                }),
+
+              ],
+
+              spacing: {
+                after: 300,
+              },
+
+              alignment:
+                AlignmentType.JUSTIFIED,
+            }),
+
             // VISIÓN ESTRATÉGICA
             new Paragraph({
               text:
@@ -1221,6 +1373,200 @@ export const generatePinarDocx = async (req, res) => {
               },
             }),
 
+            new Paragraph({
+              text:
+                "El mapa de ruta consolida la asignación de tiempos para la ejecución de los planes y proyectos definidos en el presente PINAR, permitiendo establecer acciones a corto, mediano y largo plazo.",
+
+              alignment:
+                AlignmentType.JUSTIFIED,
+
+              spacing: {
+                after: 300
+              }
+            }),
+
+            new Table({
+
+              width: {
+                size: 100,
+                type:
+                  WidthType.PERCENTAGE,
+              },
+
+              rows: [
+
+                // ENCABEZADO PRINCIPAL
+                new TableRow({
+                  children: [
+
+                    new TableCell({
+
+                      rowSpan: 2,
+
+                      children: [
+                        new Paragraph(
+                          "Plan o Proyecto"
+                        ),
+                      ],
+
+                    }),
+
+                    new TableCell({
+
+                      columnSpan: 1,
+
+                      children: [
+                        new Paragraph(
+                          "Corto plazo"
+                        ),
+                      ],
+
+                    }),
+
+                    new TableCell({
+
+                      columnSpan: 2,
+
+                      children: [
+                        new Paragraph(
+                          "Mediano plazo"
+                        ),
+                      ],
+
+                    }),
+
+                    new TableCell({
+
+                      columnSpan: 1,
+
+                      children: [
+                        new Paragraph(
+                          "Largo plazo"
+                        ),
+                      ],
+
+                    }),
+
+                  ],
+                }),
+
+                // AÑOS
+                new TableRow({
+                  children: [
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          String(years[0])
+                        ),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          String(years[1])
+                        ),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          String(years[2])
+                        ),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          String(years[3])
+                        ),
+                      ],
+                    }),
+
+                  ],
+                }),
+
+                // FILAS DINÁMICAS
+                ...planesIA.map(
+                  (plan, index) => {
+
+                    let y1 = "";
+                    let y2 = "";
+                    let y3 = "";
+                    let y4 = "";
+
+                    if (index % 3 === 0) {
+
+                      y1 = "X";
+                      y2 = "X";
+
+                    }
+
+                    else if (
+                      index % 3 === 1
+                    ) {
+
+                      y2 = "X";
+                      y3 = "X";
+
+                    }
+
+                    else {
+
+                      y3 = "X";
+                      y4 = "X";
+
+                    }
+
+                    return new TableRow({
+                      children: [
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(
+                              plan.proyecto || ""
+                            ),
+                          ],
+                        }),
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(y1),
+                          ],
+                        }),
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(y2),
+                          ],
+                        }),
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(y3),
+                          ],
+                        }),
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(y4),
+                          ],
+                        }),
+
+                      ],
+                    });
+
+                  }
+
+                ),
+
+              ],
+
+            }),
+
             new Table({
               width: {
                 size: 100,
@@ -1312,6 +1658,7 @@ export const generatePinarDocx = async (req, res) => {
 
               ],
             }),
+
 
             // CONCLUSIONES
             new Paragraph({

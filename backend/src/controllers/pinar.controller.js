@@ -1431,61 +1431,6 @@ export const generatePinarDocx = async (req, res) => {
 
               rows: [
 
-                // ENCABEZADO PRINCIPAL
-                new TableRow({
-                  children: [
-
-                    new TableCell({
-
-                      rowSpan: 2,
-
-                      children: [
-                        new Paragraph(
-                          "Plan o Proyecto"
-                        ),
-                      ],
-
-                    }),
-
-                    new TableCell({
-
-                      columnSpan: 1,
-
-                      children: [
-                        new Paragraph(
-                          "Corto plazo"
-                        ),
-                      ],
-
-                    }),
-
-                    new TableCell({
-
-                      columnSpan: 2,
-
-                      children: [
-                        new Paragraph(
-                          "Mediano plazo"
-                        ),
-                      ],
-
-                    }),
-
-                    new TableCell({
-
-                      columnSpan: 1,
-
-                      children: [
-                        new Paragraph(
-                          "Largo plazo"
-                        ),
-                      ],
-
-                    }),
-
-                  ],
-                }),
-
                 // AÑOS
                 new TableRow({
                   children: [

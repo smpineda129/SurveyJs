@@ -22,6 +22,8 @@ import entidadesPublicasConfig from '../config/EntidadesPublicasConfig';
 import mgdaConfig from '../config/MGMAconfig';
 import entidadesPrivadasConfig from '../config/surveyConfig';
 import pinarConfig from '../config/pinarConfig';
+import AccountTreeOutlinedIcon
+  from '@mui/icons-material/AccountTreeOutlined';
 
 const FORM_LABELS = {
   entidades_publicas: 'Entidades Públicas',
@@ -34,7 +36,7 @@ const FORM_COLORS = {
   entidades_publicas: { color: '#0076C6', bg: '#E1F0F7', icon: AccountBalanceOutlinedIcon },
   mgda: { color: '#005585', bg: '#E1F0F7', icon: DescriptionOutlinedIcon },
   entidades_privadas: { color: '#00446A', bg: '#E1F0F7', icon: BusinessOutlinedIcon },
-  pinar: { color: '#0B6BCB', bg: '#EAF4FF', icon: DescriptionOutlinedIcon },
+  pinar: { color: '#0B6BCB', bg: '#EAF4FF', icon: AccountTreeOutlinedIcon },
 };
 
 const FORM_CONFIGS = {
@@ -66,6 +68,7 @@ const formatDate = (d) =>
   d ? new Date(d).toLocaleDateString('es-CO', { year: 'numeric', month: 'short', day: '2-digit' }) : '—';
 
 const getEntityName = (s) =>
+  s.surveyData?.nombre_empresa ||
   s.surveyData?.nombre_entidad ||
   s.surveyData?.NOMBRE_ENTIDAD ||
   s.surveyData?.razon_social ||

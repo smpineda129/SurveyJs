@@ -64,6 +64,23 @@ export const generatePinarDocx = async (req, res) => {
       data.vigencia ||
       new Date().getFullYear();
 
+    const fechaActual =
+      new Date();
+
+    const mes =
+      fechaActual.toLocaleString(
+        "es-CO",
+        {
+          month: "long"
+        }
+      );
+
+    const year =
+      fechaActual.getFullYear();
+
+    const fechaPortada =
+      `${mes.charAt(0).toUpperCase() + mes.slice(1)} ${year}`;
+
     const objetivoGeneral =
       `Lograr en el período ${vigencia}, la implementación de planes y proyectos institucionales orientados al fortalecimiento de la gestión documental, garantizando el cumplimiento de la normatividad archivística vigente y la mejora continua de los procesos documentales de ${entidad}.`;
 
@@ -162,6 +179,18 @@ export const generatePinarDocx = async (req, res) => {
     }
 
     const doc = new Document({
+
+      styles: {
+        default: {
+          document: {
+            run: {
+              font: "Arial",
+              size: 24
+            }
+          }
+        }
+      },
+
       sections: [
         {
           children: [
@@ -179,6 +208,18 @@ export const generatePinarDocx = async (req, res) => {
 
               spacing: {
                 before: 5000,
+                after: 400,
+              },
+            }),
+
+            new Paragraph({
+              text:
+                fechaPortada,
+
+              alignment:
+                AlignmentType.CENTER,
+
+              spacing: {
                 after: 400,
               },
             }),
@@ -1575,44 +1616,6 @@ export const generatePinarDocx = async (req, res) => {
               },
 
               rows: [
-
-                new TableRow({
-                  children: [
-
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          "Plan"
-                        ),
-                      ],
-                    }),
-
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          "2026"
-                        ),
-                      ],
-                    }),
-
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          "2027"
-                        ),
-                      ],
-                    }),
-
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          "2028"
-                        ),
-                      ],
-                    }),
-
-                  ],
-                }),
 
                 ...mapaRuta.map((item) =>
 

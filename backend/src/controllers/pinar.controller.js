@@ -1482,6 +1482,52 @@ export const generatePinarDocx = async (req, res) => {
                   ],
                 }),
 
+                new TableRow({
+                  children: [
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          "Plan o Proyecto"
+                        ),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          String(years[0])
+                        ),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          String(years[1])
+                        ),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          String(years[2])
+                        ),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          String(years[3])
+                        ),
+                      ],
+                    }),
+
+                  ],
+                }),
+
                 // FILAS DINÁMICAS
                 ...planesIA.map(
                   (plan, index) => {

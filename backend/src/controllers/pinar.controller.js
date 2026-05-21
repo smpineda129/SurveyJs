@@ -64,22 +64,22 @@ export const generatePinarDocx = async (req, res) => {
       data.vigencia ||
       new Date().getFullYear();
 
-    const fechaActual =
-      new Date();
+    //const fechaActual =
+    //  new Date();
 
-    const mes =
-      fechaActual.toLocaleString(
-        "es-CO",
-        {
-          month: "long"
-        }
-      );
+    // const mes =
+    // fechaActual.toLocaleString(
+    //    "es-CO",
+    //  {
+    //      month: "long"
+    //  }
+    // );
 
-    const year =
-      fechaActual.getFullYear();
+    // const year =
+    // fechaActual.getFullYear();
 
-    const fechaPortada =
-      `${mes.charAt(0).toUpperCase() + mes.slice(1)} ${year}`;
+    //const fechaPortada =
+    //`${mes.charAt(0).toUpperCase() + mes.slice(1)} ${year}`;
 
     const objetivoGeneral =
       `Lograr en el período ${vigencia}, la implementación de planes y proyectos institucionales orientados al fortalecimiento de la gestión documental, garantizando el cumplimiento de la normatividad archivística vigente y la mejora continua de los procesos documentales de ${entidad}.`;
@@ -207,7 +207,7 @@ export const generatePinarDocx = async (req, res) => {
 
             new Paragraph({
               text:
-                fechaPortada,
+                "Mayo 2026",
 
               alignment:
                 AlignmentType.CENTER,

@@ -1707,8 +1707,16 @@ export const generatePinarDocx = async (req, res) => {
       ],
     });
 
+    console.log(
+      "DOC CREADO OK"
+    );
+
     const buffer =
       await Packer.toBuffer(doc);
+
+    console.log(
+      "BUFFER OK"
+    );
 
     res.setHeader(
       "Content-Type",
@@ -1724,11 +1732,19 @@ export const generatePinarDocx = async (req, res) => {
 
   } catch (error) {
 
-    console.error(error);
+    console.error(
+      "ERROR DOCX:",
+      error
+    );
 
     res.status(500).json({
+
       message:
-        "Error generando documento",
+        error.message,
+
+      stack:
+        error.stack
+
     });
 
   }

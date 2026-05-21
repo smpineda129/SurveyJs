@@ -241,13 +241,15 @@ MESSAGE: ${err.message}
 `
       );
 
-      alert(
-        JSON.stringify(
-          err.response?.data,
-          null,
-          2
-        )
-      );
+      const decoder =
+        new TextDecoder();
+
+      const errorText =
+        decoder.decode(
+          err.response?.data
+        );
+
+      alert(errorText);
 
       setToastMsg(
         'Error al generar el documento PINAR.'

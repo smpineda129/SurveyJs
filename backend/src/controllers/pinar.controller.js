@@ -365,7 +365,7 @@ export const generatePinarDocx = async (req, res) => {
 
             // MARCO NORMATIVO
             new Paragraph({
-              text: "2. MARCO NORMATIVO",
+              text: "3. MARCO NORMATIVO",
               heading: HeadingLevel.HEADING_1,
             }),
 
@@ -384,7 +384,7 @@ export const generatePinarDocx = async (req, res) => {
             // VISIÓN ESTRATÉGICA
             new Paragraph({
               text:
-                "3. VISIÓN ESTRATÉGICA DEL PINAR",
+                "4. VISIÓN ESTRATÉGICA DEL PINAR",
 
               heading:
                 HeadingLevel.HEADING_1,
@@ -415,7 +415,7 @@ export const generatePinarDocx = async (req, res) => {
             // ASPECTOS CRÍTICOS
             new Paragraph({
               text:
-                "4. ASPECTOS CRÍTICOS",
+                "5. ASPECTOS CRÍTICOS",
 
               heading:
                 HeadingLevel.HEADING_1,
@@ -498,7 +498,7 @@ export const generatePinarDocx = async (req, res) => {
             // EJES ARTICULADORES
             new Paragraph({
               text:
-                "4.2. Ejes articuladores",
+                "5.2. Ejes articuladores",
 
               heading:
                 HeadingLevel.HEADING_2,
@@ -665,7 +665,7 @@ export const generatePinarDocx = async (req, res) => {
 
             new Paragraph({
               text:
-                "4.3. Priorización de aspectos críticos",
+                "5.3. Priorización de aspectos críticos",
 
               heading:
                 HeadingLevel.HEADING_2,
@@ -912,7 +912,7 @@ export const generatePinarDocx = async (req, res) => {
             // OBJETIVOS
             new Paragraph({
               text:
-                "5. OBJETIVOS ESTRATÉGICOS",
+                "6. OBJETIVOS ESTRATÉGICOS",
 
               heading:
                 HeadingLevel.HEADING_1,
@@ -934,7 +934,7 @@ export const generatePinarDocx = async (req, res) => {
             // RIESGOS
             new Paragraph({
               text:
-                "6. RIESGOS DOCUMENTALES",
+                "7. RIESGOS DOCUMENTALES",
 
               heading:
                 HeadingLevel.HEADING_1,
@@ -956,7 +956,7 @@ export const generatePinarDocx = async (req, res) => {
             // PLANES
             new Paragraph({
               text:
-                "7. PLANES Y PROYECTOS",
+                "8. PLANES Y PROYECTOS",
 
               heading:
                 HeadingLevel.HEADING_1,
@@ -1091,7 +1091,7 @@ export const generatePinarDocx = async (req, res) => {
             // MAPA DE RUTA
             new Paragraph({
               text:
-                "8. MAPA DE RUTA",
+                "9. MAPA DE RUTA",
 
               heading:
                 HeadingLevel.HEADING_1,
@@ -1195,7 +1195,7 @@ export const generatePinarDocx = async (req, res) => {
 
             // CONCLUSIONES
             new Paragraph({
-              text: "9. CONCLUSIONES",
+              text: "10. CONCLUSIONES",
 
               heading:
                 HeadingLevel.HEADING_1,
@@ -1215,7 +1215,7 @@ export const generatePinarDocx = async (req, res) => {
             // RECOMENDACIONES
             new Paragraph({
               text:
-                "10. RECOMENDACIONES",
+                "11. RECOMENDACIONES",
 
               heading:
                 HeadingLevel.HEADING_1,

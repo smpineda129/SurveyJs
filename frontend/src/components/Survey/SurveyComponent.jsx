@@ -111,85 +111,6 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
         priorizados
       );
 
-
-      if (!data) return;
-
-      const nuevaMatriz =
-        data.map((row) => {
-
-          const total =
-
-            Number(row.admin || 0) +
-
-            Number(row.acceso || 0) +
-
-            Number(row.preservacion || 0) +
-
-            Number(row.tecnologia || 0) +
-
-            Number(row.fortalecimiento || 0);
-
-          return {
-
-            ...row,
-
-            total
-
-          };
-
-        });
-
-      survey.setValue(
-        "matriz_calificacion",
-        nuevaMatriz
-      );
-
-      const priorizados =
-        nuevaMatriz.map(
-          (row, index) => {
-
-            let prioridad =
-              "Baja";
-
-            if (
-              row.total >= 30
-            ) {
-
-              prioridad =
-                "Alta";
-
-            }
-
-            else if (
-              row.total >= 20
-            ) {
-
-              prioridad =
-                "Media";
-
-            }
-
-            return {
-
-              numero:
-                index + 1,
-
-              aspecto:
-                row.aspecto,
-
-              prioridad
-
-            };
-
-          }
-        );
-
-      survey.setValue(
-        "priorizacion_criticos",
-        priorizados
-      );
-
-
     };
   const generarObjetivos = (survey, priorizados) => {
 
@@ -375,39 +296,6 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
     survey.setValue("planes_proyectos", planes);
 
     generarMapaRuta(survey, planes);
-  };
-
-  const generarPriorizacion = (survey) => {
-    const data = survey.getValue("matriz_calificacion");
-    if (!data) return;
-
-    const priorizados = [...data]
-
-      // ordenar de mayor a menor por total
-      .sort((a, b) => (b.total || 0) - (a.total || 0))
-
-      .map((row, index) => {
-
-        let prioridad = "Baja";
-
-        if (row.total >= 40) {
-          prioridad = "Alta";
-        } else if (row.total >= 25) {
-          prioridad = "Media";
-        }
-
-        return {
-          numero: index + 1,
-          aspecto: row.aspecto,
-          prioridad
-        };
-      });
-
-    survey.setValue("priorizacion_criticos", priorizados);
-
-    generarObjetivos(survey, priorizados);
-    generarRiesgos(survey, priorizados);
-    generarPlanes(survey, priorizados);
   };
 
   const generarMapaRuta = (

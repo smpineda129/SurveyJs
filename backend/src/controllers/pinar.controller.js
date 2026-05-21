@@ -218,7 +218,8 @@ export const generatePinarDocx = async (req, res) => {
             }),
 
             new Paragraph({
-              text: entidad,
+              text:
+                String(entidad),
 
               alignment:
                 AlignmentType.CENTER,
@@ -229,7 +230,8 @@ export const generatePinarDocx = async (req, res) => {
             }),
 
             new Paragraph({
-              text: vigencia,
+              text:
+                String(vigencia),
 
               alignment:
                 AlignmentType.CENTER,

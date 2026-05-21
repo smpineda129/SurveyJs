@@ -119,27 +119,7 @@ const pinarConfig = {
       ]
     },
 
-    //  4. EJES ARTICULADORES
-    {
-      name: "ejes",
-      elements: [
-        {
-          type: "html",
-          html: `
-          <h3>Ejes articuladores</h3>
-          <ul>
-            <li>Administración de archivos</li>
-            <li>Acceso a la información</li>
-            <li>Preservación de la información</li>
-            <li>Aspectos tecnológicos y de seguridad</li>
-            <li>Fortalecimiento y articulación</li>
-          </ul>
-          `
-        }
-      ]
-    },
-
-    // 🟦 5. MATRIZ DE CALIFICACIÓN
+    // 🟦 4. MATRIZ DE CALIFICACIÓN
     {
       name: "calificacion",
       elements: [

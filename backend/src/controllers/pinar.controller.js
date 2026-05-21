@@ -1,7 +1,8 @@
 import {
   generatePinarIntroduction,
   generatePinarVision,
-  generateAspectosCriticosIA
+  generateAspectosCriticosIA,
+  generateObjetivosIA
 } from "../services/gptSummarizer.js";
 
 import {
@@ -35,7 +36,9 @@ export const generatePinarDocx = async (req, res) => {
       data.priorizacion_criticos || [];
 
     const objetivos =
-      data.objetivos_estrategicos || [];
+      await generateObjetivosIA(
+        aspectosCriticos
+      );
 
     const riesgos =
       data.riesgos_automaticos || [];
@@ -54,6 +57,9 @@ export const generatePinarDocx = async (req, res) => {
     const vigencia =
       data.vigencia ||
       new Date().getFullYear();
+
+    const objetivoGeneral =
+      `Lograr en el período ${vigencia}, la implementación de planes y proyectos institucionales orientados al fortalecimiento de la gestión documental, garantizando el cumplimiento de la normatividad archivística vigente y la mejora continua de los procesos documentales de ${entidad}.`;
 
     const aspectos =
       data.aspectos_criticos || [];
@@ -363,24 +369,78 @@ export const generatePinarDocx = async (req, res) => {
 
               ]),
 
-            // MARCO NORMATIVO
+            //MARCO NORMATIVO
             new Paragraph({
-              text: "3. MARCO NORMATIVO",
-              heading: HeadingLevel.HEADING_1,
-            }),
+              children: [
 
-            new Paragraph({
-              text:
-                "El presente PINAR se fundamenta en la Ley 594 de 2000, la Ley 1712 de 2014, el Decreto 1080 de 2015 y los lineamientos emitidos por el Archivo General de la Nación.",
+                new TextRun({
+                  text:
+                    "LEY 1712 DE 2014: ",
+                  bold: true,
+                }),
+
+                new TextRun({
+                  text:
+                    "Por medio de la cual se crea la Ley de Transparencia y del Derecho de Acceso a la Información Pública Nacional y se dictan otras disposiciones.",
+                }),
+
+              ],
 
               spacing: {
-                after: 300,
+                after: 200,
               },
 
               alignment:
                 AlignmentType.JUSTIFIED,
             }),
 
+            new Paragraph({
+              children: [
+
+                new TextRun({
+                  text:
+                    "LEY 594 DE 2000: ",
+                  bold: true,
+                }),
+
+                new TextRun({
+                  text:
+                    "Por medio de la cual se dicta la Ley General de Archivos y se dictan otras disposiciones.",
+                }),
+
+              ],
+
+              spacing: {
+                after: 200,
+              },
+
+              alignment:
+                AlignmentType.JUSTIFIED,
+            }),
+
+            new Paragraph({
+              children: [
+
+                new TextRun({
+                  text:
+                    "DECRETO 612 DE 2018: ",
+                  bold: true,
+                }),
+
+                new TextRun({
+                  text:
+                    "Por el cual se fijan directrices para la integración de los planes institucionales y estratégicos al Plan de Acción.",
+                }),
+
+              ],
+
+              spacing: {
+                after: 200,
+              },
+
+              alignment:
+                AlignmentType.JUSTIFIED,
+            }),
             // VISIÓN ESTRATÉGICA
             new Paragraph({
               text:
@@ -922,6 +982,44 @@ export const generatePinarDocx = async (req, res) => {
               },
             }),
 
+            new Paragraph({
+              text:
+                "6.1. Objetivo general",
+
+              heading:
+                HeadingLevel.HEADING_2,
+
+              spacing: {
+                before: 200,
+                after: 200
+              }
+            }),
+
+            new Paragraph({
+              text:
+                objetivoGeneral,
+
+              alignment:
+                AlignmentType.JUSTIFIED,
+
+              spacing: {
+                after: 300,
+              },
+            }),
+
+            new Paragraph({
+              text:
+                "6.2. Objetivos específicos",
+
+              heading:
+                HeadingLevel.HEADING_2,
+
+              spacing: {
+                before: 200,
+                after: 200
+              }
+            }),
+
             ...objetivos.map((item) =>
 
               new Paragraph({
@@ -931,32 +1029,10 @@ export const generatePinarDocx = async (req, res) => {
 
             ),
 
-            // RIESGOS
-            new Paragraph({
-              text:
-                "7. RIESGOS DOCUMENTALES",
-
-              heading:
-                HeadingLevel.HEADING_1,
-
-              spacing: {
-                before: 400,
-              },
-            }),
-
-            ...riesgos.map((item) =>
-
-              new Paragraph({
-                text:
-                  `• ${item.descripcion || item.riesgo || ""}`,
-              })
-
-            ),
-
             // PLANES
             new Paragraph({
               text:
-                "8. PLANES Y PROYECTOS",
+                "7. PLANES Y PROYECTOS",
 
               heading:
                 HeadingLevel.HEADING_1,
@@ -1091,7 +1167,7 @@ export const generatePinarDocx = async (req, res) => {
             // MAPA DE RUTA
             new Paragraph({
               text:
-                "9. MAPA DE RUTA",
+                "8. MAPA DE RUTA",
 
               heading:
                 HeadingLevel.HEADING_1,
@@ -1195,7 +1271,7 @@ export const generatePinarDocx = async (req, res) => {
 
             // CONCLUSIONES
             new Paragraph({
-              text: "10. CONCLUSIONES",
+              text: "9. CONCLUSIONES",
 
               heading:
                 HeadingLevel.HEADING_1,
@@ -1215,7 +1291,7 @@ export const generatePinarDocx = async (req, res) => {
             // RECOMENDACIONES
             new Paragraph({
               text:
-                "11. RECOMENDACIONES",
+                "10. RECOMENDACIONES",
 
               heading:
                 HeadingLevel.HEADING_1,

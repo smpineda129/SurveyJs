@@ -243,6 +243,119 @@ ${obsText}
 
 }
 
+export async function
+  generateObjetivosIA(
+    aspectos
+  ) {
+
+  if (
+    !aspectos ||
+    aspectos.length === 0
+  ) {
+
+    return [];
+
+  }
+
+  const aspectosTexto =
+    aspectos
+      .map(
+        (a) =>
+          `- ${a.aspecto}`
+      )
+      .join("\n");
+
+  const prompt = `
+
+Eres un experto archivístico colombiano especializado en PINAR.
+
+A partir de los siguientes aspectos críticos institucionales, redacta objetivos estratégicos específicos para fortalecer la gestión documental.
+
+Los objetivos deben:
+
+- tener tono técnico institucional
+- iniciar con verbos en infinitivo
+- ser claros y profesionales
+- estar alineados con archivística colombiana
+- enfocarse en mejora institucional
+
+Devuelve únicamente un JSON válido.
+
+Formato:
+
+[
+  {
+    "objetivo": "..."
+  }
+]
+
+Aspectos críticos:
+${aspectosTexto}
+
+`;
+
+  try {
+
+    const client =
+      new OpenAI({
+        apiKey:
+          process.env.GPT_API
+      });
+
+    const response =
+      await client.chat.completions.create({
+
+        model: "gpt-4o-mini",
+
+        messages: [
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+
+        temperature: 0.4,
+
+        max_tokens: 1200
+
+      });
+
+    const text =
+      response
+        .choices[0]
+        .message
+        .content
+        .trim();
+
+    const cleanText =
+      text
+        .replace(
+          /```json/g,
+          ""
+        )
+        .replace(
+          /```/g,
+          ""
+        )
+        .trim();
+
+    return JSON.parse(
+      cleanText
+    );
+
+  } catch (error) {
+
+    console.error(
+      "ERROR OBJETIVOS IA:",
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
 export async function generatePinarIntroduction(data) {
 
   try {

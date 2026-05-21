@@ -356,6 +356,129 @@ ${aspectosTexto}
 
 }
 
+export async function
+  generatePlanesIA(
+    objetivos
+  ) {
+
+  if (
+    !objetivos ||
+    objetivos.length === 0
+  ) {
+
+    return [];
+
+  }
+
+  const objetivosTexto =
+    objetivos
+      .map(
+        (o) =>
+          `- ${o.objetivo}`
+      )
+      .join("\n");
+
+  const prompt = `
+
+Eres un experto archivístico colombiano especializado en formulación de PINAR.
+
+A partir de los siguientes objetivos estratégicos, genera proyectos institucionales archivísticos.
+
+Cada proyecto debe incluir:
+
+- nombre del proyecto
+- descripción técnica institucional
+- máximo 4 actividades concretas
+
+Los proyectos deben:
+
+- ser coherentes con archivística colombiana
+- tener tono técnico institucional
+- ser realistas
+- estar orientados a fortalecimiento documental
+
+Devuelve únicamente un JSON válido.
+
+Formato:
+
+[
+  {
+    "proyecto": "...",
+    "descripcion": "...",
+    "actividades": [
+      "...",
+      "..."
+    ]
+  }
+]
+
+Objetivos:
+${objetivosTexto}
+
+`;
+
+  try {
+
+    const client =
+      new OpenAI({
+        apiKey:
+          process.env.GPT_API
+      });
+
+    const response =
+      await client.chat.completions.create({
+
+        model: "gpt-4o-mini",
+
+        messages: [
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+
+        temperature: 0.4,
+
+        max_tokens: 2000
+
+      });
+
+    const text =
+      response
+        .choices[0]
+        .message
+        .content
+        .trim();
+
+    const cleanText =
+      text
+        .replace(
+          /```json/g,
+          ""
+        )
+        .replace(
+          /```/g,
+          ""
+        )
+        .trim();
+
+    return JSON.parse(
+      cleanText
+    );
+
+  } catch (error) {
+
+    console.error(
+      "ERROR PLANES IA:",
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
 export async function generatePinarIntroduction(data) {
 
   try {

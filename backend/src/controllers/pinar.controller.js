@@ -2,7 +2,8 @@ import {
   generatePinarIntroduction,
   generatePinarVision,
   generateAspectosCriticosIA,
-  generateObjetivosIA
+  generateObjetivosIA,
+  generatePlanesIA
 } from "../services/gptSummarizer.js";
 
 import {
@@ -38,6 +39,11 @@ export const generatePinarDocx = async (req, res) => {
     const objetivos =
       await generateObjetivosIA(
         aspectosCriticos
+      );
+
+    const planesIA =
+      await generatePlanesIA(
+        objetivos
       );
 
     const riesgos =
@@ -1029,140 +1035,178 @@ export const generatePinarDocx = async (req, res) => {
 
             ),
 
-            // PLANES
+            // PLANES Y PROYECTOS
             new Paragraph({
               text:
-                "7. PLANES Y PROYECTOS",
+                "7. FORMULACIÓN DE PLANES Y PROYECTOS",
 
               heading:
                 HeadingLevel.HEADING_1,
 
               spacing: {
                 before: 400,
-              },
+                after: 200
+              }
             }),
 
-            new Table({
-              width: {
-                size: 100,
-                type:
-                  WidthType.PERCENTAGE,
-              },
+            new Paragraph({
+              text:
+                "Con base en los aspectos críticos identificados, se definieron los planes y proyectos institucionales orientados al fortalecimiento de la gestión documental, siguiendo lineamientos archivísticos y metodologías institucionales para la formulación de proyectos.",
 
-              rows: [
+              alignment:
+                AlignmentType.JUSTIFIED,
 
-                // ENCABEZADOS
-                new TableRow({
-                  children: [
+              spacing: {
+                after: 300
+              }
+            }),
 
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          "Plan / Proyecto"
-                        ),
-                      ],
-                    }),
+            ...planesIA.flatMap(
+              (plan, index) => [
 
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          "Actividad"
-                        ),
-                      ],
-                    }),
+                new Paragraph({
+                  text:
+                    `7.${index + 1}. ${plan.proyecto}`,
 
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          "Responsable"
-                        ),
-                      ],
-                    }),
+                  heading:
+                    HeadingLevel.HEADING_2,
 
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          "Indicador"
-                        ),
-                      ],
-                    }),
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          "Recursos"
-                        ),
-                      ],
-                    }),
-
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          "Plazo"
-                        ),
-                      ],
-                    }),
-
-                  ],
+                  spacing: {
+                    before: 300,
+                    after: 200
+                  }
                 }),
 
-                // FILAS
-                ...planes.map((item) =>
+                new Paragraph({
+                  text:
+                    plan.descripcion ||
 
-                  new TableRow({
-                    children: [
+                    "",
 
-                      new TableCell({
-                        children: [
-                          new Paragraph(
-                            item.plan || ""
-                          ),
-                        ],
-                      }),
+                  alignment:
+                    AlignmentType.JUSTIFIED,
 
-                      new TableCell({
-                        children: [
-                          new Paragraph(
-                            item.actividad || ""
-                          ),
-                        ],
-                      }),
+                  spacing: {
+                    after: 200
+                  }
+                }),
 
-                      new TableCell({
-                        children: [
-                          new Paragraph(
-                            item.responsable || ""
-                          ),
-                        ],
-                      }),
+                new Table({
 
-                      new TableCell({
-                        children: [
-                          new Paragraph(
-                            item.indicador || ""
-                          ),
-                        ],
-                      }),
-                      new TableCell({
-                        children: [
-                          new Paragraph(
-                            item.recursos || ""
-                          ),
-                        ],
-                      }),
+                  width: {
+                    size: 100,
+                    type:
+                      WidthType.PERCENTAGE,
+                  },
 
-                      new TableCell({
-                        children: [
-                          new Paragraph(
-                            item.plazo || ""
-                          ),
-                        ],
-                      }),
+                  rows: [
 
-                    ],
-                  }))
+                    new TableRow({
+                      children: [
 
-              ],
-            }),
+                        new TableCell({
+                          children: [
+                            new Paragraph(
+                              "N°"
+                            ),
+                          ],
+                        }),
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(
+                              "Actividad"
+                            ),
+                          ],
+                        }),
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(
+                              "Responsable"
+                            ),
+                          ],
+                        }),
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(
+                              "Recursos"
+                            ),
+                          ],
+                        }),
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(
+                              "Plazo"
+                            ),
+                          ],
+                        }),
+
+                      ],
+                    }),
+
+                    ...plan.actividades.map(
+                      (
+                        actividad,
+                        idx
+                      ) =>
+
+                        new TableRow({
+                          children: [
+
+                            new TableCell({
+                              children: [
+                                new Paragraph(
+                                  String(idx + 1)
+                                ),
+                              ],
+                            }),
+
+                            new TableCell({
+                              children: [
+                                new Paragraph(
+                                  actividad
+                                ),
+                              ],
+                            }),
+
+                            new TableCell({
+                              children: [
+                                new Paragraph(
+                                  "Gestión Documental"
+                                ),
+                              ],
+                            }),
+
+                            new TableCell({
+                              children: [
+                                new Paragraph(
+                                  "Talento humano, herramientas archivísticas y recursos administrativos"
+                                ),
+                              ],
+                            }),
+
+                            new TableCell({
+                              children: [
+                                new Paragraph(
+                                  "Mediano plazo"
+                                ),
+                              ],
+                            }),
+
+                          ],
+                        })
+
+                    ),
+
+                  ],
+
+                }),
+
+              ]
+            ),
 
             // MAPA DE RUTA
             new Paragraph({

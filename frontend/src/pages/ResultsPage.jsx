@@ -241,6 +241,14 @@ MESSAGE: ${err.message}
 `
       );
 
+      alert(
+        JSON.stringify(
+          err.response?.data,
+          null,
+          2
+        )
+      );
+
       setToastMsg(
         'Error al generar el documento PINAR.'
       );

@@ -8,7 +8,7 @@ const pinarConfig = {
 
     //  1. PORTADA
     {
-      name: "portada",
+      name: "DATOS DE LA EMPRESA",
       elements: [
         {
           type: "html",
@@ -48,7 +48,7 @@ const pinarConfig = {
 
     // 2. CONTEXTO ESTRATÉGICO
     {
-      name: "contexto",
+      name: "CONTEXTO ESTRATÉGICO",
       elements: [
 
         {
@@ -104,7 +104,7 @@ const pinarConfig = {
 
     //  3. ASPECTOS CRÍTICOS
     {
-      name: "aspectos",
+      name: "ASPECTOS CRÍTICOS",
       elements: [
         {
           type: "matrixdynamic",
@@ -119,9 +119,9 @@ const pinarConfig = {
       ]
     },
 
-    // 🟦 4. MATRIZ DE CALIFICACIÓN
+    // 🟦 4. CALIFICACION EJES ARTICULADORES
     {
-      name: "calificacion",
+      name: "EJES ARTICULADORES",
       elements: [
         {
           type: "matrixdynamic",

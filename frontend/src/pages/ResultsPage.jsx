@@ -299,7 +299,7 @@ MESSAGE: ${err.message}
           <StatCard icon={BusinessOutlinedIcon} label="Entidades Privadas" value={stats?.byFormType?.entidades_privadas ?? surveys.filter(s => s.formType === 'entidades_privadas').length} color="#636569" bg="#F4F4F5" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <StatCard icon={BusinessOutlinedIcon} label="PINAR" value={stats?.byFormType?.pinar ?? surveys.filter(s => s.formType === 'pinar').length} color="#0B6BCB" bg="#EAF4FF" />
+          <StatCard icon={AccountTreeOutlinedIcon} label="PINAR" value={stats?.byFormType?.pinar ?? surveys.filter(s => s.formType === 'pinar').length} color="#0B6BCB" bg="#EAF4FF" />
         </Grid>
       </Grid>
 

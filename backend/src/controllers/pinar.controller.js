@@ -184,7 +184,7 @@ export const generatePinarDocx = async (req, res) => {
         default: {
           document: {
             run: {
-              font: "Arial",
+              font: "Times New Roman",
               size: 24
             }
           }

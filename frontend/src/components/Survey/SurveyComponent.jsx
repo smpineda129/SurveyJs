@@ -395,14 +395,14 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
             (response.data || [])
               .filter(
                 d =>
-                  d.formType !==
+                  d.formType?.toLowerCase() !==
                   "pinar"
               );
 
-          const question =
-            survey.getQuestionByName(
-              "diagnostico_origen"
-            );
+          console.log(
+            "DIAGNOSTICOS:",
+            diagnosticos
+          );
 
           if (question) {
 

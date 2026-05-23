@@ -49,8 +49,6 @@ export const getAllSurveys = async (req, res, next) => {
 
     const surveys = await Survey.find(query)
       .sort({ createdAt: -1 })
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
       .exec();
 
     const count = await Survey.countDocuments(query);

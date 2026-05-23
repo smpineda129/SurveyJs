@@ -42,7 +42,11 @@ export const getAllSurveys = async (req, res, next) => {
 
   try {
 
-    const { status } = req.query;
+    const {
+      status,
+      page = 1,
+      limit = 100
+    } = req.query;
 
     const query = {};
 
@@ -52,6 +56,8 @@ export const getAllSurveys = async (req, res, next) => {
 
     const surveys = await Survey.find(query)
       .sort({ createdAt: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
       .exec();
 
     const count =

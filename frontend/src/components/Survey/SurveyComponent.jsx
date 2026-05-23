@@ -404,6 +404,11 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
             diagnosticos
           );
 
+          const question =
+            survey.getQuestionByName(
+              "diagnostico_origen"
+            );
+
           if (question) {
 
             question.choices =

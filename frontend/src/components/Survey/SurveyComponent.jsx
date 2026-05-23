@@ -417,6 +417,11 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
 
           if (question) {
 
+            console.log(
+              "SURVEY DATA MGDA:",
+              diagnosticos
+            );
+
             question.choices =
               diagnosticos.map(
                 (d) => ({

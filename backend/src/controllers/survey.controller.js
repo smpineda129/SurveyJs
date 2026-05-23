@@ -40,7 +40,7 @@ export const createSurvey = async (req, res, next) => {
  */
 export const getAllSurveys = async (req, res, next) => {
   try {
-    const { status, page = 1, limit = 10 } = req.query;
+    const { status, page = 1, limit = 100 } = req.query;
 
     const query = {};
     if (status) {

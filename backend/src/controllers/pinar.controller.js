@@ -1689,6 +1689,16 @@ export const
           observaciones
         } = req.body;
 
+        console.log(
+          "BODY COMPLETO:",
+          req.body
+        );
+
+        console.log(
+          "OBSERVACIONES:",
+          observaciones
+        );
+
         const aspectos =
           await generateAspectosCriticosIA(
             observaciones

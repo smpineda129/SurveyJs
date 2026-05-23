@@ -389,10 +389,7 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
         try {
 
           const response =
-            await surveyAPI.getAll({
-              formType:
-                "diagnostico"
-            });
+            await surveyAPI.getAll();
 
           const diagnosticos =
             (response.data || [])

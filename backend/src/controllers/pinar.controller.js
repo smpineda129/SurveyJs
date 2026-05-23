@@ -1689,11 +1689,13 @@ export const
           observaciones
         } = req.body;
 
-        console.log(
-          "BODY COMPLETO:",
-          req.body
-        );
+        if (!observaciones) {
 
+          throw new Error(
+            JSON.stringify(req.body)
+          );
+
+        }
         console.log(
           "OBSERVACIONES:",
           observaciones

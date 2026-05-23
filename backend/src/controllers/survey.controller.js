@@ -39,10 +39,13 @@ export const createSurvey = async (req, res, next) => {
  * Obtener todas las respuestas
  */
 export const getAllSurveys = async (req, res, next) => {
+
   try {
+
     const { status } = req.query;
 
     const query = {};
+
     if (status) {
       query.status = status;
     }
@@ -51,20 +54,23 @@ export const getAllSurveys = async (req, res, next) => {
       .sort({ createdAt: -1 })
       .exec();
 
-    const count = await Survey.countDocuments(query);
+    const count =
+      await Survey.countDocuments(query);
 
     res.status(200).json({
       success: true,
       data: surveys,
       pagination: {
-        total: count,
-        page: parseInt(page),
-        pages: Math.ceil(count / limit)
+        total: count
       }
     });
+
   } catch (error) {
+
     next(error);
+
   }
+
 };
 
 /**

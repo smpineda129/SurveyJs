@@ -417,11 +417,6 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
 
           if (question) {
 
-            console.log(
-              "SURVEY DATA MGDA:",
-              diagnosticos
-            );
-
             question.choices =
               diagnosticos.map(
                 (d) => ({
@@ -439,6 +434,47 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
                     }`
                 })
               );
+
+            survey.onValueChanged.add(
+              (sender, options) => {
+
+                if (
+                  options.name ===
+                  "diagnostico_origen"
+                ) {
+
+                  const seleccionado =
+                    diagnosticos.find(
+                      d =>
+                        d._id ===
+                        options.value
+                    );
+
+                  if (seleccionado) {
+
+                    const nombreEntidad =
+
+                      seleccionado.surveyData?.nombre_entidad ||
+
+                      seleccionado.surveyData?.NOMBRE_ENTIDAD ||
+
+                      seleccionado.surveyData?.nombre_empresa ||
+
+                      seleccionado.surveyData?.razon_social ||
+
+                      "";
+
+                    sender.setValue(
+                      "nombre_empresa",
+                      nombreEntidad
+                    );
+
+                  }
+
+                }
+
+              }
+            );
 
           }
 

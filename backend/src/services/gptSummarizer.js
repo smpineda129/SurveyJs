@@ -484,7 +484,15 @@ export async function generatePinarIntroduction(data) {
   try {
 
     const entidad =
+
       data.nombre_empresa ||
+
+      data.nombre_entidad ||
+
+      data.NOMBRE_ENTIDAD ||
+
+      data.razon_social ||
+
       "la entidad";
 
     const vigencia =
@@ -582,7 +590,15 @@ export async function generatePinarVision(data) {
   try {
 
     const entidad =
+
       data.nombre_empresa ||
+
+      data.nombre_entidad ||
+
+      data.NOMBRE_ENTIDAD ||
+
+      data.razon_social ||
+
       "la entidad";
 
     const aspectos =

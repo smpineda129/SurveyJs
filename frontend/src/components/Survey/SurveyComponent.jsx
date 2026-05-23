@@ -429,6 +429,8 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
                   text:
                     `${d.formType.toUpperCase()} - ${d.surveyData?.nombre_entidad ||
 
+                    d.surveyData?.NOMBRE_ENTIDAD ||
+
                     d.surveyData?.nombre_empresa ||
 
                     d.surveyData?.razon_social ||

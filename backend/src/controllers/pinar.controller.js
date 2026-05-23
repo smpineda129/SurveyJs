@@ -28,7 +28,23 @@ export const generatePinarDocx = async (req, res) => {
     const data = req.body.surveyData || req.body;
 
     const aspectosCriticos =
-      data.aspectos_criticos || [];
+
+      data.aspectos_criticos ||
+
+      Object.entries(data)
+        .filter(
+          ([key, value]) =>
+            key.endsWith("_obs") &&
+            value &&
+            String(value).trim() !== ""
+        )
+        .map(
+          ([key, value]) => ({
+            aspecto: String(value),
+            riesgo:
+              "Riesgo identificado en el diagnóstico archivístico"
+          })
+        );
 
     const matrizCalificacion =
       data.matriz_calificacion || [];
@@ -57,7 +73,15 @@ export const generatePinarDocx = async (req, res) => {
 
     // DATOS GENERALES
     const entidad =
+
       data.nombre_empresa ||
+
+      data.nombre_entidad ||
+
+      data.NOMBRE_ENTIDAD ||
+
+      data.razon_social ||
+
       "la entidad";
 
     const vigencia =
@@ -88,15 +112,13 @@ export const generatePinarDocx = async (req, res) => {
     ];
 
     const aspectos =
-      data.aspectos_criticos || [];
+      aspectosCriticos || [];
 
     const totalAspectos =
       aspectos.length;
 
     const totalObjetivos =
       objetivos.length;
-
-    console.log("LLAMANDO GPT PINAR");
 
     //INTRODUCCIÓN IA
     const introduccionIA =

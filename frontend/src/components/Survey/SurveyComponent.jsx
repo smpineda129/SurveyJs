@@ -391,6 +391,10 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
           const response =
             await surveyAPI.getAll();
 
+          console.log(
+            response.data
+          );
+
           const diagnosticos =
             (response.data || [])
               .filter(

@@ -414,8 +414,12 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
                 (d) => ({
                   value: d._id,
                   text:
-                    `${d.formType.toUpperCase()} - ${d.surveyData
-                      ?.nombre_entidad ||
+                    `${d.formType.toUpperCase()} - ${d.surveyData?.nombre_entidad ||
+
+                    d.surveyData?.nombre_empresa ||
+
+                    d.surveyData?.razon_social ||
+
                     "Sin nombre"
                     }`
                 })

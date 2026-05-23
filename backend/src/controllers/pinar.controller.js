@@ -33,10 +33,20 @@ export const generatePinarDocx = async (req, res) => {
 
       Object.entries(data)
         .filter(
-          ([key, value]) =>
-            key.endsWith("_obs") &&
+          ([key, value]) => (
+
+            (
+              key.endsWith("_OBS") ||
+              key.endsWith("_obs") ||
+              key.endsWith("_SEL")
+            )
+
+            &&
+
             value &&
             String(value).trim() !== ""
+
+          )
         )
         .map(
           ([key, value]) => ({

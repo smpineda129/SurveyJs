@@ -483,14 +483,21 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
           Object.entries(data)
 
             .filter(
-              ([key, value]) =>
+              ([key, value]) => (
 
-                key.endsWith("_obs") &&
+                (
+                  key.endsWith("_OBS") ||
+                  key.endsWith("_obs") ||
+                  key.endsWith("_SEL")
+                )
+
+                &&
 
                 value &&
-                value.trim() !== ""
-            )
+                String(value).trim() !== ""
 
+              )
+            )
             .map(
               ([key, value]) => ({
 

@@ -389,7 +389,9 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
         try {
 
           const response =
-            await surveyAPI.getAll();
+            await surveyAPI.getAll({
+              limit: 100
+            });
 
           console.log(
             response.data

@@ -81,6 +81,36 @@ export const generatePinarDocx = async (req, res) => {
         objetivos
       );
 
+    if (data._id) {
+
+      await Survey.findByIdAndUpdate(
+
+        data._id,
+
+        {
+
+          $set: {
+
+            "surveyData.introduccion_ia":
+              introduccionIA,
+
+            "surveyData.vision_ia":
+              visionEstrategica,
+
+            "surveyData.objetivos_ia":
+              objetivos,
+
+            "surveyData.planes_ia":
+              planesIA,
+
+          }
+
+        }
+
+      );
+
+    }
+
     const riesgos =
       data.riesgos_automaticos || [];
 
@@ -1763,36 +1793,6 @@ export const
           await generatePlanesIA(
             objetivosIA
           );
-
-        if (data._id) {
-
-          await Survey.findByIdAndUpdate(
-
-            data._id,
-
-            {
-
-              $set: {
-
-                "surveyData.introduccion_ia":
-                  introduccionIA,
-
-                "surveyData.vision_ia":
-                  visionIA,
-
-                "surveyData.objetivos_ia":
-                  objetivosIA,
-
-                "surveyData.planes_ia":
-                  planesIA,
-
-              }
-
-            }
-
-          );
-
-        }
 
         res.json({
 

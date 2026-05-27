@@ -6,6 +6,9 @@ import {
   generatePlanesIA
 } from "../services/gptSummarizer.js";
 
+import Survey
+  from "../models/Survey.js";
+
 import {
   Document,
   Packer,
@@ -1760,6 +1763,36 @@ export const
           await generatePlanesIA(
             objetivosIA
           );
+
+        if (data._id) {
+
+          await Survey.findByIdAndUpdate(
+
+            data._id,
+
+            {
+
+              $set: {
+
+                "surveyData.introduccion_ia":
+                  introduccionIA,
+
+                "surveyData.vision_ia":
+                  visionIA,
+
+                "surveyData.objetivos_ia":
+                  objetivosIA,
+
+                "surveyData.planes_ia":
+                  planesIA,
+
+              }
+
+            }
+
+          );
+
+        }
 
         res.json({
 

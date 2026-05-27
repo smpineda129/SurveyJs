@@ -567,6 +567,33 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
           aspectos
         );
 
+        const iaResponse =
+
+          await surveyAPI
+            .generatePinarIA(
+              survey.data
+            );
+
+        survey.setValue(
+          "introduccion_ia",
+          iaResponse.data.introduccion_ia
+        );
+
+        survey.setValue(
+          "vision_ia",
+          iaResponse.data.vision_ia
+        );
+
+        survey.setValue(
+          "objetivos_ia",
+          iaResponse.data.objetivos_ia
+        );
+
+        survey.setValue(
+          "planes_ia",
+          iaResponse.data.planes_ia
+        );
+
         survey.setValue(
           "aspectos_criticos",
           aspectos

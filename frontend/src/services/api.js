@@ -70,6 +70,17 @@ export const surveyAPI = {
     return response;
   },
 
+  // Generar IA estable PINAR
+  generatePinarIA: async (surveyData) => {
+
+    const response = await api.post(
+      '/pinar/generate-ia',
+      surveyData
+    );
+
+    return response.data;
+  },
+
   // Generar aspectos críticos IA
   generateAspectosCriticos:
     async (observaciones) => {

@@ -63,11 +63,17 @@ export const generatePinarDocx = async (req, res) => {
       data.priorizacion_criticos || [];
 
     const objetivos =
+
+      data.objetivos_ia ||
+
       await generateObjetivosIA(
         aspectosCriticos
       );
 
     const planesIA =
+
+      data.planes_ia ||
+
       await generatePlanesIA(
         objetivos
       );
@@ -132,6 +138,9 @@ export const generatePinarDocx = async (req, res) => {
 
     //INTRODUCCIÓN IA
     const introduccionIA =
+
+      data.introduccion_ia ||
+
       await generatePinarIntroduction(data);
 
     console.log(introduccionIA);
@@ -168,6 +177,9 @@ export const generatePinarDocx = async (req, res) => {
     // VISIÓN ESTRATÉGICA IA
 
     const visionEstrategica =
+
+      data.vision_ia ||
+
       await generatePinarVision(data);
 
     let conclusionDinamica =
@@ -376,7 +388,7 @@ export const generatePinarDocx = async (req, res) => {
                 new TextRun({
                   text: introduccionIA,
                   size: 24,
-                  font: "Times New Roman",
+                  font: "Arial",
                 }),
               ],
 
@@ -492,31 +504,6 @@ export const generatePinarDocx = async (req, res) => {
 
                 new TextRun({
                   text:
-                    "LEY 1712 DE 2014:",
-                  bold: true,
-                  break: 1
-                }),
-
-                new TextRun({
-                  text:
-                    " Por medio de la cual se crea la Ley de Transparencia y del Derecho de Acceso a la Información Pública Nacional y se dictan otras disposiciones.",
-                }),
-
-              ],
-
-              spacing: {
-                after: 200,
-              },
-
-              alignment:
-                AlignmentType.JUSTIFIED,
-            }),
-
-            new Paragraph({
-              children: [
-
-                new TextRun({
-                  text:
                     "LEY 594 DE 2000:",
                   bold: true,
                   break: 1
@@ -542,14 +529,14 @@ export const generatePinarDocx = async (req, res) => {
 
                 new TextRun({
                   text:
-                    "DECRETO 612 DE 2018:",
+                    "LEY 1712 DE 2014:",
                   bold: true,
                   break: 1
                 }),
 
                 new TextRun({
                   text:
-                    " Por el cual se fijan directrices para la integración de los planes institucionales y estratégicos al Plan de Acción por parte de las entidades del Estado.",
+                    " Por medio de la cual se crea la Ley de Transparencia y del Derecho de Acceso a la Información Pública Nacional y se dictan otras disposiciones.",
                 }),
 
               ],
@@ -617,14 +604,14 @@ export const generatePinarDocx = async (req, res) => {
 
                 new TextRun({
                   text:
-                    "ACUERDO 006 DE 2014 DEL AGN:",
+                    "DECRETO 612 DE 2018:",
                   bold: true,
                   break: 1
                 }),
 
                 new TextRun({
                   text:
-                    " Por el cual se desarrollan los artículos 47 y 48 del título XI “Conservación de documentos” de la Ley 594 de 2000.",
+                    " Por el cual se fijan directrices para la integración de los planes institucionales y estratégicos al Plan de Acción por parte de las entidades del Estado.",
                 }),
 
               ],
@@ -642,45 +629,20 @@ export const generatePinarDocx = async (req, res) => {
 
                 new TextRun({
                   text:
-                    "ACUERDO 002 DE 2014 DEL AGN:",
+                    "ACUERDO 001 DE 2024:",
                   bold: true,
                   break: 1
                 }),
 
                 new TextRun({
                   text:
-                    " Por medio del cual se establecen los criterios básicos para creación, conformación, organización, control y consulta de los expedientes de archivo y se dictan otras disposiciones.",
+                    " Por el cual se establece el Acuerdo Único de la Función Archivística, se definen los criterios técnicos y jurídicos para su implementación en el Estado Colombiano y se fijan otras disposiciones.",
                 }),
 
               ],
 
               spacing: {
                 after: 200,
-              },
-
-              alignment:
-                AlignmentType.JUSTIFIED,
-            }),
-
-            new Paragraph({
-              children: [
-
-                new TextRun({
-                  text:
-                    "ACUERDO 042 DE 2002 DEL AGN:",
-                  bold: true,
-                  break: 1
-                }),
-
-                new TextRun({
-                  text:
-                    " Por el cual se establecen los criterios para la organización de los archivos de gestión en las entidades públicas y privadas que cumplen funciones públicas, se regula el Inventario Único Documental y se desarrollan los artículos 21, 22, 23 y 26 de la Ley General de Archivos, Ley 594 de 2000.",
-                }),
-
-              ],
-
-              spacing: {
-                after: 300,
               },
 
               alignment:
@@ -705,7 +667,7 @@ export const generatePinarDocx = async (req, res) => {
                 new TextRun({
                   text: visionEstrategica,
                   size: 24,
-                  font: "Times New Roman",
+                  font: "Arial",
                 }),
               ],
 
@@ -1734,6 +1696,106 @@ export const
 
           error:
             "Error generando aspectos críticos"
+
+        });
+
+      }
+
+    };
+
+export const
+  generatePinarIA =
+    async (req, res) => {
+
+      try {
+
+        const data =
+          req.body;
+
+        const aspectosCriticos =
+
+          data.aspectos_criticos?.length
+
+            ? data.aspectos_criticos
+
+            : Object.entries(data)
+              .filter(
+                ([key, value]) => (
+
+                  (
+                    key.endsWith("_OBS") ||
+                    key.endsWith("_obs") ||
+                    key.endsWith("_SEL")
+                  )
+
+                  &&
+
+                  value &&
+                  String(value).trim() !== ""
+
+                )
+              )
+              .map(
+                ([key, value]) => ({
+                  aspecto:
+                    String(value),
+
+                  riesgo:
+                    "Riesgo identificado en el diagnóstico archivístico"
+                })
+              );
+
+        const introduccionIA =
+          await generatePinarIntroduction(data);
+
+        const visionIA =
+          await generatePinarVision(data);
+
+        const objetivosIA =
+          await generateObjetivosIA(
+            aspectosCriticos
+          );
+
+        const planesIA =
+          await generatePlanesIA(
+            objetivosIA
+          );
+
+        res.json({
+
+          success: true,
+
+          data: {
+
+            introduccion_ia:
+              introduccionIA,
+
+            vision_ia:
+              visionIA,
+
+            objetivos_ia:
+              objetivosIA,
+
+            planes_ia:
+              planesIA
+
+          }
+
+        });
+
+      } catch (error) {
+
+        console.error(
+          "ERROR IA PINAR:",
+          error
+        );
+
+        res.status(500).json({
+
+          success: false,
+
+          error:
+            "Error generando IA del PINAR"
 
         });
 

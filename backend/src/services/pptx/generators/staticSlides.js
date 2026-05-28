@@ -20,7 +20,7 @@ function addDecorativeElements(slide) {
     line: { type: 'none' },
     rotate: 45
   });
-  
+
   // Elemento diagonal inferior izquierda
   slide.addShape('triangle', {
     x: 0,
@@ -39,9 +39,9 @@ function addDecorativeElements(slide) {
 export function createPortada(pptx, entityName, date) {
   const slide = pptx.addSlide();
   slide.background = { color: STYLES.colors.bgBlue };
-  
+
   addDecorativeElements(slide);
-  
+
   // Logo superior izquierdo (placeholder - se puede reemplazar con imagen real)
   slide.addText('GDI', {
     x: 0.5,
@@ -53,9 +53,9 @@ export function createPortada(pptx, entityName, date) {
     color: STYLES.colors.white,
     fontFace: 'Arial'
   });
-  
+
   // Título principal
-  slide.addText('Contextualización\nDiagnóstico Documental\nCooprocal', {
+  slide.addText('nDiagnóstico Integral de Archivos', {
     x: 1.0,
     y: 2.0,
     w: 8.0,
@@ -66,7 +66,7 @@ export function createPortada(pptx, entityName, date) {
     align: 'center',
     valign: 'middle'
   });
-  
+
   // Nombre de la entidad
   slide.addText(entityName.toUpperCase(), {
     x: 1.0,
@@ -77,7 +77,7 @@ export function createPortada(pptx, entityName, date) {
     color: STYLES.colors.textLight,
     align: 'center'
   });
-  
+
   // Fecha
   slide.addText(date, {
     x: 1.0,
@@ -96,9 +96,9 @@ export function createPortada(pptx, entityName, date) {
 export function createTituloSlide(pptx) {
   const slide = pptx.addSlide();
   slide.background = { color: STYLES.colors.bgBlue };
-  
+
   addDecorativeElements(slide);
-  
+
   // Título
   slide.addText('TÍTULO', {
     x: 0.5,
@@ -108,7 +108,7 @@ export function createTituloSlide(pptx) {
     ...STYLES.fonts.titleMain,
     align: 'center'
   });
-  
+
   // Lista numerada
   const items = [
     '1. Diligenciamiento registro de asistencia.',
@@ -119,7 +119,7 @@ export function createTituloSlide(pptx) {
     '6. Informe diagnóstico documental.',
     '7. Plan de acción.'
   ];
-  
+
   slide.addText(items.join('\n'), {
     x: 1.5,
     y: 1.5,
@@ -137,11 +137,11 @@ export function createTituloSlide(pptx) {
 export function createContextualizacion(pptx) {
   const slide = pptx.addSlide();
   slide.background = { color: STYLES.colors.bgBlue };
-  
+
   addDecorativeElements(slide);
-  
+
   const content = STATIC_CONTENT.contextualizacion;
-  
+
   // Título
   slide.addText(content.title, {
     x: 0.5,
@@ -151,7 +151,7 @@ export function createContextualizacion(pptx) {
     ...STYLES.fonts.titleMain,
     align: 'center'
   });
-  
+
   // Contenido numerado
   slide.addText('1. Es una revisión de toda la producción documental de una empresa, con miras a organizar y establecer el archivo.', {
     x: 0.8,
@@ -160,7 +160,7 @@ export function createContextualizacion(pptx) {
     h: 0.8,
     ...STYLES.fonts.bodyText
   });
-  
+
   slide.addText('2. Permite ver el grado de madurez de una entidad en cuanto a procesos archivísticos se refiere.', {
     x: 0.8,
     y: 2.2,
@@ -176,11 +176,11 @@ export function createContextualizacion(pptx) {
 export function createObjetivos(pptx) {
   const slide = pptx.addSlide();
   slide.background = { color: STYLES.colors.bgBlue };
-  
+
   addDecorativeElements(slide);
-  
+
   const content = STATIC_CONTENT.objetivos;
-  
+
   // Título
   slide.addText('CONTEXTUALIZACIÓN DIAGNÓSTICO\nDOCUMENTAL - OBJETIVOS', {
     x: 0.5,
@@ -190,7 +190,7 @@ export function createObjetivos(pptx) {
     ...STYLES.fonts.titleSection,
     align: 'center'
   });
-  
+
   // Cajas con objetivos (simulando el diseño visual)
   const objectives = [
     'Evaluar el cumplimiento normativo',
@@ -198,7 +198,7 @@ export function createObjetivos(pptx) {
     'Determinar nivel de implementación de instrumentos',
     'Establecer recomendaciones para mejoramiento'
   ];
-  
+
   let xPos = 0.8;
   objectives.forEach((obj, index) => {
     slide.addShape(pptx.ShapeType.rect, {
@@ -209,7 +209,7 @@ export function createObjetivos(pptx) {
       fill: { color: index === 0 ? '8BC34A' : (index === 1 ? '64B5F6' : (index === 2 ? 'A1887F' : 'CE93D8')) },
       line: { type: 'none' }
     });
-    
+
     slide.addText(obj, {
       x: xPos,
       y: 2.1,
@@ -221,7 +221,7 @@ export function createObjetivos(pptx) {
       valign: 'middle',
       bold: true
     });
-    
+
     xPos += 2.0;
   });
 }
@@ -232,9 +232,9 @@ export function createObjetivos(pptx) {
 export function createMetodologia(pptx) {
   const slide = pptx.addSlide();
   slide.background = { color: STYLES.colors.bgBlue };
-  
+
   addDecorativeElements(slide);
-  
+
   // Título
   slide.addText('METODOLOGÍA DIAGNÓSTICO DOCUMENTAL', {
     x: 0.5,
@@ -244,7 +244,7 @@ export function createMetodologia(pptx) {
     ...STYLES.fonts.titleMain,
     align: 'center'
   });
-  
+
   // Diagrama circular con elementos
   const elements = [
     { text: 'Instrumentos', color: '2196F3', x: 2.0, y: 2.0 },
@@ -252,7 +252,7 @@ export function createMetodologia(pptx) {
     { text: 'Enfoque', color: 'F44336', x: 3.75, y: 1.2 },
     { text: 'Ponderación', color: 'AB47BC', x: 3.75, y: 3.5 }
   ];
-  
+
   elements.forEach(elem => {
     slide.addShape(pptx.ShapeType.ellipse, {
       x: elem.x,
@@ -262,7 +262,7 @@ export function createMetodologia(pptx) {
       fill: { color: elem.color },
       line: { type: 'none' }
     });
-    
+
     slide.addText(elem.text, {
       x: elem.x,
       y: elem.y + 0.3,
@@ -282,9 +282,9 @@ export function createMetodologia(pptx) {
 export function createQueSeEvaluo(pptx) {
   const slide = pptx.addSlide();
   slide.background = { color: STYLES.colors.bgBlue };
-  
+
   addDecorativeElements(slide);
-  
+
   // Título
   slide.addText('¿QUÉ SE EVALUÓ EN EL DIAGNÓSTICO\nDOCUMENTAL?', {
     x: 0.5,
@@ -294,14 +294,14 @@ export function createQueSeEvaluo(pptx) {
     ...STYLES.fonts.titleSection,
     align: 'center'
   });
-  
+
   // Tres cajas principales
   const sections = [
     { title: 'Aspectos\nAdministrativos', color: 'AB47BC', x: 1.0 },
     { title: 'Diagnóstico\nDocumental', color: '2196F3', x: 4.0 },
     { title: 'Función\nArchivística', color: '4CAF50', x: 7.0 }
   ];
-  
+
   sections.forEach(section => {
     slide.addShape(pptx.ShapeType.rect, {
       x: section.x,
@@ -311,7 +311,7 @@ export function createQueSeEvaluo(pptx) {
       fill: { color: section.color },
       line: { type: 'none' }
     });
-    
+
     slide.addText(section.title, {
       x: section.x,
       y: 2.7,
@@ -324,7 +324,7 @@ export function createQueSeEvaluo(pptx) {
       bold: true
     });
   });
-  
+
   // Caja inferior
   slide.addShape(pptx.ShapeType.rect, {
     x: 3.5,
@@ -334,7 +334,7 @@ export function createQueSeEvaluo(pptx) {
     fill: { color: '00BCD4' },
     line: { type: 'none' }
   });
-  
+
   slide.addText('Preservación', {
     x: 3.5,
     y: 4.4,
@@ -354,9 +354,9 @@ export function createQueSeEvaluo(pptx) {
 export function createParaTenerEnCuenta(pptx) {
   const slide = pptx.addSlide();
   slide.background = { color: STYLES.colors.bgBlue };
-  
+
   addDecorativeElements(slide);
-  
+
   // Título
   slide.addText('PARA TENER EN CUENTA...', {
     x: 0.5,
@@ -366,7 +366,7 @@ export function createParaTenerEnCuenta(pptx) {
     ...STYLES.fonts.titleMain,
     align: 'center'
   });
-  
+
   // Subtítulo
   slide.addText('Colores:', {
     x: 1.0,
@@ -377,14 +377,14 @@ export function createParaTenerEnCuenta(pptx) {
     color: STYLES.colors.white,
     bold: true
   });
-  
+
   // Semáforo con barras
   const semaforo = [
     { color: STYLES.colors.critical, text: '= Cumplimiento bajo de requisitos', y: 1.8 },
     { color: STYLES.colors.acceptable, text: '= Cumplimiento aceptable de los', y: 2.4 },
     { color: STYLES.colors.optimal, text: '= Cumplimiento óptimo de los requisitos', y: 3.0 }
   ];
-  
+
   semaforo.forEach(item => {
     slide.addShape(pptx.ShapeType.rect, {
       x: 1.5,
@@ -394,7 +394,7 @@ export function createParaTenerEnCuenta(pptx) {
       fill: { color: item.color },
       line: { type: 'none' }
     });
-    
+
     slide.addText(item.text, {
       x: 3.2,
       y: item.y,
@@ -404,7 +404,7 @@ export function createParaTenerEnCuenta(pptx) {
       color: STYLES.colors.white
     });
   });
-  
+
   // Nota de ponderación
   slide.addText('Ponderación: cada aspecto y subcomponentes derivados de los mismos tiene un ponderado diferente.', {
     x: 1.0,
@@ -423,7 +423,7 @@ export function createParaTenerEnCuenta(pptx) {
 export function createSeparator(pptx, text) {
   const slide = pptx.addSlide();
   slide.background = { color: STYLES.colors.bgDarkBlue };
-  
+
   slide.addText(text.toUpperCase(), {
     x: 0.5,
     y: 2.5,

@@ -55,7 +55,7 @@ export function createPortada(pptx, entityName, date) {
   });
 
   // Título principal
-  slide.addText('nDiagnóstico Integral de Archivos', {
+  slide.addText('Diagnóstico Integral de Archivos', {
     x: 1.0,
     y: 2.0,
     w: 8.0,

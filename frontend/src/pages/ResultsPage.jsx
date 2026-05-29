@@ -24,6 +24,8 @@ import entidadesPrivadasConfig from '../config/surveyConfig';
 import pinarConfig from '../config/pinarConfig';
 import AccountTreeOutlinedIcon
   from '@mui/icons-material/AccountTreeOutlined';
+import { useAuth }
+  from "../context/AuthContext";
 
 const FORM_LABELS = {
   entidades_publicas: 'Entidades Públicas',
@@ -102,6 +104,7 @@ export default function ResultsPage() {
   const [search, setSearch] = useState('');
   const [toastMsg, setToastMsg] = useState('');
   const [generatingId, setGeneratingId] = useState(null);
+  const { user } = useAuth();
 
   const fetchData = async () => {
     setLoading(true);
@@ -230,26 +233,6 @@ export default function ResultsPage() {
     } catch (err) {
 
       console.error("ERROR DOCX:", err);
-
-      console.error("ERROR COMPLETO DOCX:", err);
-
-      alert(
-        `
-STATUS: ${err.response?.status}
-
-MESSAGE: ${err.message}
-`
-      );
-
-      const decoder =
-        new TextDecoder();
-
-      const errorText =
-        decoder.decode(
-          err.response?.data
-        );
-
-      alert(errorText);
 
       setToastMsg(
         'Error al generar el documento PINAR.'
@@ -455,16 +438,29 @@ MESSAGE: ${err.message}
                               </span>
                             </Tooltip>
                           )}
-                          <Tooltip title="Eliminar">
-                            <IconButton
-                              size="small"
-                              onClick={() => handleDelete(survey._id)}
-                              aria-label="Eliminar registro"
-                              sx={{ '&:hover': { color: 'error.main', bgcolor: '#FEE2E2' } }}
-                            >
-                              <DeleteOutlineIcon fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
+                          {
+                            user?.role === "admin" && (
+
+                              <Tooltip title="Eliminar">
+
+                                <IconButton
+                                  size="small"
+                                  onClick={() => handleDelete(survey._id)}
+                                  aria-label="Eliminar registro"
+                                  sx={{
+                                    '&:hover': {
+                                      color: 'error.main',
+                                      bgcolor: '#FEE2E2'
+                                    }
+                                  }}
+                                >
+                                  <DeleteOutlineIcon fontSize="small" />
+                                </IconButton>
+
+                              </Tooltip>
+
+                            )
+                          }
                         </Box>
                       </TableCell>
                     </TableRow>

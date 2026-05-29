@@ -10,6 +10,7 @@ import {
 } from '../controllers/survey.controller.js';
 import { validateSurvey } from '../middleware/validators.js';
 import { authenticate } from '../middleware/authenticate.js';
+import { requireAdmin } from "../middleware/requireAdmin.js";
 
 const router = express.Router();
 
@@ -22,6 +23,6 @@ router.get('/stats', authenticate, getSurveyStats);
 router.get('/:id/presentation', authenticate, generateIndividualPresentation);
 router.get('/:id', authenticate, getSurveyById);
 router.put('/:id', authenticate, validateSurvey, updateSurvey);
-router.delete('/:id', authenticate, deleteSurvey);
+router.delete("/:id", authenticate, requireAdmin, deleteSurvey);
 
 export default router;

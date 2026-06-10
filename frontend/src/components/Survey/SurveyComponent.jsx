@@ -31,39 +31,46 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
     (survey) => {
       const data =
         survey.getValue(
-          "matriz_calificacion"
+          "admin_archivos"
         );
 
       if (!data) return;
 
-      const nuevaMatriz =
+      const nuevaTabla =
         data.map((row) => {
 
           const total =
 
-            Number(row.admin || 0) +
+            Number(row.ciclo_vital || 0) +
 
-            Number(row.acceso || 0) +
+            Number(row.instrumentos || 0) +
 
-            Number(row.preservacion || 0) +
+            Number(row.seguimiento || 0) +
 
-            Number(row.tecnologia || 0) +
+            Number(row.politica || 0) +
 
-            Number(row.fortalecimiento || 0);
+            Number(row.electronica || 0) +
+
+            Number(row.flujos || 0) +
+
+            Number(row.documentacion || 0) +
+
+            Number(row.infraestructura || 0) +
+
+            Number(row.personal || 0) +
+
+            Number(row.presupuesto || 0);
 
           return {
-
             ...row,
-
             total
-
           };
 
         });
 
       survey.setValue(
-        "matriz_calificacion",
-        nuevaMatriz
+        "admin_archivos",
+        nuevaTabla
       );
 
       const priorizados =

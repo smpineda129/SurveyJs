@@ -121,28 +121,70 @@ const pinarConfig = {
 
     // 🟦 4. CALIFICACION EJES ARTICULADORES
     {
-      name: "ADMINISTRACION_ARCHIVOS",
-      elements: [
-        {
-          type: "matrixdynamic",
-          name: "admin_archivos",
-          title: "Administración de Archivos",
-          columns: [
-            {
-              name: "aspecto",
-              title: "Aspecto crítico",
-              cellType: "text",
-              readOnly: true
-            },
-            {
-              name: "criterio1",
-              title: "¿Se consideran instrumentos archivísticos?",
-              cellType: "dropdown",
-              choices: [0, 1]
-            }
-          ]
-        }
-      ]
+      name: "ciclo_vital",
+      title: "Se considera el ciclo vital de los documentos integrando aspectos administrativos, legales, funcionales y técnicos.",
+      cellType: "dropdown",
+      choices: [0, 1]
+    },
+    {
+      name: "instrumentos",
+      title: "Se cuenta con todos los instrumentos archivísticos socializados e implementados.",
+      cellType: "dropdown",
+      choices: [0, 1]
+    },
+    {
+      name: "seguimiento",
+      title: "Se cuenta con procesos de seguimiento, evaluación y mejora para la gestión documental.",
+      cellType: "dropdown",
+      choices: [0, 1]
+    },
+    {
+      name: "politica",
+      title: "Se tiene establecida la política de gestión documental.",
+      cellType: "dropdown",
+      choices: [0, 1]
+    },
+    {
+      name: "electronica",
+      title: "Los instrumentos archivísticos involucran la documentación electrónica.",
+      cellType: "dropdown",
+      choices: [0, 1]
+    },
+    {
+      name: "flujos",
+      title: "Se cuenta con procesos y flujos documentales normalizados y medibles.",
+      cellType: "dropdown",
+      choices: [0, 1]
+    },
+    {
+      name: "documentacion",
+      title: "Se documentan procesos o actividades de gestión de documentos.",
+      cellType: "dropdown",
+      choices: [0, 1]
+    },
+    {
+      name: "infraestructura",
+      title: "Se cuenta con la infraestructura adecuada para resolver las necesidades documentales y de archivo.",
+      cellType: "dropdown",
+      choices: [0, 1]
+    },
+    {
+      name: "personal",
+      title: "El personal de la entidad conoce la importancia de los documentos e interioriza las políticas y directrices concernientes a la gestión de los documentos.",
+      cellType: "dropdown",
+      choices: [0, 1]
+    },
+    {
+      name: "presupuesto",
+      title: "Se cuenta con el presupuesto adecuado para atender las necesidades documentales y de archivo.",
+      cellType: "dropdown",
+      choices: [0, 1]
+    },
+    {
+      name: "total",
+      title: "TOTAL",
+      cellType: "text",
+      readOnly: true
     }
   ]
 };

@@ -599,48 +599,14 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
           aspectos
         );
 
-        const matriz =
-          aspectos.map(
-            (item) => ({
-
-              aspecto:
-                item.aspecto || "",
-
-              admin: "",
-              acceso: "",
-              preservacion: "",
-              tecnologia: "",
-              fortalecimiento: "",
-
-              total: 0
-
-            })
-          );
-
         survey.setValue(
-          "matriz_calificacion",
-          matriz
-        );
-
-        const priorizados =
+          "admin_archivos",
           aspectos.map(
-            (item, index) => ({
-
-              numero:
-                index + 1,
-
+            item => ({
               aspecto:
-                item.aspecto || "",
-
-              prioridad:
-                "Alta"
-
+                item.aspecto || ""
             })
-          );
-
-        survey.setValue(
-          "priorizacion_criticos",
-          priorizados
+          )
         );
 
       } catch (error) {

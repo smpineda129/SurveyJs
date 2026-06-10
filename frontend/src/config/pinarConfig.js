@@ -121,55 +121,29 @@ const pinarConfig = {
 
     // 🟦 4. CALIFICACION EJES ARTICULADORES
     {
-      name: "EJES ARTICULADORES",
+      name: "ADMINISTRACION_ARCHIVOS",
       elements: [
         {
           type: "matrixdynamic",
-          name: "matriz_calificacion",
-          title: "Calificación de aspectos",
+          name: "admin_archivos",
+          title: "Administración de Archivos",
           columns: [
-            { name: "aspecto", title: "Aspecto crítico", cellType: "text" },
-            { name: "admin", title: "Administración de archivos", cellType: "text" },
-            { name: "acceso", title: "Acceso a la información", cellType: "text" },
-            { name: "preservacion", title: "Preservación de la Información", cellType: "text" },
-            { name: "tecnologia", title: "Aspectos Tecnológicos y de Seguridad", cellType: "text" },
-            { name: "fortalecimiento", title: "Fortalecimiento y Articulación", cellType: "text" },
-            {
-              name: "total",
-              title: "TOTAL",
-              cellType: "text",
-              readOnly: true
-            }
-          ]
-        },
-        {
-          type: "matrixdynamic",
-          name: "priorizacion_criticos",
-          title: "Aspectos críticos priorizados",
-          columns: [
-            {
-              name: "numero",
-              title: "N°",
-              cellType: "text",
-              readOnly: true
-            },
             {
               name: "aspecto",
-              title: "Aspecto crítico priorizado",
+              title: "Aspecto crítico",
               cellType: "text",
               readOnly: true
             },
             {
-              name: "prioridad",
-              title: "Prioridad",
-              cellType: "text",
-              readOnly: true
+              name: "criterio1",
+              title: "¿Se consideran instrumentos archivísticos?",
+              cellType: "dropdown",
+              choices: [0, 1]
             }
           ]
         }
       ]
     }
-
   ]
 };
 

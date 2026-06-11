@@ -222,6 +222,81 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
               b.total - a.total
           );
 
+      const totalAdmin =
+        priorizados.reduce(
+          (sum, row) =>
+            sum + Number(row.admin || 0),
+          0
+        );
+
+      const totalAcceso =
+        priorizados.reduce(
+          (sum, row) =>
+            sum + Number(row.acceso || 0),
+          0
+        );
+
+      const totalPreservacion =
+        priorizados.reduce(
+          (sum, row) =>
+            sum + Number(row.preservacion || 0),
+          0
+        );
+
+      const totalTecnologia =
+        priorizados.reduce(
+          (sum, row) =>
+            sum + Number(row.tecnologia || 0),
+          0
+        );
+
+      const totalFortalecimiento =
+        priorizados.reduce(
+          (sum, row) =>
+            sum + Number(row.fortalecimiento || 0),
+          0
+        );
+
+      const totalGeneral =
+
+        totalAdmin +
+
+        totalAcceso +
+
+        totalPreservacion +
+
+        totalTecnologia +
+
+        totalFortalecimiento;
+
+      priorizados.push({
+
+        numero: "",
+
+        aspecto: "TOTAL GENERAL EJES",
+
+        admin:
+          totalAdmin,
+
+        acceso:
+          totalAcceso,
+
+        preservacion:
+          totalPreservacion,
+
+        tecnologia:
+          totalTecnologia,
+
+        fortalecimiento:
+          totalFortalecimiento,
+
+        total:
+          totalGeneral,
+
+        prioridad: "-"
+
+      });
+
       survey.setValue(
         "priorizacion_criticos",
         priorizados

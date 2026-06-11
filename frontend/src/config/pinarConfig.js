@@ -9,6 +9,7 @@ const pinarConfig = {
     //  1. PORTADA
     {
       name: "DATOS DE LA EMPRESA",
+      navigationTitle: "DATOS",
       elements: [
         {
           type: "html",
@@ -49,6 +50,7 @@ const pinarConfig = {
     // 2. CONTEXTO ESTRATÉGICO
     {
       name: "CONTEXTO ESTRATÉGICO",
+      navigationTitle: "CONTEXTO",
       elements: [
 
         {
@@ -105,6 +107,7 @@ const pinarConfig = {
     //  3. ASPECTOS CRÍTICOS
     {
       name: "ASPECTOS CRÍTICOS",
+      navigationTitle: "ASPECTOS",
       elements: [
         {
           type: "matrixdynamic",
@@ -122,6 +125,7 @@ const pinarConfig = {
     // 4. CALIFICACION EJES ARTICULADORES
     {
       name: "ADMINISTRACION_ARCHIVOS",
+      navigationTitle: "ADMIN",
       elements: [
         {
           type: "matrixdynamic",
@@ -226,6 +230,7 @@ const pinarConfig = {
 
     {
       name: "ACCESO_INFORMACION",
+      navigationTitle: "ACCESO",
       elements: [
         {
           type: "matrixdynamic",
@@ -325,6 +330,7 @@ const pinarConfig = {
 
     {
       name: "PRESERVACION_INFORMACION",
+      navigationTitle: "PRESERVACIÓN",
       elements: [
         {
           type: "matrixdynamic",
@@ -428,6 +434,7 @@ const pinarConfig = {
 
     {
       name: "TECNOLOGIA_SEGURIDAD",
+      navigationTitle: "TECNOLOGÍA",
       elements: [
         {
           type: "matrixdynamic",
@@ -531,6 +538,7 @@ const pinarConfig = {
 
     {
       name: "FORTALECIMIENTO_ARTICULACION",
+      navigationTitle: "FORTALECIMIENTO",
       elements: [
         {
           type: "matrixdynamic",
@@ -635,6 +643,7 @@ const pinarConfig = {
     // TABLA PRIORIDADES
     {
       name: "PRIORIDADES",
+      navigationTitle: "PRIORIDADES",
       elements: [
         {
           type: "matrixdynamic",

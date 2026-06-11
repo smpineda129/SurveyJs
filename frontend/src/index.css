@@ -85,3 +85,14 @@ body {
 .sd-table__cell {
   vertical-align: top;
 }
+
+/* Fix progress buttons line break */
+.sv-progress-buttons__list-element {
+  min-width: 120px;
+}
+
+.sv-progress-buttons__page-title {
+  white-space: nowrap !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

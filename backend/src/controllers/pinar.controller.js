@@ -984,7 +984,7 @@ export const generatePinarDocx = async (req, res) => {
 
             new Paragraph({
               text:
-                "Los aspectos críticos institucionales fueron evaluados frente a cada uno de los ejes articuladores de la gestión documental, permitiendo identificar aquellos de mayor impacto para la entidad.",
+                "Los aspectos críticos institucionales fueron evaluados frente a los ejes articuladores de la gestión documental, permitiendo establecer su nivel de impacto y prioridad para la formulación de planes y proyectos institucionales.",
 
               alignment:
                 AlignmentType.JUSTIFIED,
@@ -1009,6 +1009,12 @@ export const generatePinarDocx = async (req, res) => {
 
                     new TableCell({
                       children: [
+                        new Paragraph("N°"),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
                         new Paragraph(
                           "Aspecto crítico"
                         ),
@@ -1017,48 +1023,76 @@ export const generatePinarDocx = async (req, res) => {
 
                     new TableCell({
                       children: [
-                        new Paragraph("EA1"),
+                        new Paragraph(
+                          "Administración"
+                        ),
                       ],
                     }),
 
                     new TableCell({
                       children: [
-                        new Paragraph("EA2"),
+                        new Paragraph(
+                          "Acceso"
+                        ),
                       ],
                     }),
 
                     new TableCell({
                       children: [
-                        new Paragraph("EA3"),
+                        new Paragraph(
+                          "Preservación"
+                        ),
                       ],
                     }),
 
                     new TableCell({
                       children: [
-                        new Paragraph("EA4"),
+                        new Paragraph(
+                          "Tecnología"
+                        ),
                       ],
                     }),
 
                     new TableCell({
                       children: [
-                        new Paragraph("EA5"),
+                        new Paragraph(
+                          "Fortalecimiento"
+                        ),
                       ],
                     }),
 
                     new TableCell({
                       children: [
-                        new Paragraph("TOTAL"),
+                        new Paragraph(
+                          "Total"
+                        ),
+                      ],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(
+                          "Prioridad"
+                        ),
                       ],
                     }),
 
                   ],
                 }),
 
-                ...matrizCalificacion.map(
-                  (item) =>
+                ...priorizados.map(
+                  (item, index) =>
 
                     new TableRow({
                       children: [
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(
+                              String(item.numero || index + 1)
+                            ),
+                          ],
+                        }),
 
                         new TableCell({
                           children: [
@@ -1112,88 +1146,6 @@ export const generatePinarDocx = async (req, res) => {
                           children: [
                             new Paragraph(
                               String(item.total || "")
-                            ),
-                          ],
-                        }),
-
-                      ],
-                    })
-
-                ),
-
-              ],
-
-            }),
-
-            new Paragraph({
-              text:
-                "Resultado de priorización de aspectos críticos",
-
-              heading:
-                HeadingLevel.HEADING_3,
-
-              spacing: {
-                before: 300,
-                after: 200
-              }
-            }),
-
-            new Table({
-
-              width: {
-                size: 100,
-                type:
-                  WidthType.PERCENTAGE,
-              },
-
-              rows: [
-
-                new TableRow({
-                  children: [
-
-                    new TableCell({
-                      children: [
-                        new Paragraph("N°"),
-                      ],
-                    }),
-
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          "Aspecto crítico"
-                        ),
-                      ],
-                    }),
-
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          "Prioridad"
-                        ),
-                      ],
-                    }),
-
-                  ],
-                }),
-
-                ...priorizados.map(
-                  (item, index) =>
-
-                    new TableRow({
-                      children: [
-
-                        new TableCell({
-                          children: [
-                            new Paragraph(
-                              String(index + 1)
-                            ),
-                          ],
-                        }),
-
-                        new TableCell({
-                          children: [
-                            new Paragraph(
-                              item.aspecto || ""
                             ),
                           ],
                         }),

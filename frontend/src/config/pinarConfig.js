@@ -1,7 +1,7 @@
 const pinarConfig = {
   title: "PLAN INSTITUCIONAL DE ARCHIVOS – PINAR",
   showProgressBar: "top",
-  progressBarType: "pages",
+  progressBarType: "buttons",
   showQuestionNumbers: "off",
 
   pages: [

@@ -119,7 +119,7 @@ const pinarConfig = {
       ]
     },
 
-    // 🟦 4. CALIFICACION EJES ARTICULADORES
+    // 4. CALIFICACION EJES ARTICULADORES
     {
       name: "ADMINISTRACION_ARCHIVOS",
       elements: [
@@ -625,7 +625,78 @@ const pinarConfig = {
           ]
         }
       ]
+    },
+
+    // TABLA PRIORIDADES
+    {
+      name: "PRIORIDADES",
+      elements: [
+        {
+          type: "matrixdynamic",
+          name: "priorizacion_criticos",
+          title: "Aspectos críticos priorizados",
+          allowAddRows: false,
+          allowRemoveRows: false,
+          columns: [
+            {
+              name: "numero",
+              title: "N°",
+              cellType: "text",
+              readOnly: true
+            },
+            {
+              name: "aspecto",
+              title: "Aspecto crítico",
+              cellType: "text",
+              readOnly: true
+            },
+            {
+              name: "admin",
+              title: "Administración",
+              cellType: "text",
+              readOnly: true
+            },
+            {
+              name: "acceso",
+              title: "Acceso",
+              cellType: "text",
+              readOnly: true
+            },
+            {
+              name: "preservacion",
+              title: "Preservación",
+              cellType: "text",
+              readOnly: true
+            },
+            {
+              name: "tecnologia",
+              title: "Tecnología",
+              cellType: "text",
+              readOnly: true
+            },
+            {
+              name: "fortalecimiento",
+              title: "Fortalecimiento",
+              cellType: "text",
+              readOnly: true
+            },
+            {
+              name: "total",
+              title: "TOTAL",
+              cellType: "text",
+              readOnly: true
+            },
+            {
+              name: "prioridad",
+              title: "Prioridad",
+              cellType: "text",
+              readOnly: true
+            }
+          ]
+        }
+      ]
     }
+
   ]
 };
 

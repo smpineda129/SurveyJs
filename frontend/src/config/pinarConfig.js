@@ -138,8 +138,9 @@ const pinarConfig = {
             {
               name: "aspecto",
               title: "Aspecto crítico",
-              cellType: "text",
-              readOnly: true
+              cellType: "comment",
+              readOnly: true,
+              width: "400px"
             },
 
             {

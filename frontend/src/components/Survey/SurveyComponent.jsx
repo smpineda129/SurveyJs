@@ -222,6 +222,10 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
               b.total - a.total
           );
 
+      priorizados.push(
+        filaTotales
+      );
+
       const totalAdmin =
         priorizados.reduce(
           (sum, row) =>
@@ -269,33 +273,31 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
 
         totalFortalecimiento;
 
-      priorizados.push({
+      const filaTotales = {
 
         numero: "",
 
-        aspecto: "TOTAL GENERAL EJES",
+        aspecto: "TOTAL",
 
-        admin:
-          totalAdmin,
+        admin: totalAdmin,
 
-        acceso:
-          totalAcceso,
+        acceso: totalAcceso,
 
-        preservacion:
-          totalPreservacion,
+        preservacion: totalPreservacion,
 
-        tecnologia:
-          totalTecnologia,
+        tecnologia: totalTecnologia,
 
-        fortalecimiento:
-          totalFortalecimiento,
+        fortalecimiento: totalFortalecimiento,
 
-        total:
-          totalGeneral,
+        total: "",
 
-        prioridad: "-"
+        prioridad: ""
 
-      });
+      };
+
+      priorizados.push(
+        filaTotales
+      );
 
       survey.setValue(
         "priorizacion_criticos",

@@ -111,8 +111,8 @@ const pinarConfig = {
           name: "aspectos_criticos",
           title: "Aspectos críticos",
           columns: [
-            { name: "aspecto", title: "Aspecto crítico", cellType: "text" },
-            { name: "riesgo", title: "Riesgo asociado", cellType: "text" }
+            { name: "aspecto", title: "Aspecto crítico", cellType: "comment", width: "400px" },
+            { name: "riesgo", title: "Riesgo asociado", cellType: "comment", width: "400px" }
           ],
           addRowText: "Agregar aspecto"
         }
@@ -237,8 +237,9 @@ const pinarConfig = {
             {
               name: "aspecto",
               title: "Aspecto crítico",
-              cellType: "text",
-              readOnly: true
+              cellType: "comment",
+              readOnly: true,
+              width: "400px"
             },
 
             {
@@ -338,8 +339,9 @@ const pinarConfig = {
             {
               name: "aspecto",
               title: "Aspecto crítico",
-              cellType: "text",
-              readOnly: true
+              cellType: "comment",
+              readOnly: true,
+              width: "400px"
             },
 
             {
@@ -440,8 +442,9 @@ const pinarConfig = {
             {
               name: "aspecto",
               title: "Aspecto crítico",
-              cellType: "text",
-              readOnly: true
+              cellType: "comment",
+              readOnly: true,
+              width: "400px"
             },
 
             {
@@ -542,8 +545,9 @@ const pinarConfig = {
             {
               name: "aspecto",
               title: "Aspecto crítico",
-              cellType: "text",
-              readOnly: true
+              cellType: "comment",
+              readOnly: true,
+              width: "400px"
             },
 
             {
@@ -648,8 +652,9 @@ const pinarConfig = {
             {
               name: "aspecto",
               title: "Aspecto crítico",
-              cellType: "text",
-              readOnly: true
+              cellType: "comment",
+              readOnly: true,
+              width: "400px"
             },
             {
               name: "admin",

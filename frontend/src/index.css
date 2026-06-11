@@ -59,3 +59,29 @@ body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+/* PINAR matrix tables – full text visibility */
+.sv-string-viewer {
+  white-space: normal !important;
+  word-break: break-word;
+}
+
+.sv-matrix__cell textarea,
+.sd-input.sd-comment {
+  min-height: 80px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Prevent text truncation in matrix header cells */
+.sd-matrix__cell .sd-matrix__text,
+.sd-table__cell .sd-table__text {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+}
+
+/* Ensure matrix cells expand to fit content */
+.sd-table__cell {
+  vertical-align: top;
+}

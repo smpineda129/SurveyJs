@@ -72,16 +72,72 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
         "admin_archivos",
         nuevaTabla
       );
+      const acceso =
+        survey.getValue(
+          "acceso_informacion"
+        ) || [];
+
+      const preservacion =
+        survey.getValue(
+          "preservacion_informacion"
+        ) || [];
+
+      const tecnologia =
+        survey.getValue(
+          "tecnologia_seguridad"
+        ) || [];
+
+      const fortalecimiento =
+        survey.getValue(
+          "fortalecimiento_articulacion"
+        ) || [];
 
       const priorizados =
-        nuevaMatriz.map(
+        nuevaTabla.map(
           (row, index) => {
+
+            const adminTotal =
+              Number(
+                row.total || 0
+              );
+
+            const accesoTotal =
+              Number(
+                acceso[index]?.total || 0
+              );
+
+            const preservacionTotal =
+              Number(
+                preservacion[index]?.total || 0
+              );
+
+            const tecnologiaTotal =
+              Number(
+                tecnologia[index]?.total || 0
+              );
+
+            const fortalecimientoTotal =
+              Number(
+                fortalecimiento[index]?.total || 0
+              );
+
+            const totalGeneral =
+
+              adminTotal +
+
+              accesoTotal +
+
+              preservacionTotal +
+
+              tecnologiaTotal +
+
+              fortalecimientoTotal;
 
             let prioridad =
               "Baja";
 
             if (
-              row.total >= 30
+              totalGeneral >= 35
             ) {
 
               prioridad =
@@ -90,7 +146,7 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
             }
 
             else if (
-              row.total >= 20
+              totalGeneral >= 20
             ) {
 
               prioridad =
@@ -106,17 +162,61 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
               aspecto:
                 row.aspecto,
 
+              admin:
+                adminTotal,
+
+              acceso:
+                accesoTotal,
+
+              preservacion:
+                preservacionTotal,
+
+              tecnologia:
+                tecnologiaTotal,
+
+              fortalecimiento:
+                fortalecimientoTotal,
+
+              total:
+                totalGeneral,
+
               prioridad
 
             };
 
           }
-        );
+        )
+
+          .sort(
+            (a, b) =>
+              b.total - a.total
+          );
 
       survey.setValue(
         "priorizacion_criticos",
         priorizados
       );
+
+      console.log(
+        "ACCESO:",
+        acceso
+      );
+
+      console.log(
+        "PRESERVACION:",
+        preservacion
+      );
+
+      console.log(
+        "TECNOLOGIA:",
+        tecnologia
+      );
+
+      console.log(
+        "FORTALECIMIENTO:",
+        fortalecimiento
+      );
+
 
     };
   const generarObjetivos = (survey, priorizados) => {
@@ -608,6 +708,46 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
 
         survey.setValue(
           "admin_archivos",
+          aspectos.map(
+            item => ({
+              aspecto:
+                item.aspecto || ""
+            })
+          )
+        );
+
+        survey.setValue(
+          "acceso_informacion",
+          aspectos.map(
+            item => ({
+              aspecto:
+                item.aspecto || ""
+            })
+          )
+        );
+
+        survey.setValue(
+          "preservacion_informacion",
+          aspectos.map(
+            item => ({
+              aspecto:
+                item.aspecto || ""
+            })
+          )
+        );
+
+        survey.setValue(
+          "tecnologia_seguridad",
+          aspectos.map(
+            item => ({
+              aspecto:
+                item.aspecto || ""
+            })
+          )
+        );
+
+        survey.setValue(
+          "fortalecimiento_articulacion",
           aspectos.map(
             item => ({
               aspecto:

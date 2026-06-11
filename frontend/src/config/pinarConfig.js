@@ -120,7 +120,6 @@ const pinarConfig = {
     },
 
     // 🟦 4. CALIFICACION EJES ARTICULADORES
-    // 🟦 4. ADMINISTRACIÓN DE ARCHIVOS
     {
       name: "ADMINISTRACION_ARCHIVOS",
       elements: [
@@ -219,6 +218,410 @@ const pinarConfig = {
               cellType: "text",
               readOnly: true
             }
+          ]
+        }
+      ]
+    },
+
+    {
+      name: "ACCESO_INFORMACION",
+      elements: [
+        {
+          type: "matrixdynamic",
+          name: "acceso_informacion",
+          title: "Acceso a la Información",
+          allowAddRows: false,
+          allowRemoveRows: false,
+          columns: [
+            {
+              name: "aspecto",
+              title: "Aspecto crítico",
+              cellType: "text",
+              readOnly: true
+            },
+
+            {
+              name: "politicas",
+              title: "Se cuenta con políticas que garanticen la disponibilidad y accesibilidad de la información.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "personal",
+              title: "Se cuenta con personal idóneo y suficiente para atender las necesidades documentales y de archivo de los ciudadanos.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "comunicacion",
+              title: "Se cuenta con esquemas de comunicación en la entidad para difundir la importancia de la gestión de documentos.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "capacitacion",
+              title: "Se cuentan con esquemas de capacitación e información internos para la gestión de documentos articulados con el PIC.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "instrumentos",
+              title: "Se cuenta con instrumentos archivísticos de descripción y clasificación para sus archivos.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "herramientas",
+              title: "El personal hace buen uso de las herramientas tecnológicas destinadas a la administración de la información.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "usuarios",
+              title: "Se ha establecido la caracterización de usuarios de acuerdo con sus necesidades de información.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "nuevas_tecnologias",
+              title: "Se cuenta con iniciativas para fomentar el uso de nuevas tecnologías para optimizar el uso del papel.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "gel",
+              title: "Se tiene implementada la estrategia de Gobierno en Línea.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "canales",
+              title: "Se cuenta con canales de servicio, atención y orientación al ciudadano.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "total",
+              title: "TOTAL",
+              cellType: "text",
+              readOnly: true
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      name: "PRESERVACION_INFORMACION",
+      elements: [
+        {
+          type: "matrixdynamic",
+          name: "preservacion_informacion",
+          title: "Preservación de la Información",
+
+          allowAddRows: false,
+          allowRemoveRows: false,
+
+          columns: [
+
+            {
+              name: "aspecto",
+              title: "Aspecto crítico",
+              cellType: "text",
+              readOnly: true
+            },
+
+            {
+              name: "procesos_preservacion",
+              title: "Se cuenta con procesos y herramientas normalizados para la preservación y conservación a largo plazo de los documentos.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "metadatos",
+              title: "Se cuenta con un esquema de metadatos integrado a otros sistemas de gestión.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "archivos_centrales",
+              title: "Se cuenta con archivos centrales e históricos.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "normativa",
+              title: "La conservación y preservación se basa en la normativa y requisitos legales, administrativos y técnicos aplicables.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "sic",
+              title: "Se cuenta con un Sistema Integrado de Conservación (SIC).",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "infraestructura",
+              title: "Se cuenta con infraestructura adecuada para almacenamiento, conservación y preservación documental.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "valoracion",
+              title: "Se cuenta con procesos documentados de valoración y disposición final.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "estandares",
+              title: "Se tienen implementados estándares que garanticen la preservación y conservación de los documentos.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "migracion",
+              title: "Se cuenta con esquemas de migración y conversión normalizados.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "continuidad",
+              title: "Se cuenta con modelos o esquemas de continuidad del negocio.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "total",
+              title: "TOTAL",
+              cellType: "text",
+              readOnly: true
+            }
+
+          ]
+        }
+      ]
+    },
+
+    {
+      name: "TECNOLOGIA_SEGURIDAD",
+      elements: [
+        {
+          type: "matrixdynamic",
+          name: "tecnologia_seguridad",
+          title: "Aspectos Tecnológicos y de Seguridad",
+
+          allowAddRows: false,
+          allowRemoveRows: false,
+
+          columns: [
+
+            {
+              name: "aspecto",
+              title: "Aspecto crítico",
+              cellType: "text",
+              readOnly: true
+            },
+
+            {
+              name: "politicas_seguridad",
+              title: "Se cuenta con políticas asociadas a herramientas tecnológicas que respalden la seguridad, accesibilidad, integridad y autenticidad de la información.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "herramientas",
+              title: "Se cuenta con herramientas tecnológicas acordes a las necesidades de la entidad.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "confidencialidad",
+              title: "Se cuenta con acuerdos de confidencialidad y políticas de protección de datos.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "adopcion_tecnologias",
+              title: "Se cuenta con políticas que permitan adoptar tecnologías orientadas a la gestión documental.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "aplicaciones",
+              title: "Las aplicaciones son capaces de generar y gestionar documentos de valor archivístico.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "gestion_informacion",
+              title: "Se encuentra estandarizada la administración y gestión de la información.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "mecanismos_tecnicos",
+              title: "Se cuenta con mecanismos técnicos que permitan mejorar la adquisición, uso y mantenimiento de herramientas tecnológicas.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "servicio_ciudadano",
+              title: "Se cuenta con tecnología asociada al servicio al ciudadano.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "riesgos",
+              title: "Se cuenta con modelos para la identificación, evaluación y análisis de riesgos.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "directrices_seguridad",
+              title: "Se cuenta con directrices de seguridad de información relacionadas con el recurso humano, entorno físico y electrónico.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "total",
+              title: "TOTAL",
+              cellType: "text",
+              readOnly: true
+            }
+
+          ]
+        }
+      ]
+    },
+
+    {
+      name: "FORTALECIMIENTO_ARTICULACION",
+      elements: [
+        {
+          type: "matrixdynamic",
+          name: "fortalecimiento_articulacion",
+          title: "Fortalecimiento y Articulación",
+
+          allowAddRows: false,
+          allowRemoveRows: false,
+
+          columns: [
+
+            {
+              name: "aspecto",
+              title: "Aspecto crítico",
+              cellType: "text",
+              readOnly: true
+            },
+
+            {
+              name: "mipg",
+              title: "La gestión documental se encuentra implementada acorde con el Modelo Integrado de Planeación y Gestión.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "articulacion_politica",
+              title: "Se tiene articulada la política de gestión documental con los sistemas y modelos de gestión de la entidad.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "alianzas",
+              title: "Se cuenta con alianzas estratégicas que permitan mejorar e innovar la función archivística.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "marco_legal",
+              title: "Se aplica el marco legal y normativo concerniente a la función archivística.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "sgd",
+              title: "Se cuenta con un Sistema de Gestión Documental basado en estándares nacionales e internacionales.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "gestion_cambio",
+              title: "Se tienen implementadas acciones para la gestión del cambio.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "mejora_continua",
+              title: "Se cuenta con procesos de mejora continua.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "instancias_asesoras",
+              title: "Se cuenta con instancias asesoras que formulen lineamientos para la aplicación de la función archivística.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "roles",
+              title: "Se tienen identificados los roles y responsabilidades del personal y las áreas frente a los documentos.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "alta_direccion",
+              title: "La alta dirección está comprometida con el desarrollo de la función archivística.",
+              cellType: "dropdown",
+              choices: [0, 1]
+            },
+
+            {
+              name: "total",
+              title: "TOTAL",
+              cellType: "text",
+              readOnly: true
+            }
+
           ]
         }
       ]

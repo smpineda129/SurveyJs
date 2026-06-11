@@ -222,10 +222,6 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
               b.total - a.total
           );
 
-      priorizados.push(
-        filaTotales
-      );
-
       const totalAdmin =
         priorizados.reduce(
           (sum, row) =>

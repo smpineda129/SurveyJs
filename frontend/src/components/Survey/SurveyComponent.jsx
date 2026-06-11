@@ -26,6 +26,24 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
   onCompleteRef.current = onComplete;
   formTypeRef.current = formType;
 
+  const calcularTotalFila = (
+    row,
+    excluir = ["aspecto", "total"]
+  ) => {
+
+    return Object.keys(row)
+      .filter(
+        key =>
+          !excluir.includes(key)
+      )
+      .reduce(
+        (sum, key) =>
+          sum + Number(row[key] || 0),
+        0
+      );
+
+  };
+
   // FUNCIÓN PARA CALCULAR TOTALES
   const calcularTotales =
     (survey) => {
@@ -40,26 +58,7 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
         data.map((row) => {
 
           const total =
-
-            Number(row.ciclo_vital || 0) +
-
-            Number(row.instrumentos || 0) +
-
-            Number(row.seguimiento || 0) +
-
-            Number(row.politica || 0) +
-
-            Number(row.electronica || 0) +
-
-            Number(row.flujos || 0) +
-
-            Number(row.documentacion || 0) +
-
-            Number(row.infraestructura || 0) +
-
-            Number(row.personal || 0) +
-
-            Number(row.presupuesto || 0);
+            calcularTotalFila(row);
 
           return {
             ...row,
@@ -72,25 +71,56 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
         "admin_archivos",
         nuevaTabla
       );
+
+      const recalcularTabla = (
+        nombre
+      ) => {
+
+        const tabla =
+          survey.getValue(
+            nombre
+          ) || [];
+
+        const nueva =
+          tabla.map(
+            row => ({
+              ...row,
+              total:
+                calcularTotalFila(
+                  row
+                )
+            })
+          );
+
+        survey.setValue(
+          nombre,
+          nueva
+        );
+
+        return nueva;
+
+      };
+
       const acceso =
-        survey.getValue(
+        recalcularTabla(
           "acceso_informacion"
-        ) || [];
+        );
 
       const preservacion =
-        survey.getValue(
+        recalcularTabla(
           "preservacion_informacion"
-        ) || [];
+        );
 
       const tecnologia =
-        survey.getValue(
+        recalcularTabla(
           "tecnologia_seguridad"
-        ) || [];
+        );
 
       const fortalecimiento =
-        survey.getValue(
+        recalcularTabla(
           "fortalecimiento_articulacion"
-        ) || [];
+        );
+
 
       const priorizados =
         nuevaTabla.map(

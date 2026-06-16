@@ -30,11 +30,6 @@ export const generatePinarDocx = async (req, res) => {
 
     const data = req.body.surveyData || req.body;
 
-    console.log(
-      "DATA DOCX:",
-      data
-    );
-
     const aspectosCriticos =
 
       data.aspectos_criticos ||
@@ -294,7 +289,7 @@ export const generatePinarDocx = async (req, res) => {
 
             new Paragraph({
               text:
-                "PLAN INSTITUCIONAL DE ARCHIVOS - PINAR",
+                "PRUEBA CONTROLADOR NUEVO PINAR",
 
               heading: HeadingLevel.TITLE,
 

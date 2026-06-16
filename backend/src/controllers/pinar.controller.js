@@ -971,7 +971,7 @@ export const generatePinarDocx = async (req, res) => {
 
             new Paragraph({
               text:
-                "5.3. Priorización de aspectos críticos",
+                "5.3. Priorización de aspectos",
 
               heading:
                 HeadingLevel.HEADING_2,

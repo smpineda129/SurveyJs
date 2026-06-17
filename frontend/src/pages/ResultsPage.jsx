@@ -260,6 +260,27 @@ export default function ResultsPage() {
     { key: 'pinar', label: 'PINAR' },
   ];
 
+  useEffect(() => {
+
+    if (
+      selectedSurvey?.formType === "pinar"
+    ) {
+
+      console.log(
+        "PINAR DATA:",
+        selectedSurvey.surveyData
+      );
+
+      console.log(
+        "PRIORIZACION:",
+        selectedSurvey.surveyData
+          ?.priorizacion_criticos
+      );
+
+    }
+
+  }, [selectedSurvey]);
+
   return (
     <Box className="fade-in" sx={{ maxWidth: 1200, mx: 'auto' }}>
       {/* Header row */}

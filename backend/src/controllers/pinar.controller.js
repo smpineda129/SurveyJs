@@ -289,7 +289,7 @@ export const generatePinarDocx = async (req, res) => {
 
             new Paragraph({
               text:
-                "PRUEBA CONTROLADOR NUEVO PINAR",
+                "VERSION 16 JUNIO 2026",
 
               heading: HeadingLevel.TITLE,
 

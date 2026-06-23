@@ -278,30 +278,6 @@ export default function ResultsPage() {
           ?.acceso_informacion?.[0]
       );
 
-      console.log(
-        "PRESERVACION:",
-        selectedSurvey.surveyData
-          ?.preservacion_informacion?.[0]
-      );
-
-      console.log(
-        "TECNOLOGIA:",
-        selectedSurvey.surveyData
-          ?.tecnologia_seguridad?.[0]
-      );
-
-      console.log(
-        "FORTALECIMIENTO:",
-        selectedSurvey.surveyData
-          ?.fortalecimiento_articulacion?.[0]
-      );
-
-      console.log(
-        "PRIORIZACION:",
-        selectedSurvey.surveyData
-          ?.priorizacion_criticos
-      );
-
     }
 
   }, [selectedSurvey]);
@@ -710,17 +686,100 @@ export default function ResultsPage() {
                             selectedSurvey.surveyData[field.name]
                           ) ? (
 
-                            <Typography
-                              variant="body2"
-                              color="primary"
-                              fontWeight={600}
+                            <TableContainer
+                              sx={{
+                                mt: 1,
+                                width: "100%"
+                              }}
                             >
-                              Tabla con {
-                                selectedSurvey.surveyData[
-                                  field.name
-                                ].length
-                              } registros
-                            </Typography>
+
+                              <Table
+                                size="small"
+                              >
+
+                                <TableHead>
+
+                                  <TableRow>
+
+                                    {Object.keys(
+                                      selectedSurvey.surveyData[
+                                      field.name
+                                      ][0] || {}
+                                    ).map(
+                                      (col) => (
+
+                                        <TableCell
+                                          key={col}
+                                          sx={{
+                                            fontWeight: 700
+                                          }}
+                                        >
+                                          {col}
+                                        </TableCell>
+
+                                      )
+                                    )}
+
+                                  </TableRow>
+
+                                </TableHead>
+
+                                <TableBody>
+
+                                  {selectedSurvey.surveyData[
+                                    field.name
+                                  ].map(
+                                    (
+                                      row,
+                                      index
+                                    ) => (
+
+                                      <TableRow
+                                        key={index}
+                                        sx={
+                                          row.aspecto ===
+                                            "TOTAL"
+                                            ? {
+                                              backgroundColor:
+                                                "#E3F2FD"
+                                            }
+                                            : {}
+                                        }
+                                      >
+
+                                        {Object.keys(
+                                          row
+                                        ).map(
+                                          (col) => (
+
+                                            <TableCell
+                                              key={col}
+                                              sx={{
+                                                fontWeight:
+                                                  row.aspecto ===
+                                                    "TOTAL"
+                                                    ? 700
+                                                    : 400
+                                              }}
+                                            >
+                                              {
+                                                row[col]
+                                              }
+                                            </TableCell>
+
+                                          )
+                                        )}
+
+                                      </TableRow>
+
+                                    )
+                                  )}
+
+                                </TableBody>
+
+                              </Table>
+
+                            </TableContainer>
 
                           ) : (
 

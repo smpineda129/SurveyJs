@@ -522,8 +522,8 @@ export default function ResultsPage() {
                   </Typography>
                   <Grid container spacing={1.5}>
                     {page.fields.filter((f) => selectedSurvey.surveyData[f.name] !== undefined).map((field) => (
-                      <Grid item xs={12} sm={6} key={field.name}>
-                        <Box sx={{ bgcolor: '#F8FAFC', p: 1.5, borderRadius: 2, border: '1px solid #E5E7EB' }}>
+                      <Grid item xs={12} sm={12} key={field.name}>
+                        <Box sx={{ bgcolor: '#F8FAFC', p: 1.5, borderRadius: 2, border: '1px solid #E5E7EB', width: '100%' }}>
                           <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 0.25 }}>
                             {field.title}
                           </Typography>

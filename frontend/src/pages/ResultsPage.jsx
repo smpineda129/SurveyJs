@@ -530,12 +530,24 @@ export default function ResultsPage() {
                           {field.name ===
                             "priorizacion_criticos" ? (
 
-                            <Box sx={{ mt: 1 }}>
+                            <Box
+                              sx={{
+                                mt: 1,
+                                width: "100%"
+                              }}
+                            >
 
-                              <TableContainer>
+                              <TableContainer
+                                sx={{
+                                  width: "100%"
+                                }}
+                              >
 
                                 <Table
                                   size="small"
+                                  sx={{
+                                    width: "100%"
+                                  }}
                                 >
 
                                   <TableHead>

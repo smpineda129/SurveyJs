@@ -527,9 +527,36 @@ export default function ResultsPage() {
                           <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 0.25 }}>
                             {field.title}
                           </Typography>
-                          <Typography variant="body2" fontWeight={500}>
-                            {String(selectedSurvey.surveyData[field.name])}
-                          </Typography>
+                          {Array.isArray(
+                            selectedSurvey.surveyData[field.name]
+                          ) ? (
+
+                            <Typography
+                              variant="body2"
+                              color="primary"
+                              fontWeight={600}
+                            >
+                              Tabla con {
+                                selectedSurvey.surveyData[
+                                  field.name
+                                ].length
+                              } registros
+                            </Typography>
+
+                          ) : (
+
+                            <Typography
+                              variant="body2"
+                              fontWeight={500}
+                            >
+                              {String(
+                                selectedSurvey.surveyData[
+                                field.name
+                                ]
+                              )}
+                            </Typography>
+
+                          )}
                         </Box>
                       </Grid>
                     ))}

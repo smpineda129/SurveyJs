@@ -267,8 +267,33 @@ export default function ResultsPage() {
     ) {
 
       console.log(
-        "PINAR DATA:",
+        "ADMIN:",
         selectedSurvey.surveyData
+          ?.admin_archivos?.[0]
+      );
+
+      console.log(
+        "ACCESO:",
+        selectedSurvey.surveyData
+          ?.acceso_informacion?.[0]
+      );
+
+      console.log(
+        "PRESERVACION:",
+        selectedSurvey.surveyData
+          ?.preservacion_informacion?.[0]
+      );
+
+      console.log(
+        "TECNOLOGIA:",
+        selectedSurvey.surveyData
+          ?.tecnologia_seguridad?.[0]
+      );
+
+      console.log(
+        "FORTALECIMIENTO:",
+        selectedSurvey.surveyData
+          ?.fortalecimiento_articulacion?.[0]
       );
 
       console.log(

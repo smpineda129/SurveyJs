@@ -591,6 +591,15 @@ export default function ResultsPage() {
 
                                           <TableRow
                                             key={index}
+                                            sx={
+                                              row.aspecto === "TOTAL"
+                                                ? {
+                                                  backgroundColor:
+                                                    "#E3F2FD",
+                                                  fontWeight: 700
+                                                }
+                                                : {}
+                                            }
                                           >
 
                                             <TableCell>
@@ -629,10 +638,16 @@ export default function ResultsPage() {
                                               }
                                             </TableCell>
 
-                                            <TableCell>
-                                              {
-                                                row.total
-                                              }
+                                            <TableCell
+                                              sx={{
+                                                fontWeight:
+                                                  row.aspecto ===
+                                                    "TOTAL"
+                                                    ? 700
+                                                    : 400
+                                              }}
+                                            >
+                                              {row.total}
                                             </TableCell>
 
                                             <TableCell>

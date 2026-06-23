@@ -527,7 +527,134 @@ export default function ResultsPage() {
                           <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 0.25 }}>
                             {field.title}
                           </Typography>
-                          {Array.isArray(
+                          {field.name ===
+                            "priorizacion_criticos" ? (
+
+                            <Box sx={{ mt: 1 }}>
+
+                              <TableContainer>
+
+                                <Table
+                                  size="small"
+                                >
+
+                                  <TableHead>
+
+                                    <TableRow>
+
+                                      <TableCell>
+                                        Aspecto
+                                      </TableCell>
+
+                                      <TableCell>
+                                        Admin
+                                      </TableCell>
+
+                                      <TableCell>
+                                        Acceso
+                                      </TableCell>
+
+                                      <TableCell>
+                                        Preserv.
+                                      </TableCell>
+
+                                      <TableCell>
+                                        Tec.
+                                      </TableCell>
+
+                                      <TableCell>
+                                        Fort.
+                                      </TableCell>
+
+                                      <TableCell>
+                                        Total
+                                      </TableCell>
+
+                                      <TableCell>
+                                        Prioridad
+                                      </TableCell>
+
+                                    </TableRow>
+
+                                  </TableHead>
+
+                                  <TableBody>
+
+                                    {selectedSurvey
+                                      .surveyData
+                                      .priorizacion_criticos
+                                      ?.map(
+                                        (
+                                          row,
+                                          index
+                                        ) => (
+
+                                          <TableRow
+                                            key={index}
+                                          >
+
+                                            <TableCell>
+                                              {
+                                                row.aspecto
+                                              }
+                                            </TableCell>
+
+                                            <TableCell>
+                                              {
+                                                row.admin
+                                              }
+                                            </TableCell>
+
+                                            <TableCell>
+                                              {
+                                                row.acceso
+                                              }
+                                            </TableCell>
+
+                                            <TableCell>
+                                              {
+                                                row.preservacion
+                                              }
+                                            </TableCell>
+
+                                            <TableCell>
+                                              {
+                                                row.tecnologia
+                                              }
+                                            </TableCell>
+
+                                            <TableCell>
+                                              {
+                                                row.fortalecimiento
+                                              }
+                                            </TableCell>
+
+                                            <TableCell>
+                                              {
+                                                row.total
+                                              }
+                                            </TableCell>
+
+                                            <TableCell>
+                                              {
+                                                row.prioridad
+                                              }
+                                            </TableCell>
+
+                                          </TableRow>
+
+                                        )
+                                      )}
+
+                                  </TableBody>
+
+                                </Table>
+
+                              </TableContainer>
+
+                            </Box>
+
+                          ) : Array.isArray(
                             selectedSurvey.surveyData[field.name]
                           ) ? (
 

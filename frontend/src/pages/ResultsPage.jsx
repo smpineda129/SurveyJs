@@ -686,100 +686,15 @@ export default function ResultsPage() {
                             selectedSurvey.surveyData[field.name]
                           ) ? (
 
-                            <TableContainer
+                            <Box
                               sx={{
-                                mt: 1,
-                                width: "100%"
+                                bgcolor: "red",
+                                color: "white",
+                                p: 2
                               }}
                             >
-
-                              <Table
-                                size="small"
-                              >
-
-                                <TableHead>
-
-                                  <TableRow>
-
-                                    {Object.keys(
-                                      selectedSurvey.surveyData[
-                                      field.name
-                                      ][0] || {}
-                                    ).map(
-                                      (col) => (
-
-                                        <TableCell
-                                          key={col}
-                                          sx={{
-                                            fontWeight: 700
-                                          }}
-                                        >
-                                          {col}
-                                        </TableCell>
-
-                                      )
-                                    )}
-
-                                  </TableRow>
-
-                                </TableHead>
-
-                                <TableBody>
-
-                                  {selectedSurvey.surveyData[
-                                    field.name
-                                  ].map(
-                                    (
-                                      row,
-                                      index
-                                    ) => (
-
-                                      <TableRow
-                                        key={index}
-                                        sx={
-                                          row.aspecto ===
-                                            "TOTAL"
-                                            ? {
-                                              backgroundColor:
-                                                "#E3F2FD"
-                                            }
-                                            : {}
-                                        }
-                                      >
-
-                                        {Object.keys(
-                                          row
-                                        ).map(
-                                          (col) => (
-
-                                            <TableCell
-                                              key={col}
-                                              sx={{
-                                                fontWeight:
-                                                  row.aspecto ===
-                                                    "TOTAL"
-                                                    ? 700
-                                                    : 400
-                                              }}
-                                            >
-                                              {
-                                                row[col]
-                                              }
-                                            </TableCell>
-
-                                          )
-                                        )}
-
-                                      </TableRow>
-
-                                    )
-                                  )}
-
-                                </TableBody>
-
-                              </Table>
-
-                            </TableContainer>
+                              TABLA NUEVA FUNCIONANDO
+                            </Box>
 
                           ) : (
 

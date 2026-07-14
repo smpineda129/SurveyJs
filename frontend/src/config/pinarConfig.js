@@ -125,7 +125,6 @@ const pinarConfig = {
     // 4. CALIFICACION EJES ARTICULADORES
     {
       name: "ADMINISTRACION_ARCHIVOS",
-      navigationTitle: "ADMIN",
       elements: [
         {
           type: "matrixdynamic",

@@ -611,6 +611,8 @@ export async function generatePinarVision(data) {
         .map(o => o.objetivo)
         .join(", ");
 
+    const vision = data.vision || "";
+
     const prompt =
       `
 Eres un experto archivístico colombiano especializado en formulación de PINAR según lineamientos del Archivo General de la Nación.
@@ -622,23 +624,30 @@ DATOS:
 Entidad:
 ${entidad}
 
-Aspectos críticos:
+La entidad definió la siguiente visión institucional:
+
+${vision}
+
+La visión estratégica del PINAR debe estar alineada con esta visión institucional y explicar cómo la gestión documental contribuirá a su cumplimiento.
+
+Aspectos críticos priorizados:
 ${aspectos}
 
 Objetivos estratégicos:
 ${objetivos}
 
-La visión estratégica debe:
+La visión estratégica del PINAR debe:
 
-- tener tono institucional
-- sonar técnica
-- mencionar fortalecimiento archivístico
-- mencionar preservación documental
-- mencionar acceso a la información
-- mencionar mejora continua
-- mencionar modernización documental
-- ser máximo 1 párrafo
-- sonar como documento oficial colombiano
+- estar alineada con la visión institucional suministrada por la entidad
+- explicar cómo la gestión documental contribuirá al cumplimiento de dicha visión
+- integrar los aspectos críticos priorizados como oportunidades de mejora
+- reflejar los objetivos estratégicos definidos para el PINAR
+- mantener un lenguaje técnico e institucional
+- redactarse en un único párrafo
+- no copiar literalmente la visión institucional, sino desarrollarla desde el enfoque archivístico
+- sonar como un documento oficial colombiano
+- evidenciar la articulación del PINAR con el direccionamiento estratégico institucional
+- proyectar el estado futuro que la entidad espera alcanzar mediante la implementación del PINAR
 
 NO uses títulos.
 NO uses listas.

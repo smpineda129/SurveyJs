@@ -695,3 +695,112 @@ NO uses listas.
   }
 
 }
+
+export async function generateEjesArticuladoresIA(aspectos) {
+
+  // Fallback estático si no hay aspectos críticos (para no romper el flujo)
+  const EJES_DEFAULT = [
+    { eje: "Administración de archivos", descripcion: "Involucra aspectos de infraestructura, presupuesto, normatividad, política, procesos, procedimientos y personal." },
+    { eje: "Acceso a la información", descripcion: "Comprende aspectos relacionados con transparencia, participación, servicio al ciudadano y organización documental." },
+    { eje: "Preservación de la información", descripcion: "Incluye aspectos relacionados con conservación y almacenamiento de la información." },
+    { eje: "Aspectos tecnológicos y de seguridad", descripcion: "Abarca aspectos relacionados con seguridad de la información e infraestructura tecnológica." },
+    { eje: "Fortalecimiento y articulación", descripcion: "Involucra aspectos relacionados con armonización de la gestión documental y otros modelos de gestión." },
+  ];
+
+  if (!aspectos || aspectos.length === 0) {
+    return EJES_DEFAULT;
+  }
+
+  const aspectosTexto =
+    aspectos
+      .map((a) => `- ${a.aspecto}`)
+      .join("\n");
+
+  const prompt = `
+
+Eres un experto archivístico colombiano especializado en PINAR según lineamientos del Archivo General de la Nación.
+
+Los ejes articuladores de la función archivística, según la Ley 594 de 2000 artículo 4, son exactamente estos 5:
+1. Administración de archivos
+2. Acceso a la información
+3. Preservación de la información
+4. Aspectos tecnológicos y de seguridad
+5. Fortalecimiento y articulación
+
+A partir de los siguientes aspectos críticos institucionales, redacta una descripción específica para CADA UNO de los 5 ejes articuladores, explicando cómo se relaciona ese eje con los aspectos críticos identificados en esta entidad. No inventes ejes adicionales ni cambies los nombres.
+
+Devuelve únicamente un JSON válido, con exactamente 5 elementos, en este formato:
+
+[
+  { "eje": "Administración de archivos", "descripcion": "..." },
+  { "eje": "Acceso a la información", "descripcion": "..." },
+  { "eje": "Preservación de la información", "descripcion": "..." },
+  { "eje": "Aspectos tecnológicos y de seguridad", "descripcion": "..." },
+  { "eje": "Fortalecimiento y articulación", "descripcion": "..." }
+]
+
+Aspectos críticos:
+${aspectosTexto}
+
+`;
+
+  try {
+
+    const client =
+      new OpenAI({
+        apiKey:
+          process.env.GPT_API
+      });
+
+    const response =
+      await client.chat.completions.create({
+
+        model: "gpt-4o-mini",
+
+        messages: [
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+
+        temperature: 0.4,
+
+        max_tokens: 1200
+
+      });
+
+    const text =
+      response
+        .choices[0]
+        .message
+        .content
+        .trim();
+
+    const cleanText =
+      text
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim();
+
+    const parsed = JSON.parse(cleanText);
+
+    // Seguridad: si la IA devuelve menos de 5 ejes o algo raro, usamos el default
+    if (!Array.isArray(parsed) || parsed.length === 0) {
+      return EJES_DEFAULT;
+    }
+
+    return parsed;
+
+  } catch (error) {
+
+    console.error(
+      "ERROR EJES ARTICULADORES IA:",
+      error
+    );
+
+    return EJES_DEFAULT;
+
+  }
+
+}

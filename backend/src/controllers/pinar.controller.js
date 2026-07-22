@@ -3,7 +3,8 @@ import {
   generatePinarVision,
   generateAspectosCriticosIA,
   generateObjetivosIA,
-  generatePlanesIA
+  generatePlanesIA,
+  generateEjesArticuladoresIA
 } from "../services/gptSummarizer.js";
 
 import Survey
@@ -21,8 +22,6 @@ import {
   WidthType,
   AlignmentType,
 } from "docx";
-
-console.log(generatePinarIntroduction);
 
 export const generatePinarDocx = async (req, res) => {
 
@@ -81,35 +80,14 @@ export const generatePinarDocx = async (req, res) => {
         objetivos
       );
 
-    if (data._id) {
+    // EJES ARTICULADORES (IA) — NUEVO
+    const ejesArticuladores =
 
-      await Survey.findByIdAndUpdate(
+      data.ejes_articuladores_ia ||
 
-        data._id,
-
-        {
-
-          $set: {
-
-            "surveyData.introduccion_ia":
-              introduccionIA,
-
-            "surveyData.vision_ia":
-              visionEstrategica,
-
-            "surveyData.objetivos_ia":
-              objetivos,
-
-            "surveyData.planes_ia":
-              planesIA,
-
-          }
-
-        }
-
+      await generateEjesArticuladoresIA(
+        aspectosCriticos
       );
-
-    }
 
     const riesgos =
       data.riesgos_automaticos || [];
@@ -176,8 +154,6 @@ export const generatePinarDocx = async (req, res) => {
 
       await generatePinarIntroduction(data);
 
-    console.log(introduccionIA);
-
     // PLANES
     const responsableGeneral =
       "Área de Gestión Documental";
@@ -214,6 +190,40 @@ export const generatePinarDocx = async (req, res) => {
       data.vision_ia ||
 
       await generatePinarVision(data);
+
+    // GUARDAR EN BD (movido aquí: ya están declaradas introduccionIA, visionEstrategica y ejesArticuladores)
+    if (data._id) {
+
+      await Survey.findByIdAndUpdate(
+
+        data._id,
+
+        {
+
+          $set: {
+
+            "surveyData.introduccion_ia":
+              introduccionIA,
+
+            "surveyData.vision_ia":
+              visionEstrategica,
+
+            "surveyData.objetivos_ia":
+              objetivos,
+
+            "surveyData.planes_ia":
+              planesIA,
+
+            "surveyData.ejes_articuladores_ia":
+              ejesArticuladores,
+
+          }
+
+        }
+
+      );
+
+    }
 
     let conclusionDinamica =
       `De acuerdo con los resultados obtenidos en el diagnóstico archivístico institucional, se identificaron ${totalAspectos} aspectos críticos que requieren fortalecimiento mediante estrategias orientadas a la gestión documental, preservación de la información y fortalecimiento institucional.`;
@@ -796,7 +806,7 @@ export const generatePinarDocx = async (req, res) => {
               ],
             }),
 
-            // EJES ARTICULADORES
+            // EJES ARTICULADORES (AHORA DINÁMICO CON IA)
             new Paragraph({
               text:
                 "5.2. Ejes articuladores",
@@ -850,115 +860,32 @@ export const generatePinarDocx = async (req, res) => {
                   ],
                 }),
 
-                new TableRow({
-                  children: [
+                ...ejesArticuladores.map(
+                  (item) =>
 
-                    new TableCell({
+                    new TableRow({
                       children: [
-                        new Paragraph(
-                          "Administración de archivos"
-                        ),
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(
+                              item.eje || ""
+                            ),
+                          ],
+                        }),
+
+                        new TableCell({
+                          children: [
+                            new Paragraph(
+                              item.descripcion || ""
+                            ),
+                          ],
+                        }),
+
                       ],
-                    }),
+                    })
 
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          "Involucra aspectos de infraestructura, presupuesto, normatividad, política, procesos, procedimientos y personal."
-                        ),
-                      ],
-                    }),
-
-                  ],
-                }),
-
-                new TableRow({
-                  children: [
-
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          "Acceso a la información"
-                        ),
-                      ],
-                    }),
-
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          "Comprende aspectos relacionados con transparencia, participación, servicio al ciudadano y organización documental."
-                        ),
-                      ],
-                    }),
-
-                  ],
-                }),
-
-                new TableRow({
-                  children: [
-
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          "Preservación de la información"
-                        ),
-                      ],
-                    }),
-
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          "Incluye aspectos relacionados con conservación y almacenamiento de la información."
-                        ),
-                      ],
-                    }),
-
-                  ],
-                }),
-
-                new TableRow({
-                  children: [
-
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          "Aspectos tecnológicos y de seguridad"
-                        ),
-                      ],
-                    }),
-
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          "Abarca aspectos relacionados con seguridad de la información e infraestructura tecnológica."
-                        ),
-                      ],
-                    }),
-
-                  ],
-                }),
-
-                new TableRow({
-                  children: [
-
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          "Fortalecimiento y articulación"
-                        ),
-                      ],
-                    }),
-
-                    new TableCell({
-                      children: [
-                        new Paragraph(
-                          "Involucra aspectos relacionados con armonización de la gestión documental y otros modelos de gestión."
-                        ),
-                      ],
-                    }),
-
-                  ],
-                }),
+                ),
 
               ],
 
@@ -1746,6 +1673,11 @@ export const
             objetivosIA
           );
 
+        const ejesArticuladoresIA =
+          await generateEjesArticuladoresIA(
+            aspectosCriticos
+          );
+
         res.json({
 
           success: true,
@@ -1762,7 +1694,10 @@ export const
               objetivosIA,
 
             planes_ia:
-              planesIA
+              planesIA,
+
+            ejes_articuladores_ia:
+              ejesArticuladoresIA
 
           }
 

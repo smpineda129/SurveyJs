@@ -1,12 +1,57 @@
 import Survey from '../models/Survey.js';
 import { summarizeObservaciones, generatePlanAccionIA } from '../services/gptSummarizer.js';
 
+// ── Validación de registro fotográfico ──────────────────────
+const MAX_FOTOS = 15;
+const MAX_SIZE_BYTES = 2 * 1024 * 1024; // 2MB, debe coincidir con maxSize del formulario SurveyJS
+
+function validarRegistroFotografico(surveyData) {
+  const fotos = surveyData?.registro_fotografico;
+
+  if (!fotos) return { valido: true };
+  if (!Array.isArray(fotos)) {
+    return { valido: false, mensaje: 'registro_fotografico debe ser un arreglo de archivos' };
+  }
+
+  if (fotos.length > MAX_FOTOS) {
+    return {
+      valido: false,
+      mensaje: `Se permiten máximo ${MAX_FOTOS} fotos en el registro fotográfico (se recibieron ${fotos.length})`
+    };
+  }
+
+  for (const foto of fotos) {
+    if (!foto || typeof foto.content !== 'string' || !foto.content.startsWith('data:image/')) {
+      return { valido: false, mensaje: 'Uno de los archivos del registro fotográfico no es una imagen válida' };
+    }
+
+    // Estimar tamaño real del base64 (aprox. content.length * 0.75)
+    const approxBytes = foto.content.length * 0.75;
+    if (approxBytes > MAX_SIZE_BYTES) {
+      return {
+        valido: false,
+        mensaje: `La foto "${foto.name || 'sin nombre'}" excede el tamaño máximo permitido (2MB)`
+      };
+    }
+  }
+
+  return { valido: true };
+}
+
 /**
  * Crear nueva respuesta de formulario
  */
 export const createSurvey = async (req, res, next) => {
   try {
     const { surveyData, status, metadata, formType } = req.body;
+
+    const validacionFotos = validarRegistroFotografico(surveyData);
+    if (!validacionFotos.valido) {
+      return res.status(400).json({
+        success: false,
+        message: validacionFotos.mensaje
+      });
+    }
 
     const survey = new Survey({
       formType,
@@ -108,6 +153,16 @@ export const getSurveyById = async (req, res, next) => {
 export const updateSurvey = async (req, res, next) => {
   try {
     const { surveyData, status } = req.body;
+
+    if (surveyData) {
+      const validacionFotos = validarRegistroFotografico(surveyData);
+      if (!validacionFotos.valido) {
+        return res.status(400).json({
+          success: false,
+          message: validacionFotos.mensaje
+        });
+      }
+    }
 
     const survey = await Survey.findById(req.params.id);
 
@@ -288,6 +343,12 @@ export const generateIndividualPresentation = async (req, res, next) => {
         allObservaciones
       );
 
+    // REGISTRO FOTOGRÁFICO — nueva diapositiva, antes del plan de acción
+    dynamicSlides.createRegistroFotografico(
+      pptx,
+      data.registro_fotografico
+    );
+
     dynamicSlides.createPlanAccion(
       pptx,
       planAccionIA
@@ -306,4 +367,3 @@ export const generateIndividualPresentation = async (req, res, next) => {
     next(error);
   }
 };
-

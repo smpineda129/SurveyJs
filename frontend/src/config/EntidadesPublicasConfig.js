@@ -1301,11 +1301,44 @@ export const surveyJson = {
           "visible": false
         },
         {
-          "type": "signaturepad",
-          "name": "firma_responsable",
-          "title": "Firma Responsable GDI",
-          "width": 600,
-          "height": 200
+          "name": "resultados_finales",
+          "title": "RESULTADOS FINALES",
+          "elements": [
+            { "type": "expression", "name": "total_general", "expression": "round({A_total} + {B_total} + {C_total}, 2)", "visible": false },
+            { "type": "expression", "name": "porcentaje_general", "expression": "round({total_general},2)", "visible": false },
+            {
+              "type": "html",
+              "name": "resultado_display",
+              "html": "<h3>Resultado General</h3><div>Porcentaje: {porcentaje_general}%</div><div>Categoría: {categoria_general}</div>"
+            },
+            {
+              "type": "expression",
+              "name": "categoria_general",
+              "expression": "iif({total_general} < 40, 'Crítico', iif({total_general} < 70, 'Moderado', 'Aceptable'))",
+              "visible": false
+            },
+
+            {
+              "type": "file",
+              "name": "registro_fotografico",
+              "title": "Registro fotográfico",
+              "description": "Adjunte fotografías del estado de los archivos, depósitos, estanterías, documentos, etc. (máximo 2MB por foto)",
+              "storeDataAsText": true,
+              "allowMultiple": true,
+              "acceptedTypes": "image/*",
+              "maxSize": 2000000,
+              "imageHeight": 100,
+              "imageWidth": 150
+            },
+
+            {
+              "type": "signaturepad",
+              "name": "firma_responsable",
+              "title": "Firma Responsable GDI",
+              "width": 600,
+              "height": 200
+            }
+          ]
         }
       ]
     }

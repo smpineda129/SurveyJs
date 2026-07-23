@@ -5,11 +5,13 @@ import { Box, Paper, Alert, CircularProgress } from '@mui/material';
 import 'survey-core/defaultV2.min.css';
 import { surveyAPI } from '../../services/api';
 
+const MAX_FOTOS_REGISTRO = 15;
 
 function SurveyComponent({ surveyConfig, formType, onComplete }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [photoWarning, setPhotoWarning] = useState(null);
 
   console.log('>>> SurveyComponent FIXED <<<');
 
@@ -883,6 +885,18 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
         allValuesRef.current[options.name] = options.value;
       }
 
+      // VALIDACIÓN: límite de fotos en el registro fotográfico
+      if (options.name === 'registro_fotografico') {
+        if (Array.isArray(options.value) && options.value.length > MAX_FOTOS_REGISTRO) {
+          const recortado = options.value.slice(0, MAX_FOTOS_REGISTRO);
+          sender.setValue('registro_fotografico', recortado);
+          setPhotoWarning(
+            `Se permiten máximo ${MAX_FOTOS_REGISTRO} fotos en el registro fotográfico. Se conservaron las primeras ${MAX_FOTOS_REGISTRO}.`
+          );
+          setTimeout(() => setPhotoWarning(null), 6000);
+        }
+      }
+
       if (
         options.name ===
         "diagnostico_origen"
@@ -985,6 +999,12 @@ function SurveyComponent({ surveyConfig, formType, onComplete }) {
       {error && (
         <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
           {error}
+        </Alert>
+      )}
+
+      {photoWarning && (
+        <Alert severity="warning" sx={{ mb: 3 }} onClose={() => setPhotoWarning(null)}>
+          {photoWarning}
         </Alert>
       )}
 

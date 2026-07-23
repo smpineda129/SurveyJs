@@ -1329,16 +1329,16 @@ export const surveyJson = {
       title: "REGISTRO FOTOGRÁFICO",
       elements: [
         {
-          type: "file",
-          name: "registro_fotografico",
-          title: "Registro fotográfico",
-          description: "Adjunte fotografías del estado de los archivos, depósitos, estanterías, documentos, etc. (máximo 2MB por foto)",
-          storeDataAsText: true,
-          allowMultiple: true,
-          acceptedTypes: "image/*",
-          maxSize: 2000000,
-          imageHeight: 100,
-          imageWidth: 150
+          "type": "file",
+          "name": "registro_fotografico",
+          "title": "Registro fotográfico",
+          "description": "Adjunte hasta 10 fotografías del estado de los archivos, depósitos, estanterías, documentos, etc. Las imágenes se optimizan automáticamente.",
+          "storeDataAsText": true,
+          "allowMultiple": true,
+          "acceptedTypes": "image/*",
+          "maxSize": 15000000,
+          "imageHeight": 100,
+          "imageWidth": 150
         }
       ]
     }

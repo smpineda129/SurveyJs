@@ -47,8 +47,12 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(morgan('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+// Límite subido de 100kb (default) a 4mb para soportar el registro fotográfico
+// (fotos comprimidas en base64 dentro del surveyData). Ver también el límite
+// duro de 4.5mb de Vercel Functions, que no se puede aumentar desde aquí.
+app.use(express.json({ limit: '4mb' }));
+app.use(express.urlencoded({ extended: true, limit: '4mb' }));
 
 // Health check
 app.get('/health', (req, res) => {
